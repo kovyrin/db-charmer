@@ -19,11 +19,12 @@ module DbCharmer
       end
       
       def hijack_connection!
-        class_eval <<-EOF
-          def self.connection
+        puts "Hijacking connection for #{self.to_s}"
+        class << self 
+          def connection
             db_charmer_connection_proxy || super
           end
-        EOF
+        end
       end
     end
   end
