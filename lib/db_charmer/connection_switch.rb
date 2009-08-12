@@ -15,6 +15,8 @@ module DbCharmer
               raise "Unsupported connection type: #{conn.class}"
             end
         end
+
+        self.hijack_connection!
       end
     end
   end

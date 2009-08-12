@@ -18,8 +18,12 @@ module DbCharmer
         @@db_charmer_connection_proxies[self.to_s]
       end
       
-      def connection
-        db_charmer_connection_proxy || super
+      def hijack_connection!
+        class_eval <<-EOF
+          def self.connection
+            db_charmer_connection_proxy || super
+          end
+        EOF
       end
     end
   end
