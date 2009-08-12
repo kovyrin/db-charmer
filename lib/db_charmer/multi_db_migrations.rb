@@ -11,7 +11,7 @@
 # Migration class example (global connection rewrite):
 #
 #   class MultiDbTest < ActiveRecord::Migration
-#     works_on_db :second_db
+#     db_magic :connection => :second_db
 #   
 #     def self.up
 #       create_table :test_table, :force => true do |t|
@@ -28,7 +28,6 @@
 # Migration class example (block-level connection rewrite):
 #
 #   class MultiDbTest < ActiveRecord::Migration
-#   
 #     def self.up
 #       on_db :second_db do
 #         create_table :test_table, :force => true do |t|
@@ -65,16 +64,12 @@ module DbCharmer
           end          
         end
       end
-      
-      def migrate_with_db_wrapper(direction)
-        on_db(@@multi_db_name) { migrate_without_db_wrapper(direction) }
-      end
-    
-      def on_db(db_name, require_config_to_exist = true)
+          
+      def on_db(db_name)
         hijack_connection!
         announce "Switching connection to #{db_name}"
         old_proxy = MigrationAbstractClass.db_charmer_connection_proxy
-        MigrationAbstractClass.switch_connection_to(db_name, require_config_to_exist)
+        MigrationAbstractClass.switch_connection_to(db_name, DbCharmer.migration_connections_should_exist?)
         yield
       ensure
         announce "Checking all database connections"
@@ -83,9 +78,14 @@ module DbCharmer
         MigrationAbstractClass.switch_connection_to(old_proxy)
       end
     
-      def works_on_db(db_name, require_config_to_exist = true)
+      def works_on_db(db_name)
         hijack_connection!
-        MigrationAbstractClass.switch_connection_to(db_name, require_config_to_exist)
+        MigrationAbstractClass.switch_connection_to(db_name, DbCharmer.migration_connections_should_exist?)
+      end
+      
+      def db_magic(opts = {})
+        raise ArgumentError, "No connection name - no magic!" unless opts[:connection]
+        works_on_db(opts[:connection])
       end
     end
   end
