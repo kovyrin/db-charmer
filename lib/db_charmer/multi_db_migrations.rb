@@ -1,7 +1,7 @@
 # Multiple-database migrations feature for Rails
 # ==============================================
 #
-# This module adds +works_on_db+ method to the Rails migration classes
+# This module adds +db_magic+ method to the Rails migration classes
 # and allows us to specify database connection name used for migrations to run.
 #
 # With this method we're going to carefully split the main database to a set of 
@@ -43,9 +43,11 @@
 #   end
 #
 #
-# In development and test environments we could skip this +:second_db+ connection 
-# from our database.yml files, but in production we'd specify it and get the table 
-# created on a separate server and/or in a separate database.
+# By default in development and test environments we could skip this +:second_db+ 
+# connection from our database.yml files, but in production we'd specify it and 
+# get the table created on a separate server and/or in a separate database.
+#
+# This behavior is controlled by DbCharmer.migration_connections_should_exist attribute.
 #
 
 module DbCharmer
