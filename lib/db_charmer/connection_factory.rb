@@ -15,11 +15,7 @@ module DbCharmer
       module_eval <<-EOF, __FILE__, __LINE__ + 1
         class #{abstract_connection_class_name db_name} < ActiveRecord::Base
           self.abstract_class = true
-          if #{!!should_exist}
-            establish_connection configurations[Rails.env]['#{db_name}']
-          else
-            establish_connection_if_exists :#{db_name}
-          end
+          establish_real_connection_if_exists(:#{db_name}, #{!!should_exist})
         end
       EOF
 

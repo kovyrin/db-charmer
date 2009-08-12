@@ -1,22 +1,25 @@
 module DbCharmer
   module ActiveRecordExtensions
     module ClassMethods
-      def establish_connection_if_exists(name)
+      def establish_real_connection_if_exists(name, should_exist = false)
         config = configurations[RAILS_ENV][name.to_s]
+        if should_exist && !config
+          raise ArgumentError, "Invalid connection name (does not exist in database.yml): #{RAILS_ENV}/#{name}"
+        end
         establish_connection(config) if config
       end
       
-      @@connection_proxies = {}
-      def connection_proxy=(proxy)
-        @@connection_proxies[self.to_s] = proxy
+      @@db_charmer_connection_proxies = {}
+      def db_charmer_connection_proxy=(proxy)
+        @@db_charmer_connection_proxies[self.to_s] = proxy
       end
 
-      def connection_proxy
-        @@connection_proxies[self.to_s]
+      def db_charmer_connection_proxy
+        @@db_charmer_connection_proxies[self.to_s]
       end
       
       def connection
-        connection_proxy || super
+        db_charmer_connection_proxy || super
       end
     end
   end
