@@ -48,33 +48,44 @@
 # from our database.yml files, but in production we'd specify it and get the table 
 # created on a separate server and/or in a separate database.
 #
+
 module DbCharmer
   module MultiDbMigrations
-    module ClassMethods
-      @@multi_db_name = nil
+    class MigrationAbstractClass < ActiveRecord::Base
+      abstract_class = true
+      hijack_connection!
+    end
     
+    module ClassMethods
+      def hijack_connection!
+        class << self
+          def connection
+            puts "DEBUG: Retrieving migration connection"
+            MigrationAbstractClass.connection
+          end          
+        end
+      end
+      
       def migrate_with_db_wrapper(direction)
         on_db(@@multi_db_name) { migrate_without_db_wrapper(direction) }
       end
     
       def on_db(db_name, require_config_to_exist = true)
+        hijack_connection!
         announce "Switching connection to #{db_name}"
-        old_connection = ActiveRecord::Base.connection
-        ActiveRecord::Base.switch_connection_to(db_name, require_config_to_exist)
+        old_proxy = MigrationAbstractClass.db_charmer_connection_proxy
+        MigrationAbstractClass.switch_connection_to(db_name, require_config_to_exist)
         yield
       ensure
         announce "Checking all database connections"
         ActiveRecord::Base.verify_active_connections!
         announce "Switching connection back to default"
-        ActiveRecord::Base.switch_connection_to(old_connection)
+        MigrationAbstractClass.switch_connection_to(old_proxy)
       end
     
-      # FIXME: pass require_config_to_exist to on_db
       def works_on_db(db_name, require_config_to_exist = true)
-        @@multi_db_name = db_name
-        class << self
-          alias_method_chain :migrate, :db_wrapper
-        end
+        hijack_connection!
+        MigrationAbstractClass.switch_connection_to(db_name, require_config_to_exist)
       end
     end
   end
