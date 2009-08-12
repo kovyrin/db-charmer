@@ -2,7 +2,7 @@ module DbCharmer
   module ConnectionSwitch
     module ClassMethods
       def switch_connection_to(conn, require_config_to_exist = true)
-        puts "Assigning connection proxy for #{self}"
+        puts "DEBUG: Assigning connection proxy for #{self}"
         self.db_charmer_connection_proxy = case conn
           when NilClass then
             conn

@@ -19,7 +19,7 @@ module DbCharmer
       end
       
       def hijack_connection!
-        puts "Hijacking connection for #{self.to_s}"
+        puts "DEBUG: Hijacking connection for #{self.to_s}"
         class << self 
           def connection
             db_charmer_connection_proxy || super
