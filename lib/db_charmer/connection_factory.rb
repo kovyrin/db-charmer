@@ -1,6 +1,10 @@
 module DbCharmer
   class ConnectionFactory
     @@connection_classes = {}
+    
+    def self.reset!
+      @@connection_classes = {}
+    end
 
     def self.connect(db_name, should_exist = false)
       @@connection_classes[db_name.to_s] ||= establish_connection(db_name.to_s, should_exist)

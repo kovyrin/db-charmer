@@ -15,6 +15,8 @@ module DbCharmer
         opt[:slaves] ||= []
         opt[:slaves] << opt[:slave] if opt[:slave]
         db_magic_slaves(opt[:slaves], should_exist)
+        
+        self.extend(DbCharmer::MultiDbProxy::ClassMethods)
       end
 
     private
