@@ -17,7 +17,7 @@ module DbCharmer
       MASTER_METHODS.each do |master_method|
         class_eval <<-EOF
           def #{master_method}(*args, &block)
-            first_level_on_master do
+            on_master do
               super(*args, &block)
             end
           end
@@ -34,14 +34,6 @@ module DbCharmer
         end
       end
 
-
-      def first_level_on_master
-        if db_charmer_top_level_connection?
-          on_master { yield }
-        else
-          yield
-        end
-      end
     end
     
     module InstanceMethods
