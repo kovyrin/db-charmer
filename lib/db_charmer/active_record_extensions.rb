@@ -30,6 +30,11 @@ module DbCharmer
         @@db_charmer_slaves[self.to_s] || []
       end
       
+      def db_charmer_random_slave
+        return nil unless db_charmer_slaves.any?
+        db_charmer_slaves[rand(db_charmer_slaves.size)]
+      end
+      
       #-----------------------------------------------------------------------------
       def hijack_connection!
         # FIXME: make sure we do not do it more often then needed

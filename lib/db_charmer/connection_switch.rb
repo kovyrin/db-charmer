@@ -12,6 +12,10 @@ module DbCharmer
           return conn.db_charmer_connection_proxy
         end
         
+        if conn.kind_of?(ActiveRecord::ConnectionAdapters::AbstractAdapter)
+          return con
+        end
+        
         raise "Unsupported connection type: #{conn.class}"
       end
       

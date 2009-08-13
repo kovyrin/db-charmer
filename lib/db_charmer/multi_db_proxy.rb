@@ -29,6 +29,12 @@ module DbCharmer
           switch_connection_to(old_proxy)
         end
       end
+      
+      def on_slave(con = nil, &block)
+        con ||= db_charmer_random_slave
+        raise ArgumentError, "No slaves found in the class and no slave connection given" unless con
+        on_db(con, &block)
+      end
     end
   end
 end
