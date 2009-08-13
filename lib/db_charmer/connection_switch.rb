@@ -20,7 +20,7 @@ module DbCharmer
       end
       
       def switch_connection_to(conn, require_config_to_exist = true)
-        puts "DEBUG: Assigning connection proxy for #{self}"
+#        puts "DEBUG: Assigning connection proxy for #{self}"
         self.db_charmer_connection_proxy = coerce_to_connection_proxy(conn, require_config_to_exist)
         self.hijack_connection!
       end

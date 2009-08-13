@@ -29,6 +29,9 @@ module DbCharmer
         self.db_charmer_slaves = slaves.collect do |slave|
           coerce_to_connection_proxy(slave, should_exist)
         end
+        
+        self.extend(DbCharmer::FinderOverrides::ClassMethods)
+        self.send(:include, DbCharmer::FinderOverrides::InstanceMethods)
       end
     end
   end
