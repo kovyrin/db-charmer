@@ -17,17 +17,14 @@ module DbCharmer
     
     module ClassMethods
       def on_db(con)
-        # Get a connection proxy
-        connection = coerce_to_connection_proxy(con)
-
         # Chain call
-        return OnDbProxy.new(self, connection) unless block_given?
+        return OnDbProxy.new(self, con) unless block_given?
         
         # Block call
         begin
           old_proxy = db_charmer_connection_proxy
-          switch_connection_to(connection, DbCharmer.migration_connections_should_exist?)
-          yield
+          switch_connection_to(con, DbCharmer.migration_connections_should_exist?)
+          yield(self)
         ensure
           switch_connection_to(old_proxy)
         end

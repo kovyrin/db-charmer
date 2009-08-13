@@ -27,7 +27,7 @@ module DbCharmer
       
       def db_magic_slaves(slaves, should_exist = false)
         self.db_charmer_slaves = slaves.collect do |slave|
-          DbCharmer::ConnectionFactory.connect(slave, should_exist)
+          coerce_to_connection_proxy(slave, should_exist)
         end
       end
     end
