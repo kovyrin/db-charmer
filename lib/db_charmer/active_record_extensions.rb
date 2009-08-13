@@ -34,6 +34,20 @@ module DbCharmer
         return nil unless db_charmer_slaves.any?
         db_charmer_slaves[rand(db_charmer_slaves.size)]
       end
+
+      #-----------------------------------------------------------------------------
+      @@db_charmer_connection_levels = Hash.new(0)
+      def db_charmer_connection_level=(level)
+        @@db_charmer_connection_levels[self.to_s] = level
+      end
+
+      def db_charmer_connection_level
+        @@db_charmer_connection_levels[self.to_s] || 0
+      end
+      
+      def db_charmer_top_level_connection?
+        db_charmer_connection_level.zero?
+      end
       
       #-----------------------------------------------------------------------------
       def hijack_connection!
