@@ -13,7 +13,7 @@ module DbCharmer
         end
         
         if conn.kind_of?(ActiveRecord::ConnectionAdapters::AbstractAdapter)
-          return con
+          return conn
         end
         
         raise "Unsupported connection type: #{conn.class}"
