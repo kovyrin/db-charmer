@@ -1,7 +1,7 @@
 module DbCharmer
   module FinderOverrides
     module ClassMethods
-      SLAVE_METHODS = [ :find_by_sql, :count_by_sql ]
+      SLAVE_METHODS = [ :find_by_sql, :count_by_sql, :calculate ]
 
       SLAVE_METHODS.each do |slave_method|
         class_eval <<-EOF
