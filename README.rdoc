@@ -1,0 +1,30 @@
+= DB Charmer - ActiveRecord Connection Magic Plugin
+
++DbCharmer+ is a simple yet powerful plugin for ActiveRecord that does a few things:
+
+1. Allows you to easily manage AR models' connections (switch_connection_to method)
+2. Allows you to switch AR models' default connections to a separate servers/databases
+3. Allows you to easily choose where your query should go (Model.on_db methods)
+4. Allows you to automatically send read queries to your slaves while masters would handle all the updates.
+5. Adds multiple databases migrations to ActiveRecord
+
+
+== Easy ActiveRecord Connection Management
+
+FIXME: To be added
+
+
+== DB Magic Method
+
+FIXME: To be added
+
+
+== Connection Switching Methods
+
+FIXME: To be added
+
+
+== Multiple DB Migrations
+
+FIXME: To be added
+
