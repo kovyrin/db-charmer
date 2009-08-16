@@ -2,9 +2,9 @@
 
 +DbCharmer+ is a simple yet powerful plugin for ActiveRecord that does a few things:
 
-1. Allows you to easily manage AR models' connections (switch_connection_to method)
+1. Allows you to easily manage AR models' connections (+switch_connection_to+ method)
 2. Allows you to switch AR models' default connections to a separate servers/databases
-3. Allows you to easily choose where your query should go (Model.on_db methods)
+3. Allows you to easily choose where your query should go (<tt>Model.on_db</tt> methods)
 4. Allows you to automatically send read queries to your slaves while masters would handle all the updates.
 5. Adds multiple databases migrations to ActiveRecord
 
@@ -16,18 +16,73 @@ of db connections and uses them on a model. We support:
 
 1. Strings and symbols as the names of connection configuration blocks in database.yml.
 2. ActiveRecord models (we'd use connection currently set up on a model).
-3. Database connections (Model.connection)
+3. Database connections (<tt>Model.connection</tt>)
 4. Nil values to reset model to default connection.
 
 Sample code:
 
- class Foo < ActiveRecord::Model; end
+  class Foo < ActiveRecord::Model; end
 	
- Foo.switch_connection_to(:blah)
- Foo.switch_connection_to('foo')
- Foo.switch_connection_to(Bar)
- Foo.switch_connection_to(Baz.connection)
- Foo.switch_connection_to(nil)
+  Foo.switch_connection_to(:blah)
+  Foo.switch_connection_to('foo')
+  Foo.switch_connection_to(Bar)
+  Foo.switch_connection_to(Baz.connection)
+  Foo.switch_connection_to(nil)
+
+
+== Multiple DB Migrations
+
+In every application that works with many databases, there is need in convenient schema migrations mechanism. 
+
+All Rails users already have this mechanism - rails migrations. So in +DbCharmer+, we've made it possible 
+to seamlessly use multiple databases in Rails migrations.
+
+There are two methods available in migrations to operate on more than one database:
+
+1. Global connection change method - used to switch whole migration to a non-default database.
+2. Block-level connection change method - could be used to do only a part of a migration on a non-default db.
+
+Migration class example (global connection rewrite):
+
+  class MultiDbTest < ActiveRecord::Migration
+     db_magic :connection => :second_db
+   
+     def self.up
+       create_table :test_table, :force => true do |t|
+         t.string :test_string
+         t.timestamps
+       end
+     end
+   
+     def self.down
+       drop_table :test_table
+     end
+   end
+
+Migration class example (block-level connection rewrite):
+
+  class MultiDbTest < ActiveRecord::Migration
+    def self.up
+      on_db :second_db do
+        create_table :test_table, :force => true do |t|
+          t.string :test_string
+          t.timestamps
+        end
+      end
+    end
+  
+    def self.down
+      on_db :second_db { drop_table :test_table }
+    end
+  end
+
+
+By default in development and test environments you could skip this <tt>:second_db</tt> 
+connection from your database.yml files, but in production you'd specify it and 
+get the table created on a separate server and/or in a separate database.
+
+This behaviour is controlled by the <tt>DbCharmer.migration_connections_should_exist</tt> 
+configuration attribute which could be set from a rails initializer.
 
 
 == DB Magic Method
@@ -36,11 +91,6 @@ FIXME: To be added
 
 
 == Connection Switching Methods
-
-FIXME: To be added
-
-
-== Multiple DB Migrations
 
 FIXME: To be added
 
