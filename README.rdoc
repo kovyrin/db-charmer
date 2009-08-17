@@ -152,7 +152,7 @@ In the block form you could force connection switch for a block of code:
 
   User.on_master do
     user = User.find_by_login('foo')
-	user.update_attributes!(:activated => true)
+    user.update_attributes!(:activated => true)
   end
 
 In the proxy form this method could be used to force one query to be performed on 
