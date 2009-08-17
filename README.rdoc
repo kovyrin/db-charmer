@@ -172,3 +172,17 @@ It is used to switch a model's connection to some db for a short block of code
 or even for one statement (two forms). It accepts the same range of values as 
 the +switch_connection_to+ method does.
 
+
+== Documentation
+
+For more information on the plugin internals, please check out the source code. All the plugin's code is covered with tests that were placed in a separate staging rails project located at http://github.com/kovyrin/db-charmer-sandbox/tree/master. The project has unit tests for all or at least the most of the parts of plugin's code.
+
+
+== What Ruby and Rails implementations does it work for?
+
+We've tested the plugin on MRI 1.8.6 with Rails 2.3.3. After the initial testing phase we're going to deploy this code in production.
+
+
+== Who are the authors?
+
+This plugin has been created in Scribd.com for our internal use and then the sources were opened for other people to use. All the code in this package has been developed by Alexey Kovyrin for Scribd.com and is released under the GPLv2 license. For more details, see the LICENSE file.
