@@ -108,6 +108,10 @@ When you create a model, you could use <tt>db_magic :slave => :blah</tt> or <tt>
     db_magic :slave => :slave01
   end
 
+  class Bar < ActiveRecord::Base
+    db_magic :slaves => [ :slave01, :slave02 ]
+  end
+
 
 === Default Connection Switching
 
