@@ -95,14 +95,23 @@ configuration attribute which could be set from a rails initializer.
 
 == Using Models in Master-Slave Environments
 
-Master-slave replication is the most popular scale-out technique in medium and large database applications today. There are some rails plugins out there that help rails developers to use slave servers in their models but none of there were flexible enough for us to start using them in a huge application we work on.
+Master-slave replication is the most popular scale-out technique in medium and large 
+database applications today. There are some rails plugins out there that help rails 
+developers to use slave servers in their models but none of there were flexible enough 
+for us to start using them in a huge application we work on.
 
-So, we've been using ActsAsReadonlyable plugin for a long time and have developed a lots of additions to its code over that time. Since that plugin has been abandoned by its authors, we've decided to collect all of our master-slave code in one plugin and release it for rails 2.2+. +DbCharmer+ adds the following features to Rails models:
+So, we've been using ActsAsReadonlyable plugin for a long time and have developed a 
+lots of additions to its code over that time. Since that plugin has been abandoned 
+by its authors, we've decided to collect all of our master-slave code in one plugin 
+and release it for rails 2.2+. +DbCharmer+ adds the following features to Rails models:
 
 
 === Auto-Switching all Reads to Slave(s)
 
-When you create a model, you could use <tt>db_magic :slave => :blah</tt> or <tt>db_magic :slaves => [ :foo, :bar ]</tt> commands in your model to set up reads redirection mode when all your find/count/exist/etc methods will be reading data from your slave (or a bunch of slaves in a round-robin manner). Here is an example:
+When you create a model, you could use <tt>db_magic :slave => :blah</tt> or 
+<tt>db_magic :slaves => [ :foo, :bar ]</tt> commands in your model to set up reads 
+redirection mode when all your find/count/exist/etc methods will be reading data 
+from your slave (or a bunch of slaves in a round-robin manner). Here is an example:
 
   class Foo < ActiveRecord::Base
     db_magic :slave => :slave01
@@ -115,15 +124,51 @@ When you create a model, you could use <tt>db_magic :slave => :blah</tt> or <tt>
 
 === Default Connection Switching
 
-If you have more than one master-slave cluster (or simply more than one database) in your database environment, then you might want to change the default database connection of some of your models. You could do that by using <tt>db_magic :connection => :foo</tt> call from your models. Example:
+If you have more than one master-slave cluster (or simply more than one database) 
+in your database environment, then you might want to change the default database 
+connection of some of your models. You could do that by using 
+<tt>db_magic :connection => :foo</tt> call from your models. Example:
 
   class Foo < ActiveRecord::Base
     db_magic :connection => :foo
   end
 
-Sample model on a separate master-slave cluster:
+Sample model on a separate master-slave cluster (so, separate main connection + 
+a slave connection):
 
   class Bar < ActiveRecord::Base
     db_magic :connection => :bar, :slave => :bar_slave
   end
+
+=== Per-Query Connection Management
+
+Sometimes you have some select queries that you know you want to run on the master. 
+This could happen for example when you have just added some data and need to read 
+it back and not sure if it made it all the way to the slave yet or no. For this 
+situation an few others there are a few methods we've added to ActiveRecord models:
+
+1) +on_master+ - this method could be used in two forms: block form and proxy form. 
+In the block form you could force connection switch for a block of code:
+
+  User.on_master do
+    user = User.find_by_login('foo')
+	user.update_attributes!(:activated => true)
+  end
+
+In the proxy form this method could be used to force one query to be performed on 
+the master database server:
+
+  Comment.on_master.last(:limit => 5)
+  User.on_master.find_by_activation_code(code)
+  User.on_master.exists?(:login => login, :password => password)
+
+2) +on_slave+ - this method is used to force a query to be run on a slave even in 
+situations when it's been previously forced to use the master. If there is more 
+than one slave, one would be selected randomly. Tis method has two forms as 
+well: block and proxy.
+
+3) on_db(connection) - this method is what makes two previous methods possible. 
+It is used to switch a model's connection to some db for a short block of code 
+or even for one statement (two forms). It accepts the same range of values as 
+the +switch_connection_to+ method does.
 
