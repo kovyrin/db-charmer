@@ -113,13 +113,13 @@ When you create a model, you could use <tt>db_magic :slave => :blah</tt> or <tt>
 
 If you have more than one master-slave cluster (or simply more than one database) in your database environment, then you might want to change the default database connection of some of your models. You could do that by using <tt>db_magic :connection => :foo</tt> call from your models. Example:
 
-class Foo < ActiveRecord::Base
-  db_magic :connection => :foo
-end
+  class Foo < ActiveRecord::Base
+    db_magic :connection => :foo
+  end
 
 Sample model on a separate master-slave cluster:
 
-class Bar < ActiveRecord::Base
-  db_magic :connection => :bar, :slave => :bar_slave
-end
+  class Bar < ActiveRecord::Base
+    db_magic :connection => :bar, :slave => :bar_slave
+  end
 
