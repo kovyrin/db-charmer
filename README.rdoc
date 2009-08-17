@@ -29,6 +29,14 @@ Sample code:
   Foo.switch_connection_to(Baz.connection)
   Foo.switch_connection_to(nil)
 
+The +switch_connection_to+ method has an optional second parameter +should_exist+ which is true 
+by default. This parameter is used when the method is called with a string or a symbol connection 
+name and there is no such connection configuration in the database.yml file. If this parameter 
+is true, an exception would be raised, if it is false, the error would be ignored and no connection 
+change would happen. This is really useful when in development mode or in tests you do not want to 
+create many different databases on your local machine and just want to put all your tables in one 
+database.
+
 
 == Multiple DB Migrations
 
@@ -85,7 +93,7 @@ This behaviour is controlled by the <tt>DbCharmer.migration_connections_should_e
 configuration attribute which could be set from a rails initializer.
 
 
-== DB Magic Method
+== Using Models in Master-Slave Environments
 
 FIXME: To be added
 
