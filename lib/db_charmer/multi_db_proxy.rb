@@ -31,7 +31,9 @@ module DbCharmer
           self.db_charmer_connection_level -= 1
         end
       end
-
+    end
+    
+    module MasterSlaveClassMethods
       def on_slave(con = nil, &block)
         con ||= db_charmer_random_slave
         raise ArgumentError, "No slaves found in the class and no slave connection given" unless con
