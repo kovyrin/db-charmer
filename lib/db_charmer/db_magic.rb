@@ -14,9 +14,7 @@ module DbCharmer
         # Set up slaves pool
         opt[:slaves] ||= []
         opt[:slaves] << opt[:slave] if opt[:slave]
-        db_magic_slaves(opt[:slaves], should_exist)
-
-        self.extend(DbCharmer::MultiDbProxy::MasterSlaveClassMethods)
+        db_magic_slaves(opt[:slaves], should_exist) if opt[:slaves].any?
       end
 
     private
@@ -32,6 +30,7 @@ module DbCharmer
 
         self.extend(DbCharmer::FinderOverrides::ClassMethods)
         self.send(:include, DbCharmer::FinderOverrides::InstanceMethods)
+        self.extend(DbCharmer::MultiDbProxy::MasterSlaveClassMethods)
       end
     end
   end
