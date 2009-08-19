@@ -9,7 +9,7 @@ module DbCharmer
         end
         establish_connection(config) if config
       end
-      
+
       #-----------------------------------------------------------------------------
       @@db_charmer_connection_proxies = {}
       def db_charmer_connection_proxy=(proxy)
@@ -19,7 +19,7 @@ module DbCharmer
       def db_charmer_connection_proxy
         @@db_charmer_connection_proxies[self.to_s]
       end
-      
+
       #-----------------------------------------------------------------------------
       @@db_charmer_slaves = {}
       def db_charmer_slaves=(slaves)
@@ -29,7 +29,7 @@ module DbCharmer
       def db_charmer_slaves
         @@db_charmer_slaves[self.to_s] || []
       end
-      
+
       def db_charmer_random_slave
         return nil unless db_charmer_slaves.any?
         db_charmer_slaves[rand(db_charmer_slaves.size)]
@@ -44,11 +44,11 @@ module DbCharmer
       def db_charmer_connection_level
         @@db_charmer_connection_levels[self.to_s] || 0
       end
-      
+
       def db_charmer_top_level_connection?
         db_charmer_connection_level.zero?
       end
-      
+
       #-----------------------------------------------------------------------------
       def hijack_connection!
         # FIXME: make sure we do not do it more often then needed
@@ -59,7 +59,7 @@ module DbCharmer
           end
         end
       end
-      
+
     end
   end
 end

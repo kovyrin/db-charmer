@@ -5,7 +5,7 @@ module DbCharmer
     def initialize(abstract_class)
       @@abstract_connection_class = abstract_class
     end
-    
+
     def method_missing(meth, *args, &block)
 #      puts "DEBUG: proxying #{meth} call to #{@@abstract_connection_class}"
       @@abstract_connection_class.retrieve_connection.send(meth, *args, &block)

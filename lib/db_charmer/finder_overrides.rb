@@ -23,9 +23,9 @@ module DbCharmer
           end
         EOF
       end
-    
+
     private
-    
+
       def first_level_on_slave
         if db_charmer_top_level_connection?
           on_slave { yield }
@@ -35,10 +35,10 @@ module DbCharmer
       end
 
     end
-    
+
     module InstanceMethods
       def reload(*args, &block)
-        on_master do 
+        self.class.on_master do
           super(*args, &block)
         end
       end

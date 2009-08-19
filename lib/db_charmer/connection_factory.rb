@@ -1,7 +1,7 @@
 module DbCharmer
   class ConnectionFactory
     @@connection_classes = {}
-    
+
     def self.reset!
       @@connection_classes = {}
     end

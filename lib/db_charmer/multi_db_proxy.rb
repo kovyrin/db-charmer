@@ -14,12 +14,12 @@ module DbCharmer
         end
       end
     end
-    
+
     module ClassMethods
       def on_db(con)
         # Chain call
         return OnDbProxy.new(self, con) unless block_given?
-        
+
         # Block call
         begin
           self.db_charmer_connection_level += 1
@@ -31,13 +31,13 @@ module DbCharmer
           self.db_charmer_connection_level -= 1
         end
       end
-      
+
       def on_slave(con = nil, &block)
         con ||= db_charmer_random_slave
         raise ArgumentError, "No slaves found in the class and no slave connection given" unless con
         on_db(con, &block)
       end
-      
+
       def on_master(&block)
         on_db(nil, &block)
       end
