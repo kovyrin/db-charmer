@@ -12,4 +12,9 @@ module DbCharmer
   def self.connections_should_exist?
     !! connections_should_exist
   end
+  
+  def self.logger
+    return Rails.logger if defined?(Rails)
+    @logger ||= Logger.new(STDERR)
+  end
 end
