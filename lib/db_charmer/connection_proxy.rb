@@ -1,7 +1,5 @@
 module DbCharmer
   class ConnectionProxy < BlankSlate
-    @abstract_connection_class = nil
-
     def initialize(abstract_class)
       @abstract_connection_class = abstract_class
     end
