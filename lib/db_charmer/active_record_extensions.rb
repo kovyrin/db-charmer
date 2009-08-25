@@ -11,6 +11,16 @@ module DbCharmer
       end
 
       #-----------------------------------------------------------------------------
+      @@db_charmer_opts = {}
+      def db_charmer_opts=(opts)
+        @@db_charmer_opts[self.to_s] = opts
+      end
+
+      def db_charmer_opts
+        @@db_charmer_opts[self.to_s] || {}
+      end
+
+      #-----------------------------------------------------------------------------
       @@db_charmer_connection_proxies = {}
       def db_charmer_connection_proxy=(proxy)
         @@db_charmer_connection_proxies[self.to_s] = proxy
