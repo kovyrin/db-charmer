@@ -9,6 +9,26 @@
 5. Adds multiple databases migrations to ActiveRecord
 
 
+== Installation ==
+
+There are two options when approaching db-charmer installation:
+* using gem (recommended)
+* install as a Rails plugin
+
+To install as a gem, add this to your environment.rb:
+
+  config.gem 'kovyrin-db-charmer', :lib => 'db_charmer',
+    :source => 'http://gems.github.com'
+
+And then run the command:
+
+  sudo rake gems:install
+
+To install db-charmer as a Rails plugin use this:
+
+  script/plugin install git://github.com/kovyrin/db-charmer.git
+
+
 == Easy ActiveRecord Connection Management
 
 As a part of this plugin we've added +switch_connection_to+ method that accepts many different kinds 
