@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "db-charmer.gemspec",
      "init.rb",
      "lib/db_charmer.rb",
      "lib/db_charmer/active_record_extensions.rb",
@@ -45,8 +46,11 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<rails>, [">= 2.3.3"])
     else
+      s.add_dependency(%q<rails>, [">= 2.3.3"])
     end
   else
+    s.add_dependency(%q<rails>, [">= 2.3.3"])
   end
 end

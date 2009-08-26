@@ -18,3 +18,27 @@ module DbCharmer
     @logger ||= Logger.new(STDERR)
   end
 end
+
+require 'db_charmer/active_record_extensions'
+require 'db_charmer/connection_factory'
+require 'db_charmer/connection_proxy'
+require 'db_charmer/connection_switch'
+require 'db_charmer/db_magic'
+require 'db_charmer/finder_overrides'
+require 'db_charmer/multi_db_migrations'
+require 'db_charmer/multi_db_proxy'
+
+# Enable misc AR extensions
+ActiveRecord::Base.extend(DbCharmer::ActiveRecordExtensions::ClassMethods)
+
+# Enable connections switching in AR
+ActiveRecord::Base.extend(DbCharmer::ConnectionSwitch::ClassMethods)
+
+# Enable connection proxy in AR
+ActiveRecord::Base.extend(DbCharmer::MultiDbProxy::ClassMethods)
+
+# Enable multi-db migrations
+ActiveRecord::Migration.extend(DbCharmer::MultiDbMigrations::ClassMethods)
+
+# Enable the magic
+ActiveRecord::Base.extend(DbCharmer::DbMagic::ClassMethods)

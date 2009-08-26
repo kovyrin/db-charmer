@@ -7,6 +7,8 @@ begin
     gemspec.email = 'alexey@kovyrin.net'
     gemspec.homepage = 'http://github.com/kovyrin/db-charmer'
     gemspec.authors = ['Alexey Kovyrin']
+
+    gemspec.add_dependency('rails', '>= 2.3.3')
   end
 rescue LoadError
   puts 'Jeweler not available. Install it with: sudo gem install jeweler'
