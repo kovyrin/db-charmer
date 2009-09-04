@@ -16,7 +16,7 @@ module DbCharmer
   end
   
   def self.logger
-    #return Rails.logger if defined?(Rails)
+    return Rails.logger if defined?(Rails)
     @logger ||= Logger.new(STDERR)
   end
 end
