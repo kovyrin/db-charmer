@@ -36,7 +36,7 @@ ActiveRecord::Base.extend(DbCharmer::ConnectionSwitch::ClassMethods)
 
 # Enable connection proxy in AR
 ActiveRecord::Base.extend(DbCharmer::MultiDbProxy::ClassMethods)
-ActiveRecord::Base.send(:include, DbCharmer::MultiDbProxy::InstanceMethods)
+#ActiveRecord::Base.send(:include, DbCharmer::MultiDbProxy::InstanceMethods)
 
 puts "Doing the magic..."
 
