@@ -9,7 +9,7 @@ module DbCharmer
       def hijack_connection!
         class << self
           def connection
-            puts "DEBUG: Retrieving migration connection"
+#            puts "DEBUG: Retrieving migration connection"
             MigrationAbstractClass.connection
           end
         end

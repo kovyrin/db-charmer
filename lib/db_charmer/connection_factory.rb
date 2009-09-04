@@ -8,18 +8,18 @@ module DbCharmer
 
     def self.connect(db_name, should_exist = false)
       @@connection_classes[db_name.to_s] ||= establish_connection(db_name.to_s, should_exist)
-      DbCharmer.logger.warn("ConnectionFactory.connect(#{db_name}) = #{@@connection_classes[db_name.to_s]}")
-      return @@connection_classes[db_name.to_s]
+#      DbCharmer.logger.warn("ConnectionFactory.connect(#{db_name}) = #{@@connection_classes[db_name.to_s]}")
+#      return @@connection_classes[db_name.to_s]
     end
 
     def self.establish_connection(db_name, should_exist = false)
-      DbCharmer.logger.debug("Creating a connection proxy for #{db_name}")
+#      DbCharmer.logger.debug("Creating a connection proxy for #{db_name}")
       abstract_class = generate_abstract_class(db_name, should_exist)
       DbCharmer::ConnectionProxy.new(abstract_class)
     end
 
     def self.generate_abstract_class(db_name, should_exist = false)
-      DbCharmer.logger.info("Generating abstract connection class for #{db_name}: #{abstract_connection_class_name db_name}")
+#      DbCharmer.logger.info("Generating abstract connection class for #{db_name}: #{abstract_connection_class_name db_name}")
 
       module_eval <<-EOF, __FILE__, __LINE__ + 1
         class #{abstract_connection_class_name db_name} < ActiveRecord::Base
