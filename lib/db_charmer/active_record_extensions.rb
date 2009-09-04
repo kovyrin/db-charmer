@@ -13,31 +13,31 @@ module DbCharmer
       #-----------------------------------------------------------------------------
       @@db_charmer_opts = {}
       def db_charmer_opts=(opts)
-        @@db_charmer_opts[self] = opts
+        @@db_charmer_opts[self.name] = opts
       end
 
       def db_charmer_opts
-        @@db_charmer_opts[self] || {}
+        @@db_charmer_opts[self.name] || {}
       end
 
       #-----------------------------------------------------------------------------
       @@db_charmer_connection_proxies = {}
       def db_charmer_connection_proxy=(proxy)
-        @@db_charmer_connection_proxies[self] = proxy
+        @@db_charmer_connection_proxies[self.name] = proxy
       end
 
       def db_charmer_connection_proxy
-        @@db_charmer_connection_proxies[self]
+        @@db_charmer_connection_proxies[self.name]
       end
 
       #-----------------------------------------------------------------------------
       @@db_charmer_slaves = {}
       def db_charmer_slaves=(slaves)
-        @@db_charmer_slaves[self] = slaves
+        @@db_charmer_slaves[self.name] = slaves
       end
 
       def db_charmer_slaves
-        @@db_charmer_slaves[self] || []
+        @@db_charmer_slaves[self.name] || []
       end
 
       def db_charmer_random_slave
@@ -48,11 +48,11 @@ module DbCharmer
       #-----------------------------------------------------------------------------
       @@db_charmer_connection_levels = Hash.new(0)
       def db_charmer_connection_level=(level)
-        @@db_charmer_connection_levels[self] = level
+        @@db_charmer_connection_levels[self.name] = level
       end
 
       def db_charmer_connection_level
-        @@db_charmer_connection_levels[self] || 0
+        @@db_charmer_connection_levels[self.name] || 0
       end
 
       def db_charmer_top_level_connection?
