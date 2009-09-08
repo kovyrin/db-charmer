@@ -203,7 +203,7 @@ most of the parts of plugin's code.
 
 == What Ruby and Rails implementations does it work for?
 
-We've tested the plugin on MRI 1.8.6 with Rails 2.3.3. After the initial testing phase we're going
+We've tested the plugin on MRI 1.8.6 with Rails 2.3+. After the initial testing phase we're going
 to deploy this code in production.
 
 
