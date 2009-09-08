@@ -190,7 +190,7 @@ well: block and proxy.
 3) <tt>on_db(connection)</tt> - this method is what makes two previous methods possible. 
 It is used to switch a model's connection to some db for a short block of code 
 or even for one statement (two forms). It accepts the same range of values as 
-the +switch_connection_to+ method does. Example
+the +switch_connection_to+ method does. Example:
 
   Comment.on_db(:olap).count
   Post.on_db(:foo).find(:first)
