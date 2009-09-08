@@ -190,7 +190,33 @@ well: block and proxy.
 3) <tt>on_db(connection)</tt> - this method is what makes two previous methods possible. 
 It is used to switch a model's connection to some db for a short block of code 
 or even for one statement (two forms). It accepts the same range of values as 
-the +switch_connection_to+ method does.
+the +switch_connection_to+ method does. Example
+
+  Comment.on_db(:olap).count
+  Post.on_db(:foo).find(:first)
+
+
+=== Associations Connection Management
+
+ActiveRecord models can have associations and with their own connections and it becomes
+pretty hard to manage connections in chained calls like <tt>User.posts.count</tt>. With
+class-only connection switching methods this call would look like the following if we'd
+want to count posts on a separate database:
+
+  Post.on_db(:olap) { User.posts.count }
+
+Apparently this is not the best way to write the code and we've implemented <tt>on_*</tt>
+methods on associations as well so you could do things like this:
+
+  @user.posts.on_db(:olap).count
+  @user.posts.on_slave.find(:title => 'Hello, world!')
+
+Notice: Since ActiveRecord associations implemented as proxies for resulting
+objects/collections, it is possible to use our connection switching methods even without
+chained methods:
+
+  @post.user.on_slave - would return post's author
+  @photo.owner.on_slave - would return photo's owner
 
 
 == Documentation
