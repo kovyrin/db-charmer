@@ -2,7 +2,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
     gemspec.name = 'db-charmer'
-    gemspec.summary = 'db-charmer'
+    gemspec.summary = 'ActiveRecord Connections Magic'
     gemspec.description = 'ActiveRecord Connections Magic (slaves, multiple connections, etc)'
     gemspec.email = 'alexey@kovyrin.net'
     gemspec.homepage = 'http://github.com/kovyrin/db-charmer'
