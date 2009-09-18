@@ -57,6 +57,11 @@ change would happen. This is really useful when in development mode or in tests 
 create many different databases on your local machine and just want to put all your tables in one 
 database.
 
+Warning: All the connection switching calls would switch connection *only* for those classes the 
+method called on. You can't call the +switch_connection_to+ method and switch connection for a 
+base class in some hierarchy (for example, you can't switch AR::Base connection and see all your 
+models switched to the new connection, use classic +establish_connection+ instead).
+
 
 == Multiple DB Migrations
 
@@ -229,8 +234,8 @@ most of the parts of plugin's code.
 
 == What Ruby and Rails implementations does it work for?
 
-We've tested the plugin on MRI 1.8.6 with Rails 2.3+. After the initial testing phase we're going
-to deploy this code in production.
+We've tested the plugin on MRI 1.8.6 with Rails 2.2 and 2.3. We use it in production on Scribd.com 
+with MRI 1.8.6 and Rails 2.2.
 
 
 == Who are the authors?
