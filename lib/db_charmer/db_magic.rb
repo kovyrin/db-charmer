@@ -18,6 +18,9 @@ module DbCharmer
 
         # Setup inheritance magic
         setup_children_magic(opt)
+        
+        # Setup sharding if needed
+        setup_sharding_magic(opt[:sharded]) if opt[:sharded]
       end
 
     private
@@ -29,6 +32,10 @@ module DbCharmer
           child.db_magic(self.db_charmer_opts)
           super
         end
+      end
+
+      def setup_sharding_magic(config)
+        self.extend(DbCharmer::Sharding::ClassMethods)
       end
 
       def db_magic_connection(conn, should_exist = false)
