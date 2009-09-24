@@ -27,7 +27,7 @@ module DbCharmer
     private
 
       def first_level_on_slave
-        if db_charmer_top_level_connection?
+        if db_charmer_top_level_connection? && on_master.connection.open_transactions.zero?
           on_slave { yield }
         else
           yield
