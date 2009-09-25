@@ -5,7 +5,7 @@ module DbCharmer
         attr_accessor :ranges
         
         def initialize(config)
-          @ranges = config[:ranges] or raise ArgumentError, "No :ranges defined!"
+          @ranges = config[:ranges] ? config[:ranges].clone : raise(ArgumentError, "No :ranges defined!")
         end
 
         def shard_for_key(key)

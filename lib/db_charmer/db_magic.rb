@@ -20,7 +20,10 @@ module DbCharmer
         setup_children_magic(opt)
         
         # Setup sharding if needed
-        setup_sharding_magic(opt[:sharded]) if opt[:sharded]
+        if opt[:sharded]
+          raise ArgumentError, "Can't use sharding on a model with slaves!" if opt[:slaves].any? 
+          setup_sharding_magic(opt[:sharded])
+        end
       end
 
     private
@@ -36,6 +39,8 @@ module DbCharmer
 
       def setup_sharding_magic(config)
         self.extend(DbCharmer::Sharding::ClassMethods)
+        name = config[:sharded_connection] or raise ArgumentError, "No :sharded connection!"
+        self.sharded_connection = DbCharmer::Sharding.sharded_connection(name)
       end
 
       def setup_connection_magic(conn, should_exist = false)
