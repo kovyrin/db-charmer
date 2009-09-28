@@ -39,7 +39,7 @@ module DbCharmer
 
       def setup_sharding_magic(config)
         self.extend(DbCharmer::Sharding::ClassMethods)
-        name = config[:sharded_connection] or raise ArgumentError, "No :sharded connection!"
+        name = config[:sharded_connection] or raise ArgumentError, "No :sharded_connection!"
         self.sharded_connection = DbCharmer::Sharding.sharded_connection(name)
       end
 

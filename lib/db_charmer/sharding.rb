@@ -20,7 +20,7 @@ module DbCharmer
     end
     
     def self.sharded_connection(name)
-      @@sharded_connections[name]
+      @@sharded_connections[name] or raise ArgumentError, "Invalid sharded connection name!"
     end
   end
 end
