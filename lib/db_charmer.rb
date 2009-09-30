@@ -52,7 +52,7 @@ require 'db_charmer/multi_db_migrations'
 require 'db_charmer/multi_db_proxy'
 
 # Enable multi-db migrations
-ActiveRecord::Migration.extend(DbCharmer::MultiDbMigrations::ClassMethods)
+ActiveRecord::Migration.extend(DbCharmer::MultiDbMigrations)
 
 # Enable the magic
 ActiveRecord::Base.extend(DbCharmer::DbMagic::ClassMethods)
