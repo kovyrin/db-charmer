@@ -63,9 +63,9 @@ module DbCharmer
       def hijack_connection!
         # FIXME: make sure we do not do it more often then needed
 #        puts "DEBUG: Hijacking connection for #{self.to_s}"
-        class << self 
+        class << self
           def connection
-            db_charmer_connection_proxy || super
+            db_charmer_connection_proxy || retrieve_connection
           end
         end
       end
