@@ -10,6 +10,7 @@ begin
 
     gemspec.add_dependency('rails', '>= 2.2.0')
   end
+  Jeweler::GemcutterTasks.new
 rescue LoadError
   puts 'Jeweler not available. Install it with: sudo gem install jeweler'
 end
