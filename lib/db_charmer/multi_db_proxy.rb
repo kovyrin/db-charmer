@@ -14,7 +14,7 @@ module DbCharmer
           res = m.__send__(meth, *args, &block)
 
           # If result is a scope, return a new proxy for it, otherwise return the result itself
-          res.kind_of?(ActiveRecord::NamedScope::Scope) ? res.on_db(@slave) : res
+          (res.class == ActiveRecord::NamedScope::Scope) ? OnDbProxy.new(res, @slave) : res
         end
       end
     end
