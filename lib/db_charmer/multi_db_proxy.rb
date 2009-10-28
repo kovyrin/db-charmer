@@ -9,8 +9,12 @@ module DbCharmer
     private
 
       def method_missing(meth, *args, &block)
+        # Switch connection and proxy the method call
         @model.on_db(@slave) do |m|
-          m.__send__(meth, *args, &block)
+          res = m.__send__(meth, *args, &block)
+
+          # If result is a scope, return a new proxy for it, otherwise return the result itself
+          res.kind_of?(ActiveRecord::NamedScope::Scope) ? res.on_db(@slave) : res
         end
       end
     end

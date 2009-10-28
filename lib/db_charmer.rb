@@ -28,6 +28,7 @@ require 'db_charmer/connection_factory'
 require 'db_charmer/connection_proxy'
 require 'db_charmer/connection_switch'
 require 'db_charmer/association_proxy'
+require 'db_charmer/scope_proxy'
 require 'db_charmer/multi_db_proxy'
 
 # Enable misc AR extensions
@@ -41,8 +42,9 @@ ActiveRecord::Base.extend(DbCharmer::MultiDbProxy::ClassMethods)
 ActiveRecord::Base.extend(DbCharmer::MultiDbProxy::MasterSlaveClassMethods)
 #ActiveRecord::Base.send(:include, DbCharmer::MultiDbProxy::InstanceMethods)
 
-# Enable connection proxy for associations
+# Enable connection proxy for associations and scopes
 ActiveRecord::Associations::AssociationProxy.send(:include, DbCharmer::AssociationProxy::InstanceMethods)
+ActiveRecord::NamedScope::Scope.send(:include, DbCharmer::ScopeProxy::InstanceMethods)
 
 puts "Doing the magic..."
 
