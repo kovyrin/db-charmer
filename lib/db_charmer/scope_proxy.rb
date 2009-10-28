@@ -1,7 +1,8 @@
 module DbCharmer
   module ScopeProxy
     module InstanceMethods
-      def on_db(con, &block)
+      def on_db(con, proxy_target = nil, &block)
+        proxy_target ||= self
         proxy_scope.on_db(con, self, &block)
       end
 

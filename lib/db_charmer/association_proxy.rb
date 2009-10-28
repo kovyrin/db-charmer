@@ -1,8 +1,9 @@
 module DbCharmer
   module AssociationProxy
     module InstanceMethods
-      def on_db(con, &block)
-        @reflection.klass.on_db(con, self, &block)
+      def on_db(con, proxy_target = nil, &block)
+        proxy_target ||= self
+        @reflection.klass.on_db(con, proxy_target, &block)
       end
 
       def on_slave(con = nil, &block)
