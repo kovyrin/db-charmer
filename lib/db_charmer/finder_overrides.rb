@@ -5,7 +5,7 @@ module DbCharmer
       MASTER_METHODS = [ :update, :create, :delete, :destroy, :delete_all, :destroy_all, :update_all, :update_counters ]
 
       SLAVE_METHODS.each do |slave_method|
-        class_eval <<-EOF
+        class_eval <<-EOF, __FILE__, __LINE__ + 1
           def #{slave_method}(*args, &block)
             first_level_on_slave do
               super(*args, &block)
@@ -15,7 +15,7 @@ module DbCharmer
       end
 
       MASTER_METHODS.each do |master_method|
-        class_eval <<-EOF
+        class_eval <<-EOF, __FILE__, __LINE__ + 1
           def #{master_method}(*args, &block)
             on_master do
               super(*args, &block)
