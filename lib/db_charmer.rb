@@ -1,4 +1,4 @@
-puts "Loading DbCharmer..."
+#puts "Loading DbCharmer..."
 
 module DbCharmer
   @@migration_connections_should_exist = Rails.env.production?
@@ -31,7 +31,7 @@ class Object
   end
 end
 
-puts "Extending AR..."
+#puts "Extending AR..."
 
 require 'db_charmer/active_record_extensions'
 require 'db_charmer/connection_factory'
@@ -79,7 +79,7 @@ module ActiveRecord
   end
 end
 
-puts "Doing the magic..."
+#puts "Doing the magic..."
 
 require 'db_charmer/db_magic'
 require 'db_charmer/finder_overrides'
