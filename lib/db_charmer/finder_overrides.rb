@@ -24,6 +24,12 @@ module DbCharmer
         EOF
       end
 
+      def find(*args, &block)
+        options = args.extract_options!
+        on_master { super(*args, &block) } if options[:lock]
+        super(*args, &block)
+      end
+
     private
 
       def first_level_on_slave
