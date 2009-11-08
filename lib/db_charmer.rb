@@ -1,5 +1,3 @@
-#puts "Loading DbCharmer..."
-
 module DbCharmer
   @@migration_connections_should_exist = Rails.env.production?
   mattr_accessor :migration_connections_should_exist
@@ -65,8 +63,6 @@ end
 # We need blankslate for all the proxies we have
 require 'blankslate'
 
-#puts "Extending AR..."
-
 require 'db_charmer/active_record_extensions'
 require 'db_charmer/abstract_adapter_extensions'
 
@@ -115,8 +111,6 @@ module ActiveRecord
     end
   end
 end
-
-#puts "Doing the magic..."
 
 require 'db_charmer/db_magic'
 require 'db_charmer/finder_overrides'
