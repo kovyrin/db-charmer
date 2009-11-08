@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{db-charmer}
-  s.version = "1.4.3"
+  s.version = "1.4.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexey Kovyrin"]
@@ -34,7 +34,8 @@ Gem::Specification.new do |s|
      "lib/db_charmer/finder_overrides.rb",
      "lib/db_charmer/multi_db_migrations.rb",
      "lib/db_charmer/multi_db_proxy.rb",
-     "lib/db_charmer/scope_proxy.rb"
+     "lib/db_charmer/scope_proxy.rb",
+     "lib/tasks/databases.rake"
   ]
   s.homepage = %q{http://github.com/kovyrin/db-charmer}
   s.rdoc_options = ["--charset=UTF-8"]
