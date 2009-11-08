@@ -3,7 +3,7 @@ module DbCharmer
     module Method
       class HashMap
         attr_accessor :map
-        
+
         def initialize(config)
           @map = config[:map] or raise ArgumentError, "No :map defined!"
         end
@@ -13,7 +13,7 @@ module DbCharmer
           raise ArgumentError, "Invalid key value, no shards found for this key!" unless res
           return res
         end
-        
+
       end
     end
   end
