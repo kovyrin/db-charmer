@@ -25,8 +25,8 @@ module DbCharmer
       end
 
       def find(*args, &block)
-        options = args.extract_options!
-        if options[:lock]
+        options = args.last
+        if options.is_a?(Hash) && options[:lock]
           on_master { super(*args, &block) }
         else
           super(*args, &block)
