@@ -26,8 +26,11 @@ module DbCharmer
 
       def find(*args, &block)
         options = args.extract_options!
-        on_master { super(*args, &block) } if options[:lock]
-        super(*args, &block)
+        if options[:lock]
+          on_master { super(*args, &block) }
+        else
+          super(*args, &block)
+        end
       end
 
     private
