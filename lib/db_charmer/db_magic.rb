@@ -18,7 +18,7 @@ module DbCharmer
 
         # Setup inheritance magic
         setup_children_magic(opt)
-        
+
         # Setup sharding if needed
         if opt[:sharded]
           raise ArgumentError, "Can't use sharding on a model with slaves!" if opt[:slaves].any? 
@@ -59,3 +59,4 @@ module DbCharmer
     end
   end
 end
+
