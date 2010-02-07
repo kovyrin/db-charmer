@@ -9,6 +9,7 @@ begin
     gemspec.authors = ['Alexey Kovyrin']
 
     gemspec.add_dependency('rails', '>= 2.2.0')
+    gemspec.add_dependency('blankslate', '>= 0')
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

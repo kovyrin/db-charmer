@@ -31,6 +31,9 @@ class Object
   end
 end
 
+# We need blankslate for all the proxies we have
+require 'blankslate'
+
 #puts "Extending AR..."
 
 require 'db_charmer/active_record_extensions'
