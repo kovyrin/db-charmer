@@ -1,3 +1,15 @@
+1.5.0 -> 1.5.1:
+
+In this version we've added support for connection names logging in Rails queries log.
+New log records have [connection_name] prefix for all queries that are executed on
+non-standard connections:
+
+[logs]   LogRecord Columns (1.1ms)   SHOW FIELDS FROM `log_records`
+[logs]   User Delete all (0.1ms)   DELETE FROM `users`
+[slave01]   User Load (0.2ms)   SELECT * FROM `users` WHERE (`users`.`login` = 'foo')
+
+----------------------------------------------------------------------------------------
+
 1.4.6 -> 1.5.0:
 
 Major change in this version of DbCharmer is association preload support. For example,
