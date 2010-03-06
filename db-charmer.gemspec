@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{db-charmer}
-  s.version = "1.4.6"
+  s.version = "1.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexey Kovyrin"]
-  s.date = %q{2009-11-09}
+  s.date = %q{2010-03-05}
   s.description = %q{ActiveRecord Connections Magic (slaves, multiple connections, etc)}
   s.email = %q{alexey@kovyrin.net}
   s.extra_rdoc_files = [
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     ".gitignore",
+     "CHANGES",
      "LICENSE",
      "Makefile",
      "README.rdoc",
@@ -27,6 +28,7 @@ Gem::Specification.new do |s|
      "init.rb",
      "lib/db_charmer.rb",
      "lib/db_charmer/active_record_extensions.rb",
+     "lib/db_charmer/association_preload.rb",
      "lib/db_charmer/connection_factory.rb",
      "lib/db_charmer/connection_proxy.rb",
      "lib/db_charmer/connection_switch.rb",
@@ -40,7 +42,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/kovyrin/db-charmer}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{ActiveRecord Connections Magic}
 
   if s.respond_to? :specification_version then
@@ -49,11 +51,14 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rails>, [">= 2.2.0"])
+      s.add_runtime_dependency(%q<blankslate>, [">= 0"])
     else
       s.add_dependency(%q<rails>, [">= 2.2.0"])
+      s.add_dependency(%q<blankslate>, [">= 0"])
     end
   else
     s.add_dependency(%q<rails>, [">= 2.2.0"])
+    s.add_dependency(%q<blankslate>, [">= 0"])
   end
 end
 
