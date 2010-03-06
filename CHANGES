@@ -1,0 +1,22 @@
+1.4.6 -> 1.5.0:
+
+Major change in this version of DbCharmer is association preload support. For example,
+let's say we have a schema:
+
+    class Post < ActiveRecord::Base
+      belongs_to :user
+    end
+
+    class User < ActiveRecord::Base
+      has_many :posts
+    end
+
+Now, if we have the following call in our code:
+
+    User.on_db(:foo).all(:include => :posts)
+
+In 1.4.6 it would load the users from connection :foo and posts from the
+default connection, which is not what we would expect from this line of code.
+So, starting 1.5.0 all finder calls on models having :include parameter would
+switch associated models' connections to the same connection as the main model
+in the call.
