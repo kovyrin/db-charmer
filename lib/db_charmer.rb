@@ -86,6 +86,7 @@ end
 
 require 'db_charmer/db_magic'
 require 'db_charmer/finder_overrides'
+require 'db_charmer/association_preload'
 require 'db_charmer/multi_db_migrations'
 require 'db_charmer/multi_db_proxy'
 
@@ -94,3 +95,6 @@ ActiveRecord::Migration.extend(DbCharmer::MultiDbMigrations)
 
 # Enable the magic
 ActiveRecord::Base.extend(DbCharmer::DbMagic::ClassMethods)
+
+# Setup association preload magic
+ActiveRecord::Base.extend(DbCharmer::AssociationPreload::ClassMethods)

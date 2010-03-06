@@ -15,7 +15,7 @@ module DbCharmer
         opt[:slaves] ||= []
         opt[:slaves] << opt[:slave] if opt[:slave]
         db_magic_slaves(opt[:slaves], should_exist) if opt[:slaves].any?
-        
+
         # Setup inheritance magic
         setup_children_magic(opt)
       end
@@ -24,7 +24,7 @@ module DbCharmer
 
       def setup_children_magic(opt)
         self.db_charmer_opts = opt.clone
-        
+
         def self.inherited(child)
           child.db_magic(self.db_charmer_opts)
           super
