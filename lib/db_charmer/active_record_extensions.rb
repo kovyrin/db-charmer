@@ -8,6 +8,7 @@ module DbCharmer
           raise ArgumentError, "Invalid connection name (does not exist in database.yml): #{RAILS_ENV}/#{name}"
         end
         establish_connection(config) if config
+        connection.connection_name = name.to_s
       end
 
       #-----------------------------------------------------------------------------

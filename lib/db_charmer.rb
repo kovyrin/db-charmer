@@ -37,6 +37,8 @@ require 'blankslate'
 #puts "Extending AR..."
 
 require 'db_charmer/active_record_extensions'
+require 'db_charmer/abstract_adapter_extensions'
+
 require 'db_charmer/connection_factory'
 require 'db_charmer/connection_proxy'
 require 'db_charmer/connection_switch'
@@ -45,6 +47,7 @@ require 'db_charmer/multi_db_proxy'
 
 # Enable misc AR extensions
 ActiveRecord::Base.extend(DbCharmer::ActiveRecordExtensions::ClassMethods)
+ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, DbCharmer::AbstractAdapterExtensions::InstanceMethods)
 
 # Enable connections switching in AR
 ActiveRecord::Base.extend(DbCharmer::ConnectionSwitch::ClassMethods)
