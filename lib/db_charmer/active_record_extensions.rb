@@ -7,8 +7,11 @@ module DbCharmer
         if should_exist && !config
           raise ArgumentError, "Invalid connection name (does not exist in database.yml): #{RAILS_ENV}/#{name}"
         end
-        establish_connection(config) if config
-        connection.connection_name = name.to_s
+        # If there is no config, use default one
+        config ||= configurations[RAILS_ENV].clone
+        # Pass connection name with config
+        config[:connection_name] = name.to_s
+        establish_connection(config)
       end
 
       #-----------------------------------------------------------------------------
