@@ -1,3 +1,11 @@
+1.5.1 -> 1.5.3:
+
+Few changes:
+ * Colorized connection names in the logs for development mode
+ * We do not log connection names when connection does not exist
+
+----------------------------------------------------------------------------------------
+
 1.5.0 -> 1.5.1:
 
 In this version we've added support for connection names logging in Rails queries log.
