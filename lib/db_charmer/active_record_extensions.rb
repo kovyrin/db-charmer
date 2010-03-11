@@ -3,12 +3,12 @@ module DbCharmer
     module ClassMethods
 
       def establish_real_connection_if_exists(name, should_exist = false)
-        config = configurations[RAILS_ENV][name.to_s]
-        if should_exist && !config
-          raise ArgumentError, "Invalid connection name (does not exist in database.yml): #{RAILS_ENV}/#{name}"
+        unless config = configurations[RAILS_ENV][name.to_s]
+          if should_exist
+            raise ArgumentError, "Invalid connection name (does not exist in database.yml): #{RAILS_ENV}/#{name}"
+          end
+          return # No need to establish connection - they do not want us to
         end
-        # If there is no config, use default one
-        config ||= configurations[RAILS_ENV].clone
         # Pass connection name with config
         config[:connection_name] = name.to_s
         establish_connection(config)
