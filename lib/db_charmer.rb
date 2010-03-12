@@ -19,6 +19,16 @@ module DbCharmer
     return Rails.logger if defined?(Rails)
     @logger ||= Logger.new(STDERR)
   end
+  
+  def self.with_remapped_databases(mappings)
+    old_mappings = ActiveRecord::Base.db_charmer_database_remappings
+    begin
+      ActiveRecord::Base.db_charmer_database_remappings = mappings
+      yield
+    ensure
+      ActiveRecord::Base.db_charmer_database_remappings = old_mappings
+    end
+  end
 end
 
 class Object

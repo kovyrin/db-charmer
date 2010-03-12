@@ -21,7 +21,7 @@ module DbCharmer
     # Establish connection with a specified name
     def self.establish_connection(db_name, should_exist = false)
       abstract_class = generate_abstract_class(db_name, should_exist)
-      DbCharmer::ConnectionProxy.new(abstract_class)
+      DbCharmer::ConnectionProxy.new(abstract_class, db_name)
     end
 
     # Generate an abstract AR class with specified connection established

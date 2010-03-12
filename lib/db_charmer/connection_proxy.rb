@@ -1,7 +1,12 @@
 module DbCharmer
   class ConnectionProxy < BlankSlate
-    def initialize(abstract_class)
+    def initialize(abstract_class, db_name)
       @abstract_connection_class = abstract_class
+      @db_name = db_name
+    end
+
+    def db_charmer_connection_name
+      @db_name
     end
 
     def method_missing(meth, *args, &block)

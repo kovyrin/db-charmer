@@ -64,11 +64,31 @@ module DbCharmer
       end
 
       #-----------------------------------------------------------------------------
+      @@db_charmer_database_remappings = Hash.new
+      def db_charmer_remapped_connection
+        return nil if (db_charmer_connection_level || 0) > 0
+        name = db_charmer_connection_proxy.db_charmer_connection_name if db_charmer_connection_proxy
+        name = (name || :master).to_sym
+        
+        remapped = @@db_charmer_database_remappings[name]
+        return DbCharmer::ConnectionFactory.connect(remapped, true) if remapped
+      end
+      
+      def db_charmer_database_remappings
+        @@db_charmer_database_remappings
+      end
+      
+      def db_charmer_database_remappings=(mappings)
+        raise "Mappings must be nil or respond to []" if mappings && (! mappings.respond_to?(:[]))
+        @@db_charmer_database_remappings = mappings || { }
+      end
+
+      #-----------------------------------------------------------------------------
       def hijack_connection!
         return if self.respond_to?(:connection_with_magic)
         class << self
           def connection_with_magic
-            db_charmer_connection_proxy || connection_without_magic
+            db_charmer_remapped_connection || db_charmer_connection_proxy || connection_without_magic
           end
           alias_method_chain :connection, :magic
         end

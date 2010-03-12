@@ -232,6 +232,23 @@ and HABTM associations connection switching:
   @user.on_slave.posts
 
 
+=== Bulk Connection Management
+
+Sometimes you want to run code where a large number of tables may be used, and you'd like
+them all to use an alternate database. You can now do this:
+
+  DbCharmer.with_remapped_databases(:logs => :big_logs_slave) { ... }
+
+Any model whose default database is +:logs+ (e.g., <tt>db_charmer :connection => :logs</tt>)
+will now have its connection switched to +:big_logs_slave+ in that block. This is lower
+precedence than any other +DbCharmer+ method, so <tt>Model.on_db(:foo).find(...)</tt> and
+such things will still use the database they specify, not the one that model was remapped
+to.
+
+You can specify any number of remappings at once, and you can also use +:master+ as a database
+name that matches any model that has not had its connection set by +DbCharmer+ at all.
+
+
 === Named Scopes Support
 
 To make it easier for +DbCharmer+ users to use connections switching methods with named scopes,
