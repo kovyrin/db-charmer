@@ -248,6 +248,12 @@ to.
 You can specify any number of remappings at once, and you can also use +:master+ as a database
 name that matches any model that has not had its connection set by +DbCharmer+ at all.
 
+*Note*: +DbCharmer+ works via +alias_method_chain+ in model classes. It is very careful
+to only patch the models it needs to. However, if you use +with_remapped_databases+ and 
+remap the default database (+:master+), then it has no choice but to patch all subclasses
+of +ActiveRecord::Base+. This should not cause any serious problems or any big performance
+impact, but it is worth noting.
+
 
 === Named Scopes Support
 

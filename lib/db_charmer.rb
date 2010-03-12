@@ -20,13 +20,34 @@ module DbCharmer
     @logger ||= Logger.new(STDERR)
   end
   
-  def self.with_remapped_databases(mappings)
+  def self.with_remapped_databases(mappings, &proc)
     old_mappings = ActiveRecord::Base.db_charmer_database_remappings
     begin
       ActiveRecord::Base.db_charmer_database_remappings = mappings
-      yield
+      if mappings[:master] || mappings['master']
+        with_all_hijacked(&proc)
+      else
+        proc.call
+      end
     ensure
       ActiveRecord::Base.db_charmer_database_remappings = old_mappings
+    end
+  end
+  
+  def self.hijack_new_classes?
+    @@hijack_new_classes
+  end
+  
+  private
+  @@hijack_new_classes = false
+  def self.with_all_hijacked
+    old_hijack_new_classes = @@hijack_new_classes
+    begin
+      @@hijack_new_classes = true
+      ActiveRecord::Base.send(:subclasses).each { |s| s.hijack_connection! }
+      yield
+    ensure
+      @@hijack_new_classes = old_hijack_new_classes
     end
   end
 end
@@ -111,3 +132,15 @@ ActiveRecord::Base.extend(DbCharmer::DbMagic::ClassMethods)
 
 # Setup association preload magic
 ActiveRecord::Base.extend(DbCharmer::AssociationPreload::ClassMethods)
+
+class ActiveRecord::Base
+  class << self
+    def inherited_with_hijacking(subclass)
+      out = inherited_without_hijacking(subclass)
+      hijack_connection! if DbCharmer.hijack_new_classes?
+      out
+    end
+    
+    alias_method_chain :inherited, :hijacking
+  end
+end
