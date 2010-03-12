@@ -1,3 +1,11 @@
+1.5.3 -> :
+
+Added DbCharmer.with_remapped_databases, so that you can change the connection for
+many models simultaneously, and implicitly. Very useful for work where you want to use
+a particular slave for a whole range of database access.
+
+----------------------------------------------------------------------------------------
+
 1.5.1 -> 1.5.3:
 
 Few changes:
