@@ -19,8 +19,9 @@ module DbCharmer
     end
 
     def db_magic(opts = {})
+      opts[:connection] = opts[:connections] if opts[:connections]
       raise ArgumentError, "No connection name - no magic!" unless opts[:connection]
-      @multi_db_names = opts[:connection].kind_of?(Array) ? opts[:connection] : [opts[:connection]]
+      @multi_db_names = [opts[:connection]].flatten
       class << self
         alias_method_chain :migrate, :db_wrapper
       end
