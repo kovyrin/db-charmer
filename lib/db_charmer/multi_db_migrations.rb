@@ -1,9 +1,9 @@
 module DbCharmer
   module MultiDbMigrations
-    @@multi_db_name = nil
+    @multi_db_names = nil
 
     def migrate_with_db_wrapper(direction)
-      on_db(@@multi_db_name) { migrate_without_db_wrapper(direction) }
+      @multi_db_names.each { |multi_db_name| on_db(multi_db_name) { migrate_without_db_wrapper(direction) } }
     end
 
     def on_db(db_name)
@@ -19,8 +19,9 @@ module DbCharmer
     end
 
     def db_magic(opts = {})
+      opts[:connection] = opts[:connections] if opts[:connections]
       raise ArgumentError, "No connection name - no magic!" unless opts[:connection]
-      @@multi_db_name = opts[:connection]
+      @multi_db_names = [opts[:connection]].flatten
       class << self
         alias_method_chain :migrate, :db_wrapper
       end
