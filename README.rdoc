@@ -112,20 +112,20 @@ Migration class example (block-level connection rewrite):
 Migration class example (global connection rewrite, multiple connections with the same table):
 (NOTE: both :connection and :connections can take an array of connections)
 
-class MultiDbTest < ActiveRecord::Migration
-   db_magic :connections => [:second_db, :default]
+  class MultiDbTest < ActiveRecord::Migration
+    db_magic :connections => [:second_db, :default]
 
-   def self.up
-     create_table :test_table, :force => true do |t|
-       t.string :test_string
-       t.timestamps
-     end
-   end
+    def self.up
+      create_table :test_table, :force => true do |t|
+        t.string :test_string
+        t.timestamps
+      end
+    end
 
-   def self.down
-     drop_table :test_table
-   end
- end
+    def self.down
+      drop_table :test_table
+    end
+  end
 
 By default in development and test environments you could skip this <tt>:second_db</tt>
 connection from your database.yml files and rails would create the tables in your single database,
