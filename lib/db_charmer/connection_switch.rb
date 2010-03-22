@@ -8,6 +8,12 @@ module DbCharmer
           return DbCharmer::ConnectionFactory.connect(conn, should_exist)
         end
 
+        if conn.kind_of?(Hash)
+          conn = conn.symbolize_keys
+          raise ArgumentError, "Missing required :name parameter" unless conn[:name]
+          return DbCharmer::ConnectionFactory.connect_to_db(conn[:name], conn)
+        end
+
         if conn.respond_to?(:db_charmer_connection_proxy)
           return conn.db_charmer_connection_proxy
         end
