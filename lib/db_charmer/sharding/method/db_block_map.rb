@@ -18,7 +18,7 @@ module DbCharmer
         # Shards table name
         attr_accessor :shards_table
 
-        # Sharding key block size
+        # Sharding keys block size
         attr_accessor :block_size
 
         def initialize(config)
