@@ -28,6 +28,10 @@ module DbCharmer
 
           @map_table = config[:map_table] or raise(ArgumentError, "Missing required :map_table parameter!")
           @shards_table = config[:shards_table] or raise(ArgumentError, "Missing required :shards_table parameter!")
+
+          # Local caches
+          @shard_info_cache = {}
+          @blocks_cache = {}
         end
 
         def shard_for_key(key)
@@ -46,8 +50,6 @@ module DbCharmer
           shard_connection_config(shard_info)
         end
 
-      private
-
         class ShardInfo < ActiveRecord::Base
           validates_presence_of :db_host
           validates_presence_of :db_port
@@ -57,17 +59,29 @@ module DbCharmer
         end
 
         # Returns a block for a key
-        # FIXME: add caching
-        def block_for_key(key)
-          sql = "SELECT * FROM #{map_table} WHERE #{key} >= start_id AND #{key} < end_id LIMIT 1"
-          connection.select_one(sql, 'Find a shard block')
+        def block_for_key(key, cache = true)
+          # Cleanup the cache if asked to
+          key_range = [ block_start_for_key(key), block_end_for_key(key) ]
+          block_cache_key = "%d-%d" % key_range
+          @blocks_cache[block_cache_key] = nil unless cache
+
+          # Fetch cached value or load from db
+          @blocks_cache[block_cache_key] ||= begin
+            sql = "SELECT * FROM #{map_table} WHERE start_id = #{key_range.first} AND end_id = #{key_range.last} LIMIT 1"
+            connection.select_one(sql, 'Find a shard block')
+          end
         end
 
         # Load shard info
-        # FIXME: add caching
-        def shard_info_by_id(shard_id)
-          prepare_shard_model
-          ShardInfo.find_by_id(shard_id)
+        def shard_info_by_id(shard_id, cache = true)
+          # Cleanup the cache if asked to
+          @shard_info_cache[shard_id] = nil unless cache
+
+          # Either load from cache or from db
+          @shard_info_cache[shard_id] ||= begin
+            prepare_shard_model
+            ShardInfo.find_by_id(shard_id)
+          end
         end
 
         def allocate_new_block_for_key(key)
@@ -130,8 +144,6 @@ module DbCharmer
             :database => shard.db_name
           )
         end
-
-      public
 
         def create_shard(params)
           params = params.symbolize_keys
