@@ -21,7 +21,7 @@ module DbCharmer
         end
 
         def support_default_shard?
-          !! ranges[:default]
+          ranges.has_key?(:default)
         end
       end
     end

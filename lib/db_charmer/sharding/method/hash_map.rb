@@ -5,7 +5,7 @@ module DbCharmer
         attr_accessor :map
 
         def initialize(config)
-          @map = config[:map] or raise ArgumentError, "No :map defined!"
+          @map = config[:map].clone or raise ArgumentError, "No :map defined!"
         end
 
         def shard_for_key(key)
@@ -15,7 +15,7 @@ module DbCharmer
         end
 
         def support_default_shard?
-          !! map[:default]
+          map.has_key?(:default)
         end
       end
     end
