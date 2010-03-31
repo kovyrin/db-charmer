@@ -3,14 +3,16 @@ module DbCharmer
     module ClassMethods
 
       def establish_real_connection_if_exists(name, should_exist = false)
-        unless config = configurations[RAILS_ENV][name.to_s]
+        name = name.to_s
+        config = configurations[RAILS_ENV][name]
+        unless config
           if should_exist
             raise ArgumentError, "Invalid connection name (does not exist in database.yml): #{RAILS_ENV}/#{name}"
           end
           return # No need to establish connection - they do not want us to
         end
         # Pass connection name with config
-        config[:connection_name] = name.to_s
+        config[:connection_name] = name
         establish_connection(config)
       end
 
@@ -69,15 +71,15 @@ module DbCharmer
         return nil if (db_charmer_connection_level || 0) > 0
         name = db_charmer_connection_proxy.db_charmer_connection_name if db_charmer_connection_proxy
         name = (name || :master).to_sym
-        
+
         remapped = @@db_charmer_database_remappings[name]
         return DbCharmer::ConnectionFactory.connect(remapped, true) if remapped
       end
-      
+
       def db_charmer_database_remappings
         @@db_charmer_database_remappings
       end
-      
+
       def db_charmer_database_remappings=(mappings)
         raise "Mappings must be nil or respond to []" if mappings && (! mappings.respond_to?(:[]))
         @@db_charmer_database_remappings = mappings || { }

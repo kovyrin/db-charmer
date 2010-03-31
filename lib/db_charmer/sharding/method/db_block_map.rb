@@ -9,7 +9,7 @@ module DbCharmer
         # Sharder name
         attr_accessor :name
 
-        # Dictionary db connection
+        # Mapping db connection
         attr_accessor :connection, :connection_name
 
         # Mapping table name
@@ -33,49 +33,20 @@ module DbCharmer
         def shard_for_key(key)
           block = block_for_key(key)
 
-          # FIXME: Auto-allocate new blocks
-          raise ArgumentError, "Invalid key value, no shards found for this key!" unless block
+          # Auto-allocate new blocks
+          block ||= allocate_new_block_for_key(key)
+          raise ArgumentError, "Invalid key value, no shards found for this key and could not create a new block!" unless block
 
           # Bail if no shard found
           shard_id = block['shard_id'].to_i
           shard_info = shard_info_by_id(shard_id)
           raise ArgumentError, "Invalid shard_id: #{shard_id}" unless shard_info
 
-          # Format connection config and return it
-          shard_name = "db_charmer_db_block_dict_#{name}_shard_%05" % shard_id
-          return shard_connection_config(shard_name, shard_info)
+          # Get config
+          shard_connection_config(shard_info)
         end
 
       private
-
-        def block_for_key(key)
-          # FIXME: add caching
-          sql = "SELECT * FROM #{dict_table} WHERE #{key} >= start_key AND #{key} < end_key LIMIT 1"
-          connection.select_one(sql, 'Find a shard block')
-        end
-
-        # Load shard info
-        def shard_info_by_id(shard_id)
-          # FIXME: add caching
-          sql = "SELECT * FROM #{shards_table} WHERE id = #{shard_id} LIMIT 1"
-          connection.select_one(sql, 'Find a shard info')
-        end
-
-        # Create configuration (use dict connection as a template)
-        def shard_connection_config(shard_name, shard_info)
-          connection.config.clone.merge(
-            # Name for the connection factory
-            :name => shard_name,
-            # Connection params
-            :host => shard_info['db_host'],
-            :port => shard_info['db_port'],
-            :username => shard_info['db_user'],
-            :password => shard_info['db_pass'],
-            :database => shard_info['db_name']
-          )
-        end
-
-      public
 
         class ShardInfo < ActiveRecord::Base
           validates_presence_of :db_host
@@ -85,6 +56,83 @@ module DbCharmer
           validates_presence_of :db_name
         end
 
+        # Returns a block for a key
+        # FIXME: add caching
+        def block_for_key(key)
+          sql = "SELECT * FROM #{map_table} WHERE #{key} >= start_id AND #{key} < end_id LIMIT 1"
+          connection.select_one(sql, 'Find a shard block')
+        end
+
+        # Load shard info
+        # FIXME: add caching
+        def shard_info_by_id(shard_id)
+          prepare_shard_model
+          ShardInfo.find_by_id(shard_id)
+        end
+
+        def allocate_new_block_for_key(key)
+          # Can't find any shards to use for blocks allocation!
+          return nil unless shard = least_loaded_shard
+
+          # Figure out block limits
+          start_id = block_start_for_key(key)
+          end_id = block_end_for_key(key)
+
+          # Try to insert a new mapping (ignore duplicate key errors)
+          sql = <<-SQL
+            INSERT IGNORE INTO #{map_table}
+                           SET start_id = #{start_id},
+                               end_id = #{end_id},
+                               shard_id = #{shard.id},
+                               block_size = #{block_size},
+                               created_at = NOW(),
+                               updated_at = NOW()
+          SQL
+          connection.execute(sql, "Allocate new block")
+
+          # Retry block search after creation
+          block_for_key(key)
+        end
+
+        def least_loaded_shard
+          prepare_shard_model
+
+          # Select shard
+          shard = ShardInfo.all(:conditions => { :enabled => true, :open => true }, :order => 'blocks_count ASC', :limit => 1).first
+          raise "Can't find any shards to use for blocks allocation!" unless shard
+          return shard
+        end
+
+        def block_start_for_key(key)
+          block_size.to_i * (key.to_i / block_size.to_i)
+        end
+
+        def block_end_for_key(key)
+          block_size.to_i + block_start_for_key(key)
+        end
+
+        # Create configuration (use mapping connection as a template)
+        def shard_connection_config(shard)
+          # Format connection name
+          shard_name = "db_charmer_db_block_map_#{name}_shard_%05d" % shard.id
+
+          # Here we get the mapping connection's configuration
+          # They do not expose configs so we hack in and get the instance var
+          # FIXME: Find a better way, maybe move config method to our ar extenstions
+          connection.instance_variable_get(:@config).clone.merge(
+            # Name for the connection factory
+            :name => shard_name,
+            # Connection params
+            :host => shard.db_host,
+            :port => shard.db_port,
+            :username => shard.db_user,
+            :password => shard.db_pass,
+            :database => shard.db_name
+          )
+        end
+
+      public
+
         def create_shard(params)
           params = params.symbolize_keys
           [ :db_host, :db_port, :db_user, :db_pass, :db_name ].each do |arg|
@@ -92,8 +140,7 @@ module DbCharmer
           end
 
           # Prepare model
-          ShardInfo.set_table_name(shards_table)
-          ShardInfo.switch_connection_to(connection)
+          prepare_shard_model
 
           # Create the record
           ShardInfo.create! do |shard|
@@ -103,6 +150,20 @@ module DbCharmer
             shard.db_pass = params[:db_pass]
             shard.db_name = params[:db_name]
           end
+        end
+
+        def shard_connections
+          # Find all shards
+          prepare_shard_model
+          shards = ShardInfo.all(:conditions => { :enabled => true })
+          # Map them to connections
+          shards.map { |shard| shard_connection_config(shard) }
+        end
+
+        # Prepare model for working with our shards table
+        def prepare_shard_model
+          ShardInfo.set_table_name(shards_table)
+          ShardInfo.switch_connection_to(connection)
         end
 
       end

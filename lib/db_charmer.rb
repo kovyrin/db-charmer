@@ -17,7 +17,7 @@ module DbCharmer
     return Rails.logger if defined?(Rails)
     @logger ||= Logger.new(STDERR)
   end
-  
+
   def self.with_remapped_databases(mappings, &proc)
     old_mappings = ActiveRecord::Base.db_charmer_database_remappings
     begin
@@ -31,18 +31,21 @@ module DbCharmer
       ActiveRecord::Base.db_charmer_database_remappings = old_mappings
     end
   end
-  
+
   def self.hijack_new_classes?
     @@hijack_new_classes
   end
-  
-  private
+
+private
+
   @@hijack_new_classes = false
   def self.with_all_hijacked
     old_hijack_new_classes = @@hijack_new_classes
     begin
       @@hijack_new_classes = true
-      ActiveRecord::Base.send(:subclasses).each { |s| s.hijack_connection! }
+      ActiveRecord::Base.send(:subclasses).each do |subclass|
+        subclass.hijack_connection!
+      end
       yield
     ensure
       @@hijack_new_classes = old_hijack_new_classes
@@ -50,6 +53,8 @@ module DbCharmer
   end
 end
 
+# These methods are added to all objects so we could call proxy? on anything
+# and figure if an object is a proxy w/o hitting method_missing or respond_to?
 class Object
   def self.proxy?
     false
@@ -134,7 +139,7 @@ class ActiveRecord::Base
       hijack_connection! if DbCharmer.hijack_new_classes?
       out
     end
-    
+
     alias_method_chain :inherited, :hijacking
   end
 end

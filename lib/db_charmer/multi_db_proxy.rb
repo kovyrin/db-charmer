@@ -1,5 +1,7 @@
 module DbCharmer
   module MultiDbProxy
+    # Simple proxy class that switches connections and then proxies all the calls
+    # This class is used to implement chained on_db calls
     class OnDbProxy < BlankSlate
       def initialize(proxy_target, slave)
         @proxy_target = proxy_target
@@ -10,8 +12,8 @@ module DbCharmer
 
       def method_missing(meth, *args, &block)
         # Switch connection and proxy the method call
-        @proxy_target.on_db(@slave) do |m|
-          res = m.__send__(meth, *args, &block)
+        @proxy_target.on_db(@slave) do |proxy_target|
+          res = proxy_target.__send__(meth, *args, &block)
 
           # If result is a scope/association, return a new proxy for it, otherwise return the result itself
           (res.proxy?) ? OnDbProxy.new(res, @slave) : res
