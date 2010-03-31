@@ -361,8 +361,8 @@ of sharded connections initizlization calls:
   }
 
   DbCharmer::Sharding.register_connection(
-    :name => :texts,
-    :method => :range,
+    :name => :users,
+    :method => :hash_map,
     :map => SHARDING_MAP
   )
 
