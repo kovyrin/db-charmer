@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{db-charmer}
-  s.version = "1.5.5"
+  s.version = "1.6.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexey Kovyrin"]
-  s.date = %q{2010-03-15}
+  s.date = %q{2010-03-31}
   s.description = %q{ActiveRecord Connections Magic (slaves, multiple connections, etc)}
   s.email = %q{alexey@kovyrin.net}
   s.extra_rdoc_files = [
@@ -38,6 +38,12 @@ Gem::Specification.new do |s|
      "lib/db_charmer/multi_db_migrations.rb",
      "lib/db_charmer/multi_db_proxy.rb",
      "lib/db_charmer/scope_proxy.rb",
+     "lib/db_charmer/sharding.rb",
+     "lib/db_charmer/sharding/connection.rb",
+     "lib/db_charmer/sharding/method/db_block_map.rb",
+     "lib/db_charmer/sharding/method/hash_map.rb",
+     "lib/db_charmer/sharding/method/range.rb",
+     "lib/db_charmer/stub_connection.rb",
      "lib/tasks/databases.rake"
   ]
   s.homepage = %q{http://github.com/kovyrin/db-charmer}
