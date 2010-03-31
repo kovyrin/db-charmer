@@ -293,7 +293,10 @@ impact, but it is worth noting.
 == Simple Sharding Support
 
 Starting with the release 1.6.0 of +DbCharmer+ we have added support for simple database sharding
-to our ActiveRecord extensions. At this point we support three sharding methods:
+to our ActiveRecord extensions. The feature is still in alpha stage and should not be used in
+production without complete understanding of the principles of its work.
+
+At this point we support three sharding methods:
 
 1) range - really simple sharding method that allows you to take a table, slice is to a set of
 smaller tables with pre-defined ranges of primary keys and then put those smaller tables to

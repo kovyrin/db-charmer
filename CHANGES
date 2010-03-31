@@ -1,3 +1,10 @@
+1.6.0 (2010-03-31):
+
+The major (and arguably the only noticeable) change in this version is our simple database
+sharding support. The feature is still in alpha stage and should not be used in production
+without complete understanding of the principles of its work.
+
+----------------------------------------------------------------------------------------
 1.5.5 (2010-03-15):
 
 Thanks to ngmoco.com (http://github.com/ngmoco) now DbCharmer supports one more use-case
