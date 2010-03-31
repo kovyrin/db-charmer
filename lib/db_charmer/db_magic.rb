@@ -23,6 +23,7 @@ module DbCharmer
         if opt[:sharded]
           raise ArgumentError, "Can't use sharding on a model with slaves!" if opt[:slaves].any?
           setup_sharding_magic(opt[:sharded])
+          setup_connection_magic(DbCharmer::StubConnection.new)
         end
       end
 
@@ -37,8 +38,6 @@ module DbCharmer
         end
       end
 
-      # FIXME: Need to make sure models won't work w/o a connection switching call
-      # ... possible option is to set a dummy erroring default connection here...
       def setup_sharding_magic(config)
         self.extend(DbCharmer::Sharding::ClassMethods)
         name = config[:sharded_connection] or raise ArgumentError, "No :sharded_connection!"
