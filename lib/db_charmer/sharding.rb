@@ -11,8 +11,21 @@ module DbCharmer
         on_db(conn, proxy_target, &block)
       end
 
+      # Run on default shard (if supported by the sharding method)
+      def on_default_shard(proxy_target = nil, &block)
+        raise ArgumentError, "No sharded connection configured!" unless sharded_connection
+
+        if sharded_connection.support_default_shard?
+          shard_for(:default, proxy_target, &block)
+        else
+          raise ArgumentError, "This model's sharding method does not support default shard"
+        end
+      end
+
       # Enumerate shards
       def on_each_shard(proxy_target = nil, &block)
+        raise ArgumentError, "No sharded connection configured!" unless sharded_connection
+
         conns = sharded_connection.shard_connections
         raise ArgumentError, "This model's sharding method does not support shards enumeration" unless conns
 

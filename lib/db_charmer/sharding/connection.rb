@@ -18,6 +18,10 @@ module DbCharmer
       def shard_connections
         sharder.respond_to?(:shard_connections) ? sharder.shard_connections : nil
       end
+
+      def support_default_shard?
+        sharder.respond_to?(:support_default_shard?) && sharder.support_default_shard?
+      end
     end
   end
 end

@@ -14,6 +14,9 @@ module DbCharmer
           return res
         end
 
+        def support_default_shard?
+          !! map[:default]
+        end
       end
     end
   end
