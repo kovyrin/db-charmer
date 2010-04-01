@@ -1,3 +1,11 @@
+1.6.1 (2010-03-31):
+
+Breaking change from now on all connection-switching methods (both in migrations and in
+models) are controlled by a single option DbCharmer.connections_should_exist. This
+option is false by default in all non-production environments. Check out README for
+more details.
+
+----------------------------------------------------------------------------------------
 1.6.0 (2010-03-31):
 
 The major (and arguably the only noticeable) change in this version is our simple database

@@ -15,7 +15,8 @@ module DbCharmer
       announce "Switching connection to #{name}"
       # Switch connection
       old_proxy = ActiveRecord::Base.db_charmer_connection_proxy
-      ActiveRecord::Base.switch_connection_to(db_name, DbCharmer.migration_connections_should_exist?)
+      db_name = nil if db_name == :default
+      ActiveRecord::Base.switch_connection_to(db_name, DbCharmer.connections_should_exist?)
       # Yield the block
       yield
     ensure

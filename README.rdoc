@@ -132,7 +132,7 @@ connection from your database.yml files and rails would create the tables in you
 but in production you'd specify it and get the table created on a separate server and/or in a
 separate database.
 
-This behaviour is controlled by the <tt>DbCharmer.migration_connections_should_exist</tt>
+This behaviour is controlled by the <tt>DbCharmer.connections_should_exist</tt>
 configuration attribute which could be set from a rails initializer.
 
 
@@ -217,6 +217,13 @@ as the +switch_connection_to+ method does. Example:
 
   Comment.on_db(:olap).count
   Post.on_db(:foo).find(:first)
+
+By default in development and test environments you could use non-existing connections in your
+<tt>on_db</tt> calls and rails would send all your queries to a single default database. In
+production <tt>on_db</tt> won't accept non-existing names.
+
+This behaviour is controlled by the <tt>DbCharmer.connections_should_exist</tt>
+configuration attribute which could be set from a rails initializer.
 
 
 === Associations Connection Management

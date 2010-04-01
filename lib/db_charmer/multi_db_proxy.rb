@@ -32,7 +32,7 @@ module DbCharmer
         begin
           self.db_charmer_connection_level += 1
           old_proxy = db_charmer_connection_proxy
-          switch_connection_to(con, DbCharmer.migration_connections_should_exist?)
+          switch_connection_to(con, DbCharmer.connections_should_exist?)
           yield(proxy_target)
         ensure
           switch_connection_to(old_proxy)
