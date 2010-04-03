@@ -1,3 +1,9 @@
+1.6.3 (2010-04-03):
+
+Bugfix release: Modified stub connection initialization code to set default connections
+for sharded models using shards enumeration or default shard features of sharding methods.
+
+----------------------------------------------------------------------------------------
 1.6.2 (2010-04-03):
 
 Bugfix release: Modified our stub connection used on sharded models to fail on db-calling
