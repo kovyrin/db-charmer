@@ -6,6 +6,10 @@
 #
 module DbCharmer
   class StubConnection
+    def initialize(real_conn = nil)
+      @real_conn = real_conn
+    end
+
     def set_real_connection(real_conn)
       @real_conn = real_conn
     end
