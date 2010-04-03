@@ -1,3 +1,10 @@
+1.6.2 (2010-04-03):
+
+Bugfix release: Modified our stub connection used on sharded models to fail on db-calling
+methods only. Proxy the rest to a real shard connection. Another bug fixed in db_block_map
+sharding method: we didn't increment block counters when assigning blocks to shards.
+
+----------------------------------------------------------------------------------------
 1.6.1 (2010-03-31):
 
 Breaking change from now on all connection-switching methods (both in migrations and in
