@@ -104,6 +104,9 @@ module DbCharmer
           SQL
           connection.execute(sql, "Allocate new block")
 
+          # Increment the blocks counter on the shard
+          ShardInfo.update_counters(shard.id, :blocks_count => +1)
+
           # Retry block search after creation
           block_for_key(key)
         end
