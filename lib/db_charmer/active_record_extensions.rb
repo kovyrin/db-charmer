@@ -69,11 +69,12 @@ module DbCharmer
       @@db_charmer_database_remappings = Hash.new
       def db_charmer_remapped_connection
         return nil if (db_charmer_connection_level || 0) > 0
-        name = db_charmer_connection_proxy.db_charmer_connection_name if db_charmer_connection_proxy
-        name = (name || :master).to_sym
+        name = :master
+        proxy = db_charmer_connection_proxy
+        name = proxy.db_charmer_connection_name.to_sym if proxy
 
         remapped = @@db_charmer_database_remappings[name]
-        return DbCharmer::ConnectionFactory.connect(remapped, true) if remapped
+        remapped ? DbCharmer::ConnectionFactory.connect(remapped, true) : nil
       end
 
       def db_charmer_database_remappings
