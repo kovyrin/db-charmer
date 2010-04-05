@@ -37,13 +37,13 @@ module DbCharmer
       end
 
       #-----------------------------------------------------------------------------
-      @@db_charmer_default_connection = nil
+      @@db_charmer_default_connections = {}
       def db_charmer_default_connection=(conn)
-        @@db_charmer_default_connection = conn
+        @@db_charmer_default_connections[self.name] = conn
       end
 
       def db_charmer_default_connection
-        @@db_charmer_default_connection
+        @@db_charmer_default_connections[self.name]
       end
 
       #-----------------------------------------------------------------------------
