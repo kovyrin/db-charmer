@@ -127,10 +127,10 @@ Migration class example (global connection rewrite, multiple connections with th
     end
   end
 
-By default in development and test environments you could skip this <tt>:second_db</tt>
-connection from your database.yml files and rails would create the tables in your single database,
-but in production you'd specify it and get the table created on a separate server and/or in a
-separate database.
+By default in all environments <tt>on_db</tt> and <tt>db_magic</tt> statments would fail if
+specified connection does not exist in database.yml. It is possible to make +DbCharmer+
+ignore such situations in non-production environments so that rails would create the tables
+in your single database (especially useful in test databases).
 
 This behaviour is controlled by the <tt>DbCharmer.connections_should_exist</tt>
 configuration attribute which could be set from a rails initializer.

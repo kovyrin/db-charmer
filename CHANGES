@@ -1,3 +1,9 @@
+1.6.4 (2010-04-05):
+
+Default behaviour changed: DbCharmer.connections_should_exist is true in all environments 
+by default. Old default behaviour was too misleading for many developers.
+
+----------------------------------------------------------------------------------------
 1.6.3 (2010-04-03):
 
 Bugfix release: Modified stub connection initialization code to set default connections

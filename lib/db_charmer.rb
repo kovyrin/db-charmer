@@ -1,5 +1,5 @@
 module DbCharmer
-  @@connections_should_exist = Rails.env.production?
+  @@connections_should_exist = true
   mattr_accessor :connections_should_exist
 
   def self.connections_should_exist?
