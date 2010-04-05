@@ -9,7 +9,7 @@ module DbCharmer
         should_exist = opt[:should_exist] || DbCharmer.connections_should_exist?
 
         # Main connection management
-        setup_connection_magic(opt[:connection], should_exist) if opt[:connection]
+        setup_connection_magic(opt[:connection], should_exist)
 
         # Set up slaves pool
         opt[:slaves] ||= []
@@ -59,6 +59,7 @@ module DbCharmer
 
       def setup_connection_magic(conn, should_exist = false)
         switch_connection_to(conn, should_exist)
+        self.db_charmer_default_connection = conn
       end
 
       def setup_slaves_magic(slaves, should_exist = false)

@@ -56,7 +56,7 @@ module DbCharmer
       end
 
       def on_master(proxy_target = nil, &block)
-        on_db(nil, proxy_target, &block)
+        on_db(db_charmer_default_connection, proxy_target, &block)
       end
     end
   end

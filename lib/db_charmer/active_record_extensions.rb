@@ -37,6 +37,16 @@ module DbCharmer
       end
 
       #-----------------------------------------------------------------------------
+      @@db_charmer_default_connection = nil
+      def db_charmer_default_connection=(conn)
+        @@db_charmer_default_connection = conn
+      end
+
+      def db_charmer_default_connection
+        @@db_charmer_default_connection
+      end
+
+      #-----------------------------------------------------------------------------
       @@db_charmer_slaves = {}
       def db_charmer_slaves=(slaves)
         @@db_charmer_slaves[self.name] = slaves

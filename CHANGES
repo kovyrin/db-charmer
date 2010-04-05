@@ -1,6 +1,12 @@
+1.6.5 (2010-04-05):
+
+Bugfix release: Fixed :connection vs :slave in db_magic behaviour. Model.on_master should
+run queries on the master, not on AR's default connection.
+
+----------------------------------------------------------------------------------------
 1.6.4 (2010-04-05):
 
-Default behaviour changed: DbCharmer.connections_should_exist is true in all environments 
+Default behaviour changed: DbCharmer.connections_should_exist is true in all environments
 by default. Old default behaviour was too misleading for many developers.
 
 ----------------------------------------------------------------------------------------
