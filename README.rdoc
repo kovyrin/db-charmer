@@ -135,6 +135,10 @@ in your single database (especially useful in test databases).
 This behaviour is controlled by the <tt>DbCharmer.connections_should_exist</tt>
 configuration attribute which could be set from a rails initializer.
 
+Warning: if in test environment you use separate connections and master-slave support
+in DbCharmer, make sure you disable transactional fixtures support in Rails. Without
+this change you're going to see all kinds of weird data visibility problems in your tests.
+
 
 == Using Models in Master-Slave Environments
 
