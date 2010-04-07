@@ -4,6 +4,7 @@ Changed the way we handle associations in on_db(:foo).find(:include) calls. Now 
 switch association's connection only if its default connection is the same as the
 master model's connection (not more "table does not exist" problems I hope).
 
+----------------------------------------------------------------------------------------
 1.6.5 (2010-04-05):
 
 Bugfix release: Fixed :connection vs :slave in db_magic behaviour. Model.on_master should

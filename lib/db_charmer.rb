@@ -125,6 +125,9 @@ ActiveRecord::Base.extend(DbCharmer::DbMagic::ClassMethods)
 # Setup association preload magic
 ActiveRecord::Base.extend(DbCharmer::AssociationPreload::ClassMethods)
 
+# Open up really useful API method
+ActiveRecord::AssociationPreload::ClassMethods.send(:public, :preload_associations)
+
 class ActiveRecord::Base
   class << self
     def inherited_with_hijacking(subclass)
