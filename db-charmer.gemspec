@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{db-charmer}
-  s.version = "1.6.8"
+  s.version = "1.6.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexey Kovyrin"]
-  s.date = %q{2010-04-07}
+  s.date = %q{2010-04-08}
   s.description = %q{ActiveRecord Connections Magic (slaves, multiple connections, etc)}
   s.email = %q{alexey@kovyrin.net}
   s.extra_rdoc_files = [
@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
      "lib/db_charmer/connection_factory.rb",
      "lib/db_charmer/connection_proxy.rb",
      "lib/db_charmer/connection_switch.rb",
+     "lib/db_charmer/core_extensions.rb",
      "lib/db_charmer/db_magic.rb",
      "lib/db_charmer/finder_overrides.rb",
      "lib/db_charmer/multi_db_migrations.rb",
