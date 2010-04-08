@@ -63,10 +63,12 @@ require 'blankslate'
 
 require 'db_charmer/active_record_extensions'
 require 'db_charmer/abstract_adapter_extensions'
+require 'db_charmer/core_extensions'
 
 require 'db_charmer/connection_factory'
 require 'db_charmer/connection_proxy'
 require 'db_charmer/connection_switch'
+require 'db_charmer/stub_connection'
 require 'db_charmer/scope_proxy'
 require 'db_charmer/multi_db_proxy'
 
