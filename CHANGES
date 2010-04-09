@@ -1,3 +1,10 @@
+1.6.10 (2010-04-09):
+
+Multi-Db migrations changed. Now it is possible to call ActiveRecord::Migration.db_magic
+and specify default migration connection that would be used by all migrations without
+excplicitly switched connections.
+
+----------------------------------------------------------------------------------------
 1.6.9 (2010-04-08):
 
 Bugfix release: now DbCharmer works without Rails.

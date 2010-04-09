@@ -127,6 +127,15 @@ Migration class example (global connection rewrite, multiple connections with th
     end
   end
 
+=== Default Migrations Connection
+
+Starting with DbCharmer version 1.6.10 it is possible to call <tt>ActiveRecord::Migration.db_magic</tt>
+and specify default migration connection that would be used by all migrations without
+excplicitly switched connections. If you want to switch your migration to the default ActiveRecord
+connection, just use <tt>db_magic :connection => :default</tt>.
+
+=== Invalid Connection Names Handling
+
 By default in all environments <tt>on_db</tt> and <tt>db_magic</tt> statments would fail if
 specified connection does not exist in database.yml. It is possible to make +DbCharmer+
 ignore such situations in non-production environments so that rails would create the tables
