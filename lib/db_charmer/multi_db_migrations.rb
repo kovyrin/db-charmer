@@ -1,12 +1,31 @@
 module DbCharmer
   module MultiDbMigrations
-    @multi_db_names = nil
+    def self.extended(base)
+      class << base
+        alias_method_chain :migrate, :db_wrapper
+      end
+    end
+
+    @@multi_db_names = {}
+    def multi_db_names
+      puts "Retrieving connections for #{self.name}"
+      @@multi_db_names[self.name] || @@multi_db_names['ActiveRecord::Migration']
+    end
+
+    def multi_db_names=(names)
+      puts "Setting connections for #{self.name}"
+      @@multi_db_names[self.name] = names
+    end
 
     def migrate_with_db_wrapper(direction)
-      @multi_db_names.each do |multi_db_name|
-        on_db(multi_db_name) do
-          migrate_without_db_wrapper(direction)
+      if names = multi_db_names
+        names.each do |multi_db_name|
+          on_db(multi_db_name) do
+            migrate_without_db_wrapper(direction)
+          end
         end
+      else
+        migrate_without_db_wrapper(direction)
       end
     end
 
@@ -21,9 +40,8 @@ module DbCharmer
       yield
     ensure
       # Switch it back
-      announce "Checking all database connections"
       ActiveRecord::Base.verify_active_connections!
-      announce "Switching connection back to default"
+      announce "Switching connection back"
       ActiveRecord::Base.switch_connection_to(old_proxy)
     end
 
@@ -37,10 +55,7 @@ module DbCharmer
       raise ArgumentError, "No connection name - no magic!" unless conns.any?
 
       # Save connections
-      @multi_db_names = conns
-      class << self
-        alias_method_chain :migrate, :db_wrapper
-      end
+      self.multi_db_names = conns
     end
 
     # Return a list of connections to shards in a sharded connection
