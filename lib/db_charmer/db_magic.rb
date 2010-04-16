@@ -57,12 +57,12 @@ module DbCharmer
         self.sharded_connection = DbCharmer::Sharding.sharded_connection(name)
       end
 
-      def setup_connection_magic(conn, should_exist = false)
+      def setup_connection_magic(conn, should_exist = true)
         switch_connection_to(conn, should_exist)
         self.db_charmer_default_connection = conn
       end
 
-      def setup_slaves_magic(slaves, should_exist = false)
+      def setup_slaves_magic(slaves, should_exist = true)
         self.db_charmer_slaves = slaves.collect do |slave|
           coerce_to_connection_proxy(slave, should_exist)
         end
