@@ -37,8 +37,14 @@ module DbCharmer
         def shard_for_key(key)
           block = block_for_key(key)
 
-          # Auto-allocate new blocks
-          block ||= allocate_new_block_for_key(key)
+          begin
+            # Auto-allocate new blocks
+            block ||= allocate_new_block_for_key(key)
+          rescue ActiveRecord::StatementInvalid => e
+            raise unless e.message.include?('Duplicate entry')
+            block = block_for_key(key)
+          end
+
           raise ArgumentError, "Invalid key value, no shards found for this key and could not create a new block!" unless block
 
           # Bail if no shard found
@@ -94,13 +100,13 @@ module DbCharmer
 
           # Try to insert a new mapping (ignore duplicate key errors)
           sql = <<-SQL
-            INSERT IGNORE INTO #{map_table}
-                           SET start_id = #{start_id},
-                               end_id = #{end_id},
-                               shard_id = #{shard.id},
-                               block_size = #{block_size},
-                               created_at = NOW(),
-                               updated_at = NOW()
+            INSERT INTO #{map_table}
+                   SET start_id = #{start_id},
+                       end_id = #{end_id},
+                       shard_id = #{shard.id},
+                       block_size = #{block_size},
+                       created_at = NOW(),
+                       updated_at = NOW()
           SQL
           connection.execute(sql, "Allocate new block")
 
