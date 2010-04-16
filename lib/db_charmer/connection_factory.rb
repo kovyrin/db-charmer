@@ -13,7 +13,7 @@ module DbCharmer
     end
 
     # Establishes connection or return an existing one from cache
-    def self.connect(connection_name, should_exist = false)
+    def self.connect(connection_name, should_exist = true)
       connection_name = connection_name.to_s
       @@connection_classes[connection_name] ||= establish_connection(connection_name, should_exist)
     end
@@ -25,7 +25,7 @@ module DbCharmer
     end
 
     # Establish connection with a specified name
-    def self.establish_connection(connection_name, should_exist = false)
+    def self.establish_connection(connection_name, should_exist = true)
       abstract_class = generate_abstract_class(connection_name, should_exist)
       DbCharmer::ConnectionProxy.new(abstract_class, connection_name)
     end
@@ -37,7 +37,7 @@ module DbCharmer
     end
 
     # Generate an abstract AR class with specified connection established
-    def self.generate_abstract_class(connection_name, should_exist = false)
+    def self.generate_abstract_class(connection_name, should_exist = true)
       # Generate class
       klass = generate_empty_abstract_ar_class(abstract_connection_class_name(connection_name))
 

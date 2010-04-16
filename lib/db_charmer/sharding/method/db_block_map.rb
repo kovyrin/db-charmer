@@ -23,7 +23,7 @@ module DbCharmer
 
         def initialize(config)
           @name = config[:name] or raise(ArgumentError, "Missing required :name parameter!")
-          @connection = DbCharmer::ConnectionFactory.connect(config[:connection])
+          @connection = DbCharmer::ConnectionFactory.connect(config[:connection], true)
           @block_size = (config[:block_size] || 10000).to_i
 
           @map_table = config[:map_table] or raise(ArgumentError, "Missing required :map_table parameter!")
