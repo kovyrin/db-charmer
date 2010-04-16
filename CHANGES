@@ -1,3 +1,11 @@
+1.6.11 (2010-04-16):
+
+Bugfix: Change the way we allocate sharding blocks in block map sharding method to
+prevent race-conditions from happening on block to shard assignments.
+Breaking change: We require connections to exist by default in all connection factory
+methods. If you need old behavior, pass should_exist=false explicitly.
+
+----------------------------------------------------------------------------------------
 1.6.10 (2010-04-09):
 
 Multi-Db migrations changed. Now it is possible to call ActiveRecord::Migration.db_magic
