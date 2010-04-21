@@ -6,7 +6,7 @@ module DbCharmer
         hijack_connection!
 
         # Should requested connections exist in the config?
-        should_exist = opt[:should_exist] || DbCharmer.connections_should_exist?
+        should_exist = opt.has_key?(:should_exist) ? opt[:should_exist] : DbCharmer.connections_should_exist?
 
         # Main connection management
         setup_connection_magic(opt[:connection], should_exist)
