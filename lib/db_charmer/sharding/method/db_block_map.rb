@@ -31,7 +31,9 @@ module DbCharmer
 
           # Local caches
           @shard_info_cache = {}
-          @blocks_cache = {}
+
+          @blocks_cache = Rails.cache
+          @blocks_cache_prefix = config[:blocks_cache_prefix] || "#{@name}_block:"
         end
 
         def shard_for_key(key)
@@ -69,13 +71,29 @@ module DbCharmer
           # Cleanup the cache if asked to
           key_range = [ block_start_for_key(key), block_end_for_key(key) ]
           block_cache_key = "%d-%d" % key_range
-          @blocks_cache[block_cache_key] = nil unless cache
+
+          if cache
+            cached_block = get_cached_block(block_cache_key)
+            return cached_block if cached_block
+          end
 
           # Fetch cached value or load from db
-          @blocks_cache[block_cache_key] ||= begin
+          block = begin
             sql = "SELECT * FROM #{map_table} WHERE start_id = #{key_range.first} AND end_id = #{key_range.last} LIMIT 1"
             connection.select_one(sql, 'Find a shard block')
           end
+          
+          set_cached_block(block_cache_key, block)
+
+          return block
+        end
+
+        def get_cached_block(block_cache_key)
+          @blocks_cache.read("#{@blocks_cache_prefix}#{block_cache_key}")
+        end
+
+        def set_cached_block(block_cache_key, block)
+          @blocks_cache.write("#{@blocks_cache_prefix}#{block_cache_key}", block)
         end
 
         # Load shard info
