@@ -144,7 +144,7 @@ module DbCharmer
           # FIXME: Find a better way, maybe move config method to our ar extenstions
           connection.instance_variable_get(:@config).clone.merge(
             # Name for the connection factory
-            :name => shard_name,
+            :connection_name => shard_name,
             # Connection params
             :host => shard.db_host,
             :port => shard.db_port,

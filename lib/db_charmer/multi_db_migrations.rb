@@ -30,7 +30,7 @@ module DbCharmer
     end
 
     def on_db(db_name)
-      name = db_name.is_a?(Hash) ? db_name[:name] : db_name.inspect
+      name = db_name.is_a?(Hash) ? db_name[:connection_name] : db_name.inspect
       announce "Switching connection to #{name}"
       # Switch connection
       old_proxy = ActiveRecord::Base.db_charmer_connection_proxy
