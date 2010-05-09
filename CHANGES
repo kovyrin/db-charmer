@@ -1,3 +1,12 @@
+1.6.12 (2010-05-09):
+
+Starting with this version we use Rails.cache (memcache or whatever you use in your project)
+to cache sharding blocks information.
+
+Bugfixes: Thanks to Allen Madsen (github user blatyo) we've fixed a few minor issues in
+database connections handling.
+
+----------------------------------------------------------------------------------------
 1.6.11 (2010-04-16):
 
 Bugfix: Change the way we allocate sharding blocks in block map sharding method to
