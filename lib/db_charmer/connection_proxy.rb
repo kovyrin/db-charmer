@@ -10,6 +10,10 @@ module DbCharmer
       @db_name
     end
 
+    def db_charmer_connection_proxy
+      self
+    end
+
     def method_missing(meth, *args, &block)
       @abstract_connection_class.retrieve_connection.send(meth, *args, &block)
     end
