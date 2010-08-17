@@ -27,8 +27,8 @@ To install db-charmer as a Rails plugin use this:
 
   script/plugin install git://github.com/kovyrin/db-charmer.git
 
-_Notice_: If you use db-charmer in a non-rails project, you may need to set DbCharmer.env to a correct value
-before using any of its connection management methods. Correct value here is a valid database.yml 
+_Notice_: If you use db-charmer in a non-rails project, you may need to set +DbCharmer.env+ to a correct value
+before using any of its connection management methods. Correct value here is a valid +database.yml+ 
 first-level section name.
 
 
