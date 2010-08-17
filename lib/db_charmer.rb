@@ -2,7 +2,7 @@ module DbCharmer
   @@connections_should_exist = true
   mattr_accessor :connections_should_exist
 
-  @@env = defined?(RAILS_ENV) ? RAILS_ENV : 'development'
+  @@env = defined?(Rails) ? Rails.env : 'development'
   mattr_accessor :env
 
   def self.connections_should_exist?
