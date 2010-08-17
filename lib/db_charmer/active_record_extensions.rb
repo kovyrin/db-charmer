@@ -4,13 +4,23 @@ module DbCharmer
 
       def establish_real_connection_if_exists(name, should_exist = false)
         name = name.to_s
-        config = configurations[DbCharmer.env][name]
+
+        # Check environment name
+        config = configurations[DbCharmer.env]
+        unless config
+          error = "Invalid environment name (does not exist in database.yml): #{DbCharmer.env}. Please set correct Rails.env or DbCharmer.env."
+          raise ArgumentError, error
+        end
+
+        # Check connection name
+        config = config[name]
         unless config
           if should_exist
             raise ArgumentError, "Invalid connection name (does not exist in database.yml): #{DbCharmer.env}/#{name}"
           end
           return # No need to establish connection - they do not want us to
         end
+
         # Pass connection name with config
         config[:connection_name] = name
         establish_connection(config)
