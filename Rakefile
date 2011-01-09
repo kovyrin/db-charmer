@@ -8,7 +8,7 @@ begin
     gemspec.homepage = 'http://github.com/kovyrin/db-charmer'
     gemspec.authors = ['Alexey Kovyrin']
 
-    gemspec.add_dependency('rails', '>= 2.2.0')
+    gemspec.add_dependency('rails', '~> 2.2')
     gemspec.add_dependency('blankslate', '>= 0')
   end
   Jeweler::GemcutterTasks.new

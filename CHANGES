@@ -1,3 +1,9 @@
+1.6.14 (2011-01-09):
+
+Bugfixes: We do not support Rails 3, and now we prohibit any versions but 2.2 and 2.3 from
+being used with db-charmer gem.
+
+----------------------------------------------------------------------------------------
 1.6.13 (2010-08-17):
 
 Starting with this version we use Rails.env instead of RAILS_ENV to auto-detect rails 
