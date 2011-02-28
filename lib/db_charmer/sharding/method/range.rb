@@ -23,6 +23,10 @@ module DbCharmer
         def support_default_shard?
           ranges.has_key?(:default)
         end
+
+        def shard_connections
+          ranges.values.uniq
+        end
       end
     end
   end
