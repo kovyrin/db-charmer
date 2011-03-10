@@ -241,7 +241,7 @@ module DbCharmer
         def shard_connections
           # Find all groups
           prepare_shard_models
-          groups = Group.all(:conditions => { :enabled => true })
+          groups = Group.all(:conditions => { :enabled => true }, :include => :shard)
           # Map them to shards
           groups.map { |group| shard_connection_config(group.shard, group.id) }
         end
