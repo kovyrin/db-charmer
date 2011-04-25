@@ -71,7 +71,6 @@ require 'db_charmer/core_extensions'
 require 'db_charmer/connection_factory'
 require 'db_charmer/connection_proxy'
 require 'db_charmer/connection_switch'
-require 'db_charmer/stub_connection'
 require 'db_charmer/scope_proxy'
 require 'db_charmer/multi_db_proxy'
 
@@ -120,6 +119,10 @@ require 'db_charmer/finder_overrides'
 require 'db_charmer/association_preload'
 require 'db_charmer/multi_db_migrations'
 require 'db_charmer/multi_db_proxy'
+
+require 'db_charmer/sharding'
+require 'db_charmer/sharding/connection'
+require 'db_charmer/sharding/stub_connection'
 
 # Enable multi-db migrations
 ActiveRecord::Migration.extend(DbCharmer::MultiDbMigrations)

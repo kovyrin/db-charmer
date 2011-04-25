@@ -18,7 +18,7 @@ module DbCharmer
           return conn.db_charmer_connection_proxy
         end
 
-        if conn.kind_of?(ActiveRecord::ConnectionAdapters::AbstractAdapter) || conn.kind_of?(DbCharmer::StubConnection)
+        if conn.kind_of?(ActiveRecord::ConnectionAdapters::AbstractAdapter) || conn.kind_of?(DbCharmer::Sharding::StubConnection)
           return conn
         end
 
@@ -28,7 +28,7 @@ module DbCharmer
       def switch_connection_to(conn, require_config_to_exist = true)
         new_conn = coerce_to_connection_proxy(conn, require_config_to_exist)
 
-        if db_charmer_connection_proxy.is_a?(DbCharmer::StubConnection)
+        if db_charmer_connection_proxy.is_a?(DbCharmer::Sharding::StubConnection)
           db_charmer_connection_proxy.set_real_connection(new_conn)
         end
 

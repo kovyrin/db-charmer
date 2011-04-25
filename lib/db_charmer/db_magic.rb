@@ -23,20 +23,6 @@ module DbCharmer
         if opt[:sharded]
           raise ArgumentError, "Can't use sharding on a model with slaves!" if opt[:slaves].any?
           setup_sharding_magic(opt[:sharded])
-
-          # If method supports shards enumeration, get the first shard
-          conns = sharded_connection.shard_connections || []
-          real_conn = conns.first
-
-          # If connection we do not have real connection yet, try to use the default one
-          real_conn ||= sharded_connection.sharder.shard_for_key(:default) if sharded_connection.support_default_shard?
-
-          # Create stub connection
-          real_conn = coerce_to_connection_proxy(real_conn, DbCharmer.connections_should_exist?) if real_conn
-          stub_conn = DbCharmer::StubConnection.new(real_conn)
-
-          # ... and set it as the default one for this model
-          setup_connection_magic(stub_conn)
         end
       end
 
@@ -52,9 +38,16 @@ module DbCharmer
       end
 
       def setup_sharding_magic(config)
+        # Add sharding-specific methods
         self.extend(DbCharmer::Sharding::ClassMethods)
+
+        # Get configuration
         name = config[:sharded_connection] or raise ArgumentError, "No :sharded_connection!"
+        # Assign sharded connection
         self.sharded_connection = DbCharmer::Sharding.sharded_connection(name)
+
+        # Setup model default connection
+        setup_connection_magic(sharded_connection.default_connection)
       end
 
       def setup_connection_magic(conn, should_exist = true)
