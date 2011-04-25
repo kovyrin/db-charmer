@@ -23,13 +23,14 @@ module DbCharmer
         return @real_conn if @real_conn
 
         # If sharded connection supports shards enumeration, get the first shard
-        @real_conn = sharded_connection.shard_connections.try(:first)
+        conn = sharded_connection.shard_connections.try(:first)
 
         # If we do not have real connection yet, try to use the default one (if it is supported by the sharder)
-        @real_conn ||= sharded_connection.sharder.shard_for_key(:default) if sharded_connection.support_default_shard?
+        conn ||= sharded_connection.sharder.shard_for_key(:default) if sharded_connection.support_default_shard?
 
         # Get connection proxy for our real connection
-        @real_conn && coerce_to_connection_proxy(@real_conn, DbCharmer.connections_should_exist?)
+        return nil unless conn
+        @real_conn = ActiveRecord::Base.coerce_to_connection_proxy(conn, DbCharmer.connections_should_exist?)
       end
 
       def method_missing(meth, *args, &block)
@@ -39,12 +40,12 @@ module DbCharmer
         end
 
         # Fail if no connection has been established yet
-        unless @real_conn
+        unless real_connection
           raise ActiveRecord::ConnectionNotEstablished, "No real connection to proxy this method to!"
         end
 
         # Proxy the call to our real connection target
-        @real_conn.__send__(meth, *args, &block)
+        real_connection.__send__(meth, *args, &block)
       end
     end
   end
