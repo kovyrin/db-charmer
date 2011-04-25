@@ -1,3 +1,10 @@
+1.6.15 (2011-04-25):
+
+Bugfixes: Do not touch database for sharded models until we really need to. Before 1.6.15
+if a database server was dead and there were any other connection issues, class loading
+in Ruby would be broken and sharded model class would not be initialized.
+
+----------------------------------------------------------------------------------------
 1.6.14 (2011-01-09):
 
 Bugfixes: We do not support Rails 3, and now we prohibit any versions but 2.2 and 2.3 from
