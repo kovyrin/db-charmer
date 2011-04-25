@@ -1,4 +1,4 @@
-1.6.17/1.6.18 (2011-04-25):
+1.6.17-19 (2011-04-25):
 
 Bugfixes: Do not touch database for sharded models until we really need to. Before 1.6.17
 if a database server was dead and there were any other connection issues, class loading
