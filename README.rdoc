@@ -507,8 +507,8 @@ most of the parts of plugin's code.
 
 == What Ruby and Rails implementations does it work for?
 
-We have a continuous integration setups for this plugin on MRI 1.8.6 with Rails 2.2 and 2.3.
-We use the plugin in production on Scribd.com with MRI (rubyee) 1.8.6 and Rails 2.2.
+We have a continuous integration setups for this plugin on MRI 1.8.7 with Rails 2.2 and 2.3.
+We use the plugin in production on Scribd.com with MRI (rubyee) 1.8.7 and Rails 2.2.
 
 
 == Who are the authors?
