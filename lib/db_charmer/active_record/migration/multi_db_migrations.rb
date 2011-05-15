@@ -11,12 +11,10 @@ module DbCharmer
 
         @@multi_db_names = {}
         def multi_db_names
-          puts "Retrieving connections for #{self.name}"
           @@multi_db_names[self.name] || @@multi_db_names['ActiveRecord::Migration']
         end
 
         def multi_db_names=(names)
-          puts "Setting connections for #{self.name}"
           @@multi_db_names[self.name] = names
         end
 
