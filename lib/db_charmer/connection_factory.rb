@@ -62,7 +62,7 @@ module DbCharmer
 
     def self.generate_empty_abstract_ar_class(klass)
       # Define class
-      module_eval "class #{klass} < ActiveRecord::Base; self.abstract_class = true; end"
+      module_eval "class #{klass} < ::ActiveRecord::Base; self.abstract_class = true; end"
 
       # Return class
       klass.constantize

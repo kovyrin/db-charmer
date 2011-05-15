@@ -10,7 +10,7 @@ module DbCharmer
     module Method
       class DbBlockGroupMap
         # Shard connection info model
-        class Shard < ActiveRecord::Base
+        class Shard < ::ActiveRecord::Base
           validates_presence_of :db_host
           validates_presence_of :db_port
           validates_presence_of :db_user
@@ -21,7 +21,7 @@ module DbCharmer
         end
 
         # Table group info model
-        class Group < ActiveRecord::Base
+        class Group < ::ActiveRecord::Base
           validates_presence_of :shard_id
           belongs_to :shard, :class_name => 'DbCharmer::Sharding::Method::DbBlockGroupMap::Shard'
         end

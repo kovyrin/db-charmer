@@ -1,6 +1,7 @@
 module DbCharmer
-  module DbMagic
-    module ClassMethods
+  module ActiveRecord
+    module DbMagic
+
       def db_magic(opt = {})
         # Make sure we could use our connections management here
         hijack_connection!
@@ -13,8 +14,14 @@ module DbCharmer
 
         # Set up slaves pool
         opt[:slaves] ||= []
+        opt[:slaves] = [ opt[:slaves] ].flatten
         opt[:slaves] << opt[:slave] if opt[:slave]
-        setup_slaves_magic(opt[:slaves], should_exist) if opt[:slaves].any?
+
+        # Forced reads are enabled for all models by default, could be disabled by the user
+        forced_slave_reads = opt.has_key?(:force_slave_reads) ? opt[:force_slave_reads] : true
+
+        # Setup all the slaves related magic if needed
+        setup_slaves_magic(opt[:slaves], forced_slave_reads, should_exist) if opt[:slaves].any?
 
         # Setup inheritance magic
         setup_children_magic(opt)
@@ -39,7 +46,7 @@ module DbCharmer
 
       def setup_sharding_magic(config)
         # Add sharding-specific methods
-        self.extend(DbCharmer::Sharding::ClassMethods)
+        self.extend(DbCharmer::ActiveRecord::Sharding)
 
         # Get configuration
         name = config[:sharded_connection] or raise ArgumentError, "No :sharded_connection!"
@@ -55,15 +62,18 @@ module DbCharmer
         self.db_charmer_default_connection = conn
       end
 
-      def setup_slaves_magic(slaves, should_exist = true)
+      def setup_slaves_magic(slaves, force_slave_reads, should_exist = true)
         self.db_charmer_slaves = slaves.collect do |slave|
           coerce_to_connection_proxy(slave, should_exist)
         end
 
-        self.extend(DbCharmer::FinderOverrides::ClassMethods)
-        self.send(:include, DbCharmer::FinderOverrides::InstanceMethods)
-        self.extend(DbCharmer::MultiDbProxy::MasterSlaveClassMethods)
+        self.db_charmer_force_slave_reads = force_slave_reads
+
+        self.extend(DbCharmer::ActiveRecord::FinderOverrides::ClassMethods)
+        self.send(:include, DbCharmer::ActiveRecord::FinderOverrides::InstanceMethods)
+        self.extend(DbCharmer::ActiveRecord::MultiDbProxy::MasterSlaveClassMethods)
       end
+
     end
   end
 end

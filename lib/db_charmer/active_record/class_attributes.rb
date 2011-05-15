@@ -1,32 +1,6 @@
 module DbCharmer
-  module ActiveRecordExtensions
-    module ClassMethods
-
-      def establish_real_connection_if_exists(name, should_exist = false)
-        name = name.to_s
-
-        # Check environment name
-        config = configurations[DbCharmer.env]
-        unless config
-          error = "Invalid environment name (does not exist in database.yml): #{DbCharmer.env}. Please set correct Rails.env or DbCharmer.env."
-          raise ArgumentError, error
-        end
-
-        # Check connection name
-        config = config[name]
-        unless config
-          if should_exist
-            raise ArgumentError, "Invalid connection name (does not exist in database.yml): #{DbCharmer.env}/#{name}"
-          end
-          return # No need to establish connection - they do not want us to
-        end
-
-        # Pass connection name with config
-        config[:connection_name] = name
-        establish_connection(config)
-      end
-
-      #-----------------------------------------------------------------------------
+  module ActiveRecord
+    module ClassAttributes
       @@db_charmer_opts = {}
       def db_charmer_opts=(opts)
         @@db_charmer_opts[self.name] = opts
@@ -72,6 +46,23 @@ module DbCharmer
       end
 
       #-----------------------------------------------------------------------------
+      @@db_charmer_force_slave_reads = {}
+      def db_charmer_force_slave_reads=(force)
+        @@db_charmer_force_slave_reads[self.name] = force
+      end
+
+      def db_charmer_force_slave_reads
+        @@db_charmer_force_slave_reads[self.name]
+      end
+
+      # Slave reads are used in two cases:
+      #  - per-model slave reads are enabled (see db_magic method for more details)
+      #  - global slave reads enforcing is enabled (in a controller action)
+      def db_charmer_force_slave_reads?
+        db_charmer_force_slave_reads || DbCharmer.force_slave_reads?
+      end
+
+      #-----------------------------------------------------------------------------
       @@db_charmer_connection_levels = Hash.new(0)
       def db_charmer_connection_level=(level)
         @@db_charmer_connection_levels[self.name] = level
@@ -105,18 +96,6 @@ module DbCharmer
         raise "Mappings must be nil or respond to []" if mappings && (! mappings.respond_to?(:[]))
         @@db_charmer_database_remappings = mappings || { }
       end
-
-      #-----------------------------------------------------------------------------
-      def hijack_connection!
-        return if self.respond_to?(:connection_with_magic)
-        class << self
-          def connection_with_magic
-            db_charmer_remapped_connection || db_charmer_connection_proxy || connection_without_magic
-          end
-          alias_method_chain :connection, :magic
-        end
-      end
-
     end
   end
 end

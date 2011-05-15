@@ -42,7 +42,7 @@ module DbCharmer
           begin
             # Auto-allocate new blocks
             block ||= allocate_new_block_for_key(key)
-          rescue ActiveRecord::StatementInvalid => e
+          rescue ::ActiveRecord::StatementInvalid => e
             raise unless e.message.include?('Duplicate entry')
             block = block_for_key(key)
           end
@@ -58,7 +58,7 @@ module DbCharmer
           shard_connection_config(shard_info)
         end
 
-        class ShardInfo < ActiveRecord::Base
+        class ShardInfo < ::ActiveRecord::Base
           validates_presence_of :db_host
           validates_presence_of :db_port
           validates_presence_of :db_user
@@ -82,7 +82,7 @@ module DbCharmer
             sql = "SELECT * FROM #{map_table} WHERE start_id = #{key_range.first} AND end_id = #{key_range.last} LIMIT 1"
             connection.select_one(sql, 'Find a shard block')
           end
-          
+
           set_cached_block(block_cache_key, block)
 
           return block

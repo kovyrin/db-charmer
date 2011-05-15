@@ -1,6 +1,6 @@
 module DbCharmer
-  module AssociationPreload
-    module ClassMethods
+  module ActiveRecord
+    module AssociationPreload
       ASSOCIATION_TYPES = [ :has_one, :has_many, :belongs_to, :has_and_belongs_to_many ]
 
       def self.extended(base)

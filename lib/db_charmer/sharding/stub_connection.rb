@@ -30,18 +30,18 @@ module DbCharmer
 
         # Get connection proxy for our real connection
         return nil unless conn
-        @real_conn = ActiveRecord::Base.coerce_to_connection_proxy(conn, DbCharmer.connections_should_exist?)
+        @real_conn = ::ActiveRecord::Base.coerce_to_connection_proxy(conn, DbCharmer.connections_should_exist?)
       end
 
       def method_missing(meth, *args, &block)
         # Fail on database statements
-        if ActiveRecord::ConnectionAdapters::DatabaseStatements.instance_methods.member?(meth.to_s)
-          raise ActiveRecord::ConnectionNotEstablished, "You have to switch connection on your model before using it!"
+        if ::ActiveRecord::ConnectionAdapters::DatabaseStatements.instance_methods.member?(meth.to_s)
+          raise ::ActiveRecord::ConnectionNotEstablished, "You have to switch connection on your model before using it!"
         end
 
         # Fail if no connection has been established yet
         unless real_connection
-          raise ActiveRecord::ConnectionNotEstablished, "No real connection to proxy this method to!"
+          raise ::ActiveRecord::ConnectionNotEstablished, "No real connection to proxy this method to!"
         end
 
         # Proxy the call to our real connection target
