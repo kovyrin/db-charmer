@@ -1,5 +1,7 @@
 begin
   require 'jeweler'
+  require './lib/db_charmer/version.rb'
+
   Jeweler::Tasks.new do |gemspec|
     gemspec.name = 'db-charmer'
     gemspec.summary = 'ActiveRecord Connections Magic'
@@ -7,6 +9,8 @@ begin
     gemspec.email = 'alexey@kovyrin.net'
     gemspec.homepage = 'http://github.com/kovyrin/db-charmer'
     gemspec.authors = ['Alexey Kovyrin']
+
+    gemspec.version = DbCharmer::Version::STRING
 
     gemspec.add_dependency('rails', '~> 2.2')
     gemspec.add_dependency('blankslate', '>= 0')
