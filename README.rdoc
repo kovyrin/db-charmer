@@ -28,7 +28,7 @@ To install db-charmer as a Rails plugin use this:
   script/plugin install git://github.com/kovyrin/db-charmer.git
 
 _Notice_: If you use db-charmer in a non-rails project, you may need to set <tt>DbCharmer.env</tt> to a correct value
-before using any of its connection management methods. Correct value here is a valid <tt>database.yml</tt> 
+before using any of its connection management methods. Correct value here is a valid <tt>database.yml</tt>
 first-level section name.
 
 
@@ -267,8 +267,9 @@ lagging with your slaves because users do not like to see outdated information a
 accounts. But in some cases (like logged-out profile page views, etc) it would be perfectly
 reasonable to switch all reads to the slave.
 
-For this use-case starting with DbCharmer 1.7.0 we have a feature called forced slave reads.
-It consists of a few separate small features that together make it really powerful:
+For this use-case starting with +DbCharmer+ release 1.7.0 we have a feature called forced
+slave reads. It consists of a few separate small features that together make it really
+powerful:
 
 1) <tt>:force_slave_reads => false</tt> option for +ActiveRecord+'s <tt>db_magic</tt> method.
 This option could be used to disable automated slave reads on your models so that you could
@@ -311,6 +312,9 @@ powerful feature allowing high granularity in your control of forced slave reads
     total_users = User.count
     ...
   end
+
+Notice: At this point the feature considered beta and should be used with caution. It is fully covered
+with tests, but there still could be unexpected issues when used in real-world applications.
 
 
 === Associations Connection Management

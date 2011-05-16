@@ -1,9 +1,10 @@
 1.7.0 (not released yet):
 
-Added force_slave_reads functionality. Now we could have models with slaves that are not
-used by default, but could be turned on globally (per-controller or per-action).
+Beta feature: Added force_slave_reads functionality. Now we could have models with slaves
+that are not used by default, but could be turned on globally (per-controller or per-action).
 
-Heavily reorganized the source code to match Rails code structure (class names, etc).
+Heavily reorganized the source code to match Rails code structure (class names, etc). This should
+make it much easier for other contributors to work with the code.
 Added smarter environment detection (using Rails.env, RAILS_ENV or RACK_ENV).
 
 Bugfixes: Fix for N+1 queries when accessing shard_info for db_block_group_map sharding method.
@@ -24,10 +25,10 @@ being used with db-charmer gem.
 ----------------------------------------------------------------------------------------
 1.6.13 (2010-08-17):
 
-Starting with this version we use Rails.env instead of RAILS_ENV to auto-detect rails 
+Starting with this version we use Rails.env instead of RAILS_ENV to auto-detect rails
 environment. If you use DbCharmer in non-rails project, please set DbCharmer.env manually.
 
-Bugfixes: Thanks to Eric Lindvall we now allow connection names that have symbols ruby 
+Bugfixes: Thanks to Eric Lindvall we now allow connection names that have symbols ruby
 wouldn't like for class names.
 
 ----------------------------------------------------------------------------------------
