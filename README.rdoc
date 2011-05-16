@@ -577,11 +577,11 @@ other people to use. Most of the code in this package has been developed by Alex
 and is released under the MIT license. For more details, see the LICENSE file.
 
 Other contributors who have helped with the development of this library are (alphabetically ordered):
- - Allen Madsen
- - Andrew Geweke
- - Ashley Martens
- - Dmytro Shteflyuk
- - Eric Lindvall
- - Gregory Man
- - Michael Birk
- - Tyler McMullen
+* Allen Madsen
+* Andrew Geweke
+* Ashley Martens
+* Dmytro Shteflyuk
+* Eric Lindvall
+* Gregory Man
+* Michael Birk
+* Tyler McMullen
