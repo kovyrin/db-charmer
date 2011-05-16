@@ -573,5 +573,15 @@ We use the plugin in production on Scribd.com with MRI (rubyee) 1.8.7 and Rails 
 == Who are the authors?
 
 This plugin has been created in Scribd.com for our internal use and then the sources were opened for
-other people to use. All the code in this package has been developed by Alexey Kovyrin for Scribd.com
+other people to use. Most of the code in this package has been developed by Alexey Kovyrin for Scribd.com
 and is released under the MIT license. For more details, see the LICENSE file.
+
+Other contributors who have helped with the development of this library are (alphabetically ordered):
+ - Allen Madsen
+ - Andrew Geweke
+ - Ashley Martens
+ - Dmytro Shteflyuk
+ - Eric Lindvall
+ - Gregory Man
+ - Michael Birk
+ - Tyler McMullen
