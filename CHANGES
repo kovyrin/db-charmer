@@ -1,3 +1,14 @@
+1.7.0 (not released yet):
+
+Added force_slave_reads functionality. Now we could have models with slaves that are not
+used by default, but could be turned on globally (per-controller or per-action).
+
+Heavily reorganized the source code to match Rails code structure (class names, etc).
+Added smarter environment detection (using Rails.env, RAILS_ENV or RACK_ENV).
+
+Bugfixes: Fix for N+1 queries when accessing shard_info for db_block_group_map sharding method.
+
+----------------------------------------------------------------------------------------
 1.6.17-19 (2011-04-25):
 
 Bugfixes: Do not touch database for sharded models until we really need to. Before 1.6.17
