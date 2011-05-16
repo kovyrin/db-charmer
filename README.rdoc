@@ -270,7 +270,7 @@ reasonable to switch all reads to the slave.
 For this use-case starting with DbCharmer 1.7.0 we have a feature called forced slave reads.
 It consists of a few separate small features that together make it really powerful:
 
-1. <tt>:force_slave_reads => false</tt> option for +ActiveRecord+'s <tt>db_magic</tt> method.
+1) <tt>:force_slave_reads => false</tt> option for +ActiveRecord+'s <tt>db_magic</tt> method.
 This option could be used to disable automated slave reads on your models so that you could
 call <tt>on_slave</tt> or use other methods to enable slave reads when you need it. Example:
 
@@ -278,7 +278,7 @@ call <tt>on_slave</tt> or use other methods to enable slave reads when you need 
     db_magic :slave => slave01, :forced_slave_reads => false
   end
 
-2. <tt>force_slave_reads</tt> +ActionController+ class method. This method could be used to
+2) <tt>force_slave_reads</tt> +ActionController+ class method. This method could be used to
 enable per-controller (when called with no arguments), or per-action (<tt>:only</tt> and
 <tt>:except</tt> params) forced reads from slaves. This is really useful for actions in
 which you know you could tolerate some slave lag so all your models with slaves defined will
@@ -289,7 +289,7 @@ send their reads to slaves. Example:
     ...
   end
 
-3. <tt>force_slave_reads!</tt> +ActionController+ instance method, that could be used within
+3) <tt>force_slave_reads!</tt> +ActionController+ instance method, that could be used within
 your actions or in controller filters to temporarily switch your models to forced slave reads
 mode. This could be useful for cases when the same actions could be called by logged-in and
 anonymous users. Then you could authorize users in <tt>before_filter</tt> and call
@@ -302,7 +302,7 @@ anonymous users. Then you could authorize users in <tt>before_filter</tt> and ca
     ...
   end
 
-4. <tt>DbCharmer.force_slave_reads</tt> method that could be used with a block of ruby code
+4) <tt>DbCharmer.force_slave_reads</tt> method that could be used with a block of ruby code
 and would enable forced slave reads mode until the end of the block execution. This is really
 powerful feature allowing high granularity in your control of forced slave reads mode. Example:
 
