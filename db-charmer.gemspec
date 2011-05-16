@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{db-charmer}
-  s.version = "1.6.19"
+  s.version = "1.7.0.pre1"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexey Kovyrin"]
-  s.date = %q{2011-04-25}
+  s.date = %q{2011-05-16}
   s.description = %q{ActiveRecord Connections Magic (slaves, multiple connections, etc)}
   s.email = %q{alexey@kovyrin.net}
   s.extra_rdoc_files = [
@@ -23,22 +23,24 @@ Gem::Specification.new do |s|
      "Makefile",
      "README.rdoc",
      "Rakefile",
-     "VERSION",
      "db-charmer.gemspec",
      "init.rb",
      "lib/db_charmer.rb",
-     "lib/db_charmer/abstract_adapter_extensions.rb",
-     "lib/db_charmer/active_record_extensions.rb",
-     "lib/db_charmer/association_preload.rb",
+     "lib/db_charmer/abstract_adapter/log_formatting.rb",
+     "lib/db_charmer/action_controller/force_slave_reads.rb",
+     "lib/db_charmer/active_record/association_preload.rb",
+     "lib/db_charmer/active_record/class_attributes.rb",
+     "lib/db_charmer/active_record/connection_switching.rb",
+     "lib/db_charmer/active_record/db_magic.rb",
+     "lib/db_charmer/active_record/finder_overrides.rb",
+     "lib/db_charmer/active_record/migration/multi_db_migrations.rb",
+     "lib/db_charmer/active_record/multi_db_proxy.rb",
+     "lib/db_charmer/active_record/named_scope/scope_proxy.rb",
+     "lib/db_charmer/active_record/sharding.rb",
      "lib/db_charmer/connection_factory.rb",
      "lib/db_charmer/connection_proxy.rb",
-     "lib/db_charmer/connection_switch.rb",
      "lib/db_charmer/core_extensions.rb",
-     "lib/db_charmer/db_magic.rb",
-     "lib/db_charmer/finder_overrides.rb",
-     "lib/db_charmer/multi_db_migrations.rb",
-     "lib/db_charmer/multi_db_proxy.rb",
-     "lib/db_charmer/scope_proxy.rb",
+     "lib/db_charmer/force_slave_reads.rb",
      "lib/db_charmer/sharding.rb",
      "lib/db_charmer/sharding/connection.rb",
      "lib/db_charmer/sharding/method/db_block_group_map.rb",
@@ -46,16 +48,16 @@ Gem::Specification.new do |s|
      "lib/db_charmer/sharding/method/hash_map.rb",
      "lib/db_charmer/sharding/method/range.rb",
      "lib/db_charmer/sharding/stub_connection.rb",
+     "lib/db_charmer/version.rb",
      "lib/tasks/databases.rake"
   ]
   s.homepage = %q{http://github.com/kovyrin/db-charmer}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.7}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{ActiveRecord Connections Magic}
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
