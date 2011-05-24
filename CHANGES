@@ -7,6 +7,9 @@ Heavily reorganized the source code to match Rails code structure (class names, 
 make it much easier for other contributors to work with the code.
 Added smarter environment detection (using Rails.env, RAILS_ENV or RACK_ENV).
 
+Changed dependencies a bit: instead of depending on rails, we now require specific components
+(ActiveRecord, ActiveSupport, etc) + we do not require blankslate gem anymore.
+
 Bugfixes: Fix for N+1 queries when accessing shard_info for db_block_group_map sharding method.
 
 ----------------------------------------------------------------------------------------
