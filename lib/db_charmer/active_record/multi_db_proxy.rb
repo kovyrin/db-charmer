@@ -4,6 +4,9 @@ module DbCharmer
       # Simple proxy class that switches connections and then proxies all the calls
       # This class is used to implement chained on_db calls
       class OnDbProxy < ActiveSupport::BasicObject
+        # We need to do this because in Rails 2.3 BasicObject does not remove object_id method, which is stupid
+        undef_method(:object_id) if instance_methods.member?('object_id')
+
         def initialize(proxy_target, slave)
           @proxy_target = proxy_target
           @slave = slave
