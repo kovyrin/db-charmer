@@ -12,8 +12,9 @@ begin
 
     gemspec.version = DbCharmer::Version::STRING
 
-    gemspec.add_dependency('rails', '~> 2.2')
-    gemspec.add_dependency('blankslate', '>= 0')
+    gemspec.add_dependency('activesupport', '~> 2.2')
+    gemspec.add_dependency('activerecord', '~> 2.2')
+    gemspec.add_dependency('actionpack', '~> 2.2')
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

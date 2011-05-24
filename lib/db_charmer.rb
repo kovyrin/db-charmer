@@ -58,9 +58,6 @@ private
   end
 end
 
-# We need blankslate for all the proxies we have
-require 'blankslate'
-
 # Add useful methods to global object
 require 'db_charmer/core_extensions'
 

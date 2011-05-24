@@ -1,6 +1,6 @@
 # Simple proxy that sends all method calls to a real database connection
 module DbCharmer
-  class ConnectionProxy < BlankSlate
+  class ConnectionProxy < ActiveSupport::BasicObject
     def initialize(abstract_class, db_name)
       @abstract_connection_class = abstract_class
       @db_name = db_name
