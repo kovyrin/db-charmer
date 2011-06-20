@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{db-charmer}
-  s.version = "1.7.0.pre2"
+  s.version = "1.7.0.pre3"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexey Kovyrin"]
-  s.date = %q{2011-05-23}
+  s.date = %q{2011-06-20}
   s.description = %q{ActiveRecord Connections Magic (slaves, multiple connections, etc)}
   s.email = %q{alexey@kovyrin.net}
   s.extra_rdoc_files = [
