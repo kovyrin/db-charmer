@@ -1,5 +1,9 @@
 module DbCharmer
   module Sharding
+    autoload :Connection, 'db_charmer/sharding/connection'
+    autoload :StubConnection, 'db_charmer/sharding/stub_connection'
+    autoload :Method, 'db_charmer/sharding/method'
+
     @@sharded_connections = {}
 
     def self.register_connection(config)
@@ -12,4 +16,3 @@ module DbCharmer
     end
   end
 end
-

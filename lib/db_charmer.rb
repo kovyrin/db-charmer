@@ -1,4 +1,5 @@
 module DbCharmer
+  # Accessors
   @@connections_should_exist = true
   mattr_accessor :connections_should_exist
 
@@ -66,25 +67,30 @@ require 'db_charmer/connection_proxy'
 require 'db_charmer/force_slave_reads'
 
 # Add our custom class-level attributes to AR models
-::ActiveRecord::Base.extend(DbCharmer::ActiveRecord::ClassAttributes)
+require 'db_charmer/active_record/class_attributes'
+ActiveRecord::Base.extend(DbCharmer::ActiveRecord::ClassAttributes)
 
 # Enable connections switching in AR
-::ActiveRecord::Base.extend(DbCharmer::ActiveRecord::ConnectionSwitching)
+require 'db_charmer/active_record/connection_switching'
+ActiveRecord::Base.extend(DbCharmer::ActiveRecord::ConnectionSwitching)
 
 # Enable misc AR extensions
-::ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, DbCharmer::AbstractAdapter::LogFormatting)
+require 'db_charmer/abstract_adapter/log_formatting'
+ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, DbCharmer::AbstractAdapter::LogFormatting)
 
 # Enable connection proxy in AR
-::ActiveRecord::Base.extend(DbCharmer::ActiveRecord::MultiDbProxy::ClassMethods)
-::ActiveRecord::Base.extend(DbCharmer::ActiveRecord::MultiDbProxy::MasterSlaveClassMethods)
-::ActiveRecord::Base.send(:include, DbCharmer::ActiveRecord::MultiDbProxy::InstanceMethods)
+require 'db_charmer/active_record/multi_db_proxy'
+ActiveRecord::Base.extend(DbCharmer::ActiveRecord::MultiDbProxy::ClassMethods)
+ActiveRecord::Base.extend(DbCharmer::ActiveRecord::MultiDbProxy::MasterSlaveClassMethods)
+ActiveRecord::Base.send(:include, DbCharmer::ActiveRecord::MultiDbProxy::InstanceMethods)
 
 # Enable connection proxy for scopes
-::ActiveRecord::NamedScope::Scope.send(:include, DbCharmer::ActiveRecord::NamedScope::ScopeProxy)
+require 'db_charmer/active_record/named_scope/scope_proxy'
+ActiveRecord::NamedScope::Scope.send(:include, DbCharmer::ActiveRecord::NamedScope::ScopeProxy)
 
 # Enable connection proxy for associations
 # WARNING: Inject methods to association class right here (they proxy include calls somewhere else, so include does not work)
-module ::ActiveRecord
+module ActiveRecord
   module Associations
     class AssociationProxy
       def proxy?
@@ -108,16 +114,21 @@ module ::ActiveRecord
 end
 
 # Enable multi-db migrations
-::ActiveRecord::Migration.extend(DbCharmer::ActiveRecord::Migration::MultiDbMigrations)
+require 'db_charmer/active_record/migration/multi_db_migrations'
+ActiveRecord::Migration.extend(DbCharmer::ActiveRecord::Migration::MultiDbMigrations)
 
 # Enable the magic
-::ActiveRecord::Base.extend(DbCharmer::ActiveRecord::DbMagic)
+require 'db_charmer/active_record/finder_overrides'
+require 'db_charmer/active_record/sharding'
+require 'db_charmer/active_record/db_magic'
+ActiveRecord::Base.extend(DbCharmer::ActiveRecord::DbMagic)
 
 # Setup association preload magic
-::ActiveRecord::Base.extend(DbCharmer::ActiveRecord::AssociationPreload)
+require 'db_charmer/active_record/association_preload'
+ActiveRecord::Base.extend(DbCharmer::ActiveRecord::AssociationPreload)
 
 # Open up really useful API method
-::ActiveRecord::AssociationPreload::ClassMethods.send(:public, :preload_associations)
+ActiveRecord::AssociationPreload::ClassMethods.send(:public, :preload_associations)
 
 class ::ActiveRecord::Base
   class << self
@@ -133,5 +144,6 @@ end
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Extend ActionController to support forcing slave reads
-::ActionController::Base.extend(DbCharmer::ActionController::ForceSlaveReads::ClassMethods)
-::ActionController::Base.send(:include, DbCharmer::ActionController::ForceSlaveReads::InstanceMethods)
+require 'db_charmer/action_controller/force_slave_reads'
+ActionController::Base.extend(DbCharmer::ActionController::ForceSlaveReads::ClassMethods)
+ActionController::Base.send(:include, DbCharmer::ActionController::ForceSlaveReads::InstanceMethods)
