@@ -1,4 +1,8 @@
 module DbCharmer
+  # Configure autoload
+  autoload :Sharding, 'db_charmer/sharding'
+  autoload :Version,  'db_charmer/version'
+
   # Accessors
   @@connections_should_exist = true
   mattr_accessor :connections_should_exist
