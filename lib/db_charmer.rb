@@ -2,7 +2,9 @@ module DbCharmer
   # Configure autoload
   autoload :Sharding, 'db_charmer/sharding'
   autoload :Version,  'db_charmer/version'
-  autoload :ActionController, 'db_charmer/action_controller'
+  module ActionController
+    autoload :ForceSlaveReads, 'db_charmer/action_controller/force_slave_reads'
+  end
 
   # Accessors
   @@connections_should_exist = true
