@@ -148,6 +148,8 @@ end
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Extend ActionController to support forcing slave reads
-require 'db_charmer/action_controller/force_slave_reads'
-ActionController::Base.extend(DbCharmer::ActionController::ForceSlaveReads::ClassMethods)
-ActionController::Base.send(:include, DbCharmer::ActionController::ForceSlaveReads::InstanceMethods)
+if defined?(ActionController)
+  require 'db_charmer/action_controller/force_slave_reads'
+  ActionController::Base.extend(DbCharmer::ActionController::ForceSlaveReads::ClassMethods)
+  ActionController::Base.send(:include, DbCharmer::ActionController::ForceSlaveReads::InstanceMethods)
+end
