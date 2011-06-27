@@ -304,7 +304,7 @@ and anonymous users. Then you could authorize users in <tt>before_filter</tt> an
   end
 
 Notice: Before using this method you need to enable +ActionController+ support in +DbCharmer+.
-You need to call <rr>DbCharmer.enable_controller_magic!</tt> method from your project
+You need to call <tt>DbCharmer.enable_controller_magic!</tt> method from your project
 initialization code.
 
 4) <tt>DbCharmer.force_slave_reads</tt> method that could be used with a block of ruby code
