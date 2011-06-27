@@ -292,8 +292,8 @@ send their reads to slaves. Example:
 
 3) <tt>force_slave_reads!</tt> +ActionController+ instance method, that could be used within
 your actions or in controller filters to temporarily switch your models to forced slave reads
-mode. This could be useful for cases when the same actions could be called by logged-in and
-anonymous users. Then you could authorize users in <tt>before_filter</tt> and call
+mode. This method could be useful for cases when the same actions could be called by logged-in 
+and anonymous users. Then you could authorize users in <tt>before_filter</tt> and call
 <tt>force_slave_reads!</tt> method for anonymous page views.
 
   class ProfilesController < Application
@@ -302,6 +302,10 @@ anonymous users. Then you could authorize users in <tt>before_filter</tt> and ca
     end
     ...
   end
+
+Notice: Before using this method you need to enable +ActionController+ support in +DbCharmer+.
+You need to call <rr>DbCharmer.enable_controller_magic!</tt> method from your project
+initialization code.
 
 4) <tt>DbCharmer.force_slave_reads</tt> method that could be used with a block of ruby code
 and would enable forced slave reads mode until the end of the block execution. This is really

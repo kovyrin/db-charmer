@@ -2,6 +2,7 @@ module DbCharmer
   # Configure autoload
   autoload :Sharding, 'db_charmer/sharding'
   autoload :Version,  'db_charmer/version'
+  autoload :ActionController, 'db_charmer/action_controller'
 
   # Accessors
   @@connections_should_exist = true
@@ -21,6 +22,12 @@ module DbCharmer
 
   def self.connections_should_exist?
     !! connections_should_exist
+  end
+
+  # Extend ActionController to support forcing slave reads
+  def self.enable_controller_magic!
+    ::ActionController::Base.extend(DbCharmer::ActionController::ForceSlaveReads::ClassMethods)
+    ::ActionController::Base.send(:include, DbCharmer::ActionController::ForceSlaveReads::InstanceMethods)
   end
 
   def self.logger
@@ -145,9 +152,3 @@ class ::ActiveRecord::Base
     alias_method_chain :inherited, :hijacking
   end
 end
-
-#-----------------------------------------------------------------------------------------------------------------------
-# Extend ActionController to support forcing slave reads
-require 'db_charmer/action_controller/force_slave_reads'
-ActionController::Base.extend(DbCharmer::ActionController::ForceSlaveReads::ClassMethods)
-ActionController::Base.send(:include, DbCharmer::ActionController::ForceSlaveReads::InstanceMethods)
