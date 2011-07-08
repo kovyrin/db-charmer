@@ -136,6 +136,9 @@ require 'db_charmer/active_record/sharding'
 require 'db_charmer/active_record/db_magic'
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::DbMagic)
 
+# Enable query caching for all connections in the system, not only the default one
+ActiveRecord::Base.extend(DbCharmer::ActiveRecord::QueryCache)
+
 # Setup association preload magic
 require 'db_charmer/active_record/association_preload'
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::AssociationPreload)

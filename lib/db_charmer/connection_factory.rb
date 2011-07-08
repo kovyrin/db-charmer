@@ -8,6 +8,13 @@ module DbCharmer
   module ConnectionFactory
     @@connection_classes = {}
 
+    # Returns the list of all connections we know about
+    def self.all_connections
+      connections = @@connection_classes.values { |k| k.connection }
+      connections << ::ActiveRecord::Base.connection
+      connections.uniq
+    end
+
     def self.reset!
       @@connection_classes = {}
     end
