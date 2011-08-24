@@ -69,9 +69,17 @@ module DbCharmer
 
         self.db_charmer_force_slave_reads = force_slave_reads
 
-        self.extend(DbCharmer::ActiveRecord::FinderOverrides::ClassMethods)
-        self.send(:include, DbCharmer::ActiveRecord::FinderOverrides::InstanceMethods)
+        # Enable on_slave/on_master methods
         self.extend(DbCharmer::ActiveRecord::MultiDbProxy::MasterSlaveClassMethods)
+
+        # Enable automatic master/slave queries routing
+        if DbCharmer.rails3?
+          # FIXME: Implement finder overrides for Rails 3
+          raise NotImplementedError, "Master/Slave Magic is not implemented for Rails 3 yet" unless Rails.env.test?
+        else
+          self.extend(DbCharmer::ActiveRecord::FinderOverrides::ClassMethods)
+          self.send(:include, DbCharmer::ActiveRecord::FinderOverrides::InstanceMethods)
+        end
       end
 
     end

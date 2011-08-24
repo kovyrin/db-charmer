@@ -62,6 +62,15 @@ module DbCharmer
         def on_master(proxy_target = nil, &block)
           on_db(db_charmer_default_connection, proxy_target, &block)
         end
+
+        def first_level_on_slave
+          first_level = db_charmer_top_level_connection? && on_master.connection.open_transactions.zero?
+          if first_level && db_charmer_force_slave_reads?
+            on_slave { yield }
+          else
+            yield
+          end
+        end
       end
     end
   end

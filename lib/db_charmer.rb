@@ -6,6 +6,11 @@ module DbCharmer
     autoload :ForceSlaveReads, 'db_charmer/action_controller/force_slave_reads'
   end
 
+  # Used in all Rails3-specific places
+  def self.rails3?
+    ::ActiveRecord::VERSION::MAJOR > 2
+  end
+
   # Accessors
   @@connections_should_exist = true
   mattr_accessor :connections_should_exist
@@ -28,8 +33,8 @@ module DbCharmer
 
   # Extend ActionController to support forcing slave reads
   def self.enable_controller_magic!
-    ::ActionController::Base.extend(DbCharmer::ActionController::ForceSlaveReads::ClassMethods)
-    ::ActionController::Base.send(:include, DbCharmer::ActionController::ForceSlaveReads::InstanceMethods)
+  #####   ::ActionController::Base.extend(DbCharmer::ActionController::ForceSlaveReads::ClassMethods)
+  #####   ::ActionController::Base.send(:include, DbCharmer::ActionController::ForceSlaveReads::InstanceMethods)
   end
 
   def self.logger
@@ -62,7 +67,8 @@ private
     old_hijack_new_classes = @@hijack_new_classes
     begin
       @@hijack_new_classes = true
-      ::ActiveRecord::Base.send(:subclasses).each do |subclass|
+      subclasses_method = DbCharmer.rails3? ? :descendants : :subclasses
+      ::ActiveRecord::Base.send(subclasses_method).each do |subclass|
         subclass.hijack_connection!
       end
       yield
@@ -87,9 +93,16 @@ ActiveRecord::Base.extend(DbCharmer::ActiveRecord::ClassAttributes)
 require 'db_charmer/active_record/connection_switching'
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::ConnectionSwitching)
 
-# Enable misc AR extensions
-require 'db_charmer/abstract_adapter/log_formatting'
-ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, DbCharmer::AbstractAdapter::LogFormatting)
+# Enable AR logging extensions
+if DbCharmer.rails3?
+  require 'db_charmer/rails3/abstract_adapter/connection_name'
+  require 'db_charmer/rails3/active_record/log_subscriber'
+  ActiveRecord::LogSubscriber.send(:include, DbCharmer::ActiveRecord::LogSubscriber)
+  ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, DbCharmer::AbstractAdapter::ConnectionName)
+else
+  require 'db_charmer/rails2/abstract_adapter/log_formatting'
+  ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, DbCharmer::AbstractAdapter::LogFormatting)
+end
 
 # Enable connection proxy in AR
 require 'db_charmer/active_record/multi_db_proxy'
@@ -97,51 +110,66 @@ ActiveRecord::Base.extend(DbCharmer::ActiveRecord::MultiDbProxy::ClassMethods)
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::MultiDbProxy::MasterSlaveClassMethods)
 ActiveRecord::Base.send(:include, DbCharmer::ActiveRecord::MultiDbProxy::InstanceMethods)
 
-# Enable connection proxy for scopes
-require 'db_charmer/active_record/named_scope/scope_proxy'
-ActiveRecord::NamedScope::Scope.send(:include, DbCharmer::ActiveRecord::NamedScope::ScopeProxy)
+# Enable connection proxy for relations
+if DbCharmer.rails3?
+  require 'db_charmer/rails3/active_record/relation_method'
+  require 'db_charmer/rails3/active_record/relation/connection'
+  ActiveRecord::Base.extend(DbCharmer::ActiveRecord::RelationMethod)
+  ActiveRecord::Relation.send(:include, DbCharmer::ActiveRecord::Relation::Connection)
+end
+
+# Enable connection proxy for scopes (rails 2.x only)
+unless DbCharmer.rails3?
+  require 'db_charmer/active_record/named_scope/scope_proxy'
+  ActiveRecord::NamedScope::Scope.send(:include, DbCharmer::ActiveRecord::NamedScope::ScopeProxy)
+end
 
 # Enable connection proxy for associations
 # WARNING: Inject methods to association class right here (they proxy include calls somewhere else, so include does not work)
-module ActiveRecord
-  module Associations
-    class AssociationProxy
-      def proxy?
-        true
-      end
-
-      def on_db(con, proxy_target = nil, &block)
-        proxy_target ||= self
-        @reflection.klass.on_db(con, proxy_target, &block)
-      end
-
-      def on_slave(con = nil, &block)
-        @reflection.klass.on_slave(con, self, &block)
-      end
-
-      def on_master(&block)
-        @reflection.klass.on_master(self, &block)
-      end
-    end
-  end
-end
+##### module ActiveRecord
+#####   module Associations
+#####     class AssociationProxy
+#####       def proxy?
+#####         true
+#####       end
+#####
+#####       def on_db(con, proxy_target = nil, &block)
+#####         proxy_target ||= self
+#####         @reflection.klass.on_db(con, proxy_target, &block)
+#####       end
+#####
+#####       def on_slave(con = nil, &block)
+#####         @reflection.klass.on_slave(con, self, &block)
+#####       end
+#####
+#####       def on_master(&block)
+#####         @reflection.klass.on_master(self, &block)
+#####       end
+#####     end
+#####   end
+##### end
 
 # Enable multi-db migrations
 require 'db_charmer/active_record/migration/multi_db_migrations'
 ActiveRecord::Migration.extend(DbCharmer::ActiveRecord::Migration::MultiDbMigrations)
 
 # Enable the magic
-require 'db_charmer/active_record/finder_overrides'
+if DbCharmer.rails3?
+  # FIXME: Implement finder overrides for Rails3
+else
+  require 'db_charmer/rails2/active_record/finder_overrides'
+end
+
 require 'db_charmer/active_record/sharding'
 require 'db_charmer/active_record/db_magic'
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::DbMagic)
 
 # Setup association preload magic
-require 'db_charmer/active_record/association_preload'
-ActiveRecord::Base.extend(DbCharmer::ActiveRecord::AssociationPreload)
+##### require 'db_charmer/active_record/association_preload'
+##### ActiveRecord::Base.extend(DbCharmer::ActiveRecord::AssociationPreload)
 
 # Open up really useful API method
-ActiveRecord::AssociationPreload::ClassMethods.send(:public, :preload_associations)
+##### ActiveRecord::AssociationPreload::ClassMethods.send(:public, :preload_associations)
 
 class ::ActiveRecord::Base
   class << self

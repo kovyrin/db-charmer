@@ -29,6 +29,7 @@ module DbCharmer
       def hijack_connection!
         return if self.respond_to?(:connection_with_magic)
         class << self
+          # Make sure we check our accessors before going to the default connection retrieval method
           def connection_with_magic
             db_charmer_remapped_connection || db_charmer_connection_proxy || connection_without_magic
           end
@@ -62,8 +63,8 @@ module DbCharmer
       end
 
       #-----------------------------------------------------------------------------------------------------------------
-      def switch_connection_to(conn, require_config_to_exist = true)
-        new_conn = coerce_to_connection_proxy(conn, require_config_to_exist)
+      def switch_connection_to(conn, should_exist = true)
+        new_conn = coerce_to_connection_proxy(conn, should_exist)
 
         if db_charmer_connection_proxy.is_a?(DbCharmer::Sharding::StubConnection)
           db_charmer_connection_proxy.set_real_connection(new_conn)
@@ -71,7 +72,22 @@ module DbCharmer
 
         self.db_charmer_connection_proxy = new_conn
         self.hijack_connection!
+
+        # In Rails3 we need to switch arel engine as well
+        # (and if there was an arel table created already, we need to switch its engine as well)
+        # (and if there was a relation created already, we need to switch all the internal engines as well)
+        if DbCharmer.rails3?
+          @arel_engine = self
+          @arel_table.engine = @arel_engine if @arel_table
+          if @relation
+            @relation.table.engine = @arel_engine
+            if rel_arel = relation.instance_variable_get(:@arel)
+              rel_arel.instance_variable_set(:@engine, @arel_engine)
+            end
+          end
+        end
       end
+
     end
   end
 end

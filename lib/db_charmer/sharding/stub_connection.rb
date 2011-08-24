@@ -18,6 +18,10 @@ module DbCharmer
         @real_conn = real_conn
       end
 
+      def db_charmer_connection_name
+        "StubConnection"
+      end
+
       def real_connection
         # Return memoized real connection
         return @real_conn if @real_conn
@@ -42,6 +46,10 @@ module DbCharmer
         # Fail if no connection has been established yet
         unless real_connection
           raise ::ActiveRecord::ConnectionNotEstablished, "No real connection to proxy this method to!"
+        end
+
+        if real_connection.kind_of?(DbCharmer::Sharding::StubConnection)
+          raise ::ActiveRecord::ConnectionNotEstablished, "You have to switch connection on your model before using it!"
         end
 
         # Proxy the call to our real connection target

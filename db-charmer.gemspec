@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = [ 'LICENSE', 'README.rdoc' ]
 
   # Dependencies
-  s.add_dependency 'activesupport', '~> 2.2'
-  s.add_dependency 'activerecord', '~> 2.2'
+  s.add_dependency 'activesupport', '~> 3.0'
+  s.add_dependency 'activerecord', '~> 3.0'
 end
 

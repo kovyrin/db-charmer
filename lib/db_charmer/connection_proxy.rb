@@ -4,6 +4,9 @@ module DbCharmer
     # We need to do this because in Rails 2.3 BasicObject does not remove object_id method, which is stupid
     undef_method(:object_id) if instance_methods.member?('object_id')
 
+    # We use this to get a connection class from the proxy
+    attr_accessor :abstract_connection_class
+
     def initialize(abstract_class, db_name)
       @abstract_connection_class = abstract_class
       @db_name = db_name
