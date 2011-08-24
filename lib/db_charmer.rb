@@ -120,34 +120,34 @@ end
 
 # Enable connection proxy for scopes (rails 2.x only)
 unless DbCharmer.rails3?
-  require 'db_charmer/active_record/named_scope/scope_proxy'
+  require 'db_charmer/rails2/active_record/named_scope/scope_proxy'
   ActiveRecord::NamedScope::Scope.send(:include, DbCharmer::ActiveRecord::NamedScope::ScopeProxy)
 end
 
 # Enable connection proxy for associations
 # WARNING: Inject methods to association class right here (they proxy include calls somewhere else, so include does not work)
-##### module ActiveRecord
-#####   module Associations
-#####     class AssociationProxy
-#####       def proxy?
-#####         true
-#####       end
-#####
-#####       def on_db(con, proxy_target = nil, &block)
-#####         proxy_target ||= self
-#####         @reflection.klass.on_db(con, proxy_target, &block)
-#####       end
-#####
-#####       def on_slave(con = nil, &block)
-#####         @reflection.klass.on_slave(con, self, &block)
-#####       end
-#####
-#####       def on_master(&block)
-#####         @reflection.klass.on_master(self, &block)
-#####       end
-#####     end
-#####   end
-##### end
+module ActiveRecord
+  module Associations
+    class AssociationProxy
+      def proxy?
+        true
+      end
+
+      def on_db(con, proxy_target = nil, &block)
+        proxy_target ||= self
+        @reflection.klass.on_db(con, proxy_target, &block)
+      end
+
+      def on_slave(con = nil, &block)
+        @reflection.klass.on_slave(con, self, &block)
+      end
+
+      def on_master(&block)
+        @reflection.klass.on_master(self, &block)
+      end
+    end
+  end
+end
 
 # Enable multi-db migrations
 require 'db_charmer/active_record/migration/multi_db_migrations'
@@ -165,11 +165,11 @@ require 'db_charmer/active_record/db_magic'
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::DbMagic)
 
 # Setup association preload magic
-##### require 'db_charmer/active_record/association_preload'
-##### ActiveRecord::Base.extend(DbCharmer::ActiveRecord::AssociationPreload)
+require 'db_charmer/active_record/association_preload'
+ActiveRecord::Base.extend(DbCharmer::ActiveRecord::AssociationPreload)
 
 # Open up really useful API method
-##### ActiveRecord::AssociationPreload::ClassMethods.send(:public, :preload_associations)
+ActiveRecord::AssociationPreload::ClassMethods.send(:public, :preload_associations)
 
 class ::ActiveRecord::Base
   class << self
