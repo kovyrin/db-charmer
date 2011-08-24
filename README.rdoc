@@ -563,7 +563,7 @@ establish shard connections in a loop.
 == Documentation
 
 For more information on the plugin internals, please check out the source code. All the plugin's
-code is ~100% covered with a tests that were placed in a separate staging rails project located
+code is ~100% covered with tests that were placed in a separate staging rails project located
 at http://github.com/kovyrin/db-charmer-sandbox. The project has unit tests for all or at least the
 most of the parts of plugin's code.
 
