@@ -72,20 +72,6 @@ module DbCharmer
 
         self.db_charmer_connection_proxy = new_conn
         self.hijack_connection!
-
-        # In Rails3 we need to switch arel engine as well
-        # (and if there was an arel table created already, we need to switch its engine as well)
-        # (and if there was a relation created already, we need to switch all the internal engines as well)
-        if DbCharmer.rails3?
-          @arel_engine = self
-          @arel_table.engine = @arel_engine if @arel_table
-          if @relation
-            @relation.table.engine = @arel_engine
-            if rel_arel = relation.instance_variable_get(:@arel)
-              rel_arel.instance_variable_set(:@engine, @arel_engine)
-            end
-          end
-        end
       end
 
     end
