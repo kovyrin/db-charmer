@@ -65,12 +65,9 @@ module DbCharmer
 
         def first_level_on_slave
           first_level = db_charmer_top_level_connection? && on_master.connection.open_transactions.zero?
-          puts "FLOS: First level => #{first_level}, force slave reads => #{db_charmer_force_slave_reads?}"
           if first_level && db_charmer_force_slave_reads?
-            puts "FLOS: On Slave"
             on_slave { yield }
           else
-            puts "FLOS: On Default"
             yield
           end
         end
