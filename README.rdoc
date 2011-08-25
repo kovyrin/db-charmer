@@ -571,7 +571,7 @@ If you have any questions regarding this project, you could contact the author u
 the DbCharmer Users Group mailing list:
 
 - Group Info: http://groups.google.com/group/db-charmer
-- Subscribe using the info page or by sending an email to <db-charmer-subscribe@googlegroups.com>
+- Subscribe using the info page or by sending an email to db-charmer-subscribe@googlegroups.com
 
 
 == What Ruby and Rails implementations does it work for?
@@ -587,8 +587,8 @@ the public in August-September of 2011.
 == Who are the authors?
 
 This plugin has been created in Scribd.com for our internal use and then the sources were opened for
-other people to use. Most of the code in this package has been developed by Alexey Kovyrin for Scribd.com
-and is released under the MIT license. For more details, see the LICENSE file.
+other people to use. Most of the code in this package has been developed by Oleksiy Kovyrin for
+Scribd.com and is released under the MIT license. For more details, see the LICENSE file.
 
 Other contributors who have helped with the development of this library are (alphabetically ordered):
 * Allen Madsen
