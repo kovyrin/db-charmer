@@ -38,8 +38,8 @@ module DbCharmer
 
   # Extend ActionController to support forcing slave reads
   def self.enable_controller_magic!
-  #####   ::ActionController::Base.extend(DbCharmer::ActionController::ForceSlaveReads::ClassMethods)
-  #####   ::ActionController::Base.send(:include, DbCharmer::ActionController::ForceSlaveReads::InstanceMethods)
+    ::ActionController::Base.extend(DbCharmer::ActionController::ForceSlaveReads::ClassMethods)
+    ::ActionController::Base.send(:include, DbCharmer::ActionController::ForceSlaveReads::InstanceMethods)
   end
 
   def self.logger
