@@ -97,13 +97,17 @@ module DbCharmer
 
         # Switch the model to default relation connection
         def switch_connection_for_method(method, recommendation = nil)
+          puts "PRE-ROUTING: #{method} => #{recommendation}" if recommendation
+
           # Choose where to send the query
           destination ||= select_destination(method, recommendation)
+          puts "ROUTING (slaves => #{db_charmer_enable_slaves.inspect}): #{method} => #{destination}"
 
           # What method to use
           on_db_method = [ :on_db, db_charmer_connection ]
           on_db_method = :on_master if destination == :master
           on_db_method = :first_level_on_slave if destination == :slave
+          puts "ON_DB METHOD: #{on_db_method.inspect}"
 
           # Perform the query
           @klass.send(*on_db_method) do
@@ -113,6 +117,7 @@ module DbCharmer
 
         # For normal selects we go to the slave, but for selects with a lock we should use master
         def to_a_with_db_charmer(*args, &block)
+          puts "to_a (#{self.object_id})"
           preferred_destination = :slave
           preferred_destination = :master if lock_value
 
