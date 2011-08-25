@@ -21,7 +21,7 @@ module DbCharmer
         forced_slave_reads = opt.has_key?(:force_slave_reads) ? opt[:force_slave_reads] : true
 
         # Setup all the slaves related magic if needed
-        setup_slaves_magic(opt[:slaves], forced_slave_reads, should_exist) if opt[:slaves].any?
+        setup_slaves_magic(opt[:slaves], forced_slave_reads, should_exist)
 
         # Setup inheritance magic
         setup_children_magic(opt)
@@ -63,22 +63,23 @@ module DbCharmer
       end
 
       def setup_slaves_magic(slaves, force_slave_reads, should_exist = true)
+        self.db_charmer_force_slave_reads = force_slave_reads
+
+        # Initialize the slave connections list
         self.db_charmer_slaves = slaves.collect do |slave|
           coerce_to_connection_proxy(slave, should_exist)
         end
-
-        self.db_charmer_force_slave_reads = force_slave_reads
+        return unless db_charmer_slaves.any?
 
         # Enable on_slave/on_master methods
         self.extend(DbCharmer::ActiveRecord::MultiDbProxy::MasterSlaveClassMethods)
 
         # Enable automatic master/slave queries routing
-        if DbCharmer.rails3?
-          # FIXME: Implement finder overrides for Rails 3
-          raise NotImplementedError, "Master/Slave Magic is not implemented for Rails 3 yet" unless Rails.env.test?
+        if DbCharmer.rails2?
+          self.extend(DbCharmer::ActiveRecord::MasterSlaveRouting)
         else
-          self.extend(DbCharmer::ActiveRecord::FinderOverrides::ClassMethods)
-          self.send(:include, DbCharmer::ActiveRecord::FinderOverrides::InstanceMethods)
+          self.extend(DbCharmer::ActiveRecord::MasterSlaveRouting::ClassMethods)
+          self.send(:include, DbCharmer::ActiveRecord::MasterSlaveRouting::InstanceMethods)
         end
       end
 

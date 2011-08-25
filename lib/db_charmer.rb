@@ -11,6 +11,11 @@ module DbCharmer
     ::ActiveRecord::VERSION::MAJOR > 2
   end
 
+  # Used in all Rails2-specific places
+  def self.rails2?
+    ::ActiveRecord::VERSION::MAJOR == 2
+  end
+
   # Accessors
   @@connections_should_exist = true
   mattr_accessor :connections_should_exist
@@ -113,13 +118,13 @@ ActiveRecord::Base.send(:include, DbCharmer::ActiveRecord::MultiDbProxy::Instanc
 # Enable connection proxy for relations
 if DbCharmer.rails3?
   require 'db_charmer/rails3/active_record/relation_method'
-  require 'db_charmer/rails3/active_record/relation/connection'
+  require 'db_charmer/rails3/active_record/relation/connection_routing'
   ActiveRecord::Base.extend(DbCharmer::ActiveRecord::RelationMethod)
-  ActiveRecord::Relation.send(:include, DbCharmer::ActiveRecord::Relation::Connection)
+  ActiveRecord::Relation.send(:include, DbCharmer::ActiveRecord::Relation::ConnectionRouting)
 end
 
 # Enable connection proxy for scopes (rails 2.x only)
-unless DbCharmer.rails3?
+if DbCharmer.rails2?
   require 'db_charmer/rails2/active_record/named_scope/scope_proxy'
   ActiveRecord::NamedScope::Scope.send(:include, DbCharmer::ActiveRecord::NamedScope::ScopeProxy)
 end
@@ -155,9 +160,9 @@ ActiveRecord::Migration.extend(DbCharmer::ActiveRecord::Migration::MultiDbMigrat
 
 # Enable the magic
 if DbCharmer.rails3?
-  # FIXME: Implement finder overrides for Rails3
+  require 'db_charmer/rails3/active_record/master_slave_routing'
 else
-  require 'db_charmer/rails2/active_record/finder_overrides'
+  require 'db_charmer/rails2/active_record/master_slave_routing'
 end
 
 require 'db_charmer/active_record/sharding'
