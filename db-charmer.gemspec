@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version       = DbCharmer::Version::STRING
   s.platform      = Gem::Platform::RUBY
 
-  s.authors       = [ 'Alexey Kovyrin' ]
+  s.authors       = [ 'Oleksiy Kovyrin' ]
   s.email         = 'alexey@kovyrin.net'
   s.homepage      = 'http://github.com/kovyrin/db-charmer'
   s.summary       = 'ActiveRecord Connections Magic (slaves, multiple connections, etc)'
@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = [ 'LICENSE', 'README.rdoc' ]
 
   # Dependencies
-  s.add_dependency 'activesupport', '~> 3.0'
+  s.add_dependency 'activesupport', '>= 3.0'
   s.add_dependency 'activerecord', '~> 3.0'
 end
 
