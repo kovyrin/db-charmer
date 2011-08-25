@@ -560,19 +560,28 @@ return an array of sharding connection names or connection configurations to be 
 establish shard connections in a loop.
 
 
-== Documentation
+== Documentation/Questions
 
 For more information on the plugin internals, please check out the source code. All the plugin's
 code is ~100% covered with tests that were placed in a separate staging rails project located
 at http://github.com/kovyrin/db-charmer-sandbox. The project has unit tests for all or at least the
 most of the parts of plugin's code.
 
+If you have any questions regarding this project, you could contact the author using
+the DbCharmer Users Group mailing list:
+
+- Group Info: http://groups.google.com/group/db-charmer
+- Subscribe using the info page or by sending an email to <db-charmer-subscribe@googlegroups.com>
+
 
 == What Ruby and Rails implementations does it work for?
 
 We have a continuous integration setups for this plugin on MRI 1.8.7 with Rails 2.2 and 2.3.
-We use the plugin in production on Scribd.com with MRI (rubyee) 1.8.7 and Rails 2.2, Rails 2.3,
-Sinatra and plain Rack applications.
+We use the plugin in production on Scribd.com with MRI (Ruby Enterprise Edition) 1.8.7 and
+Rails 2.2, Rails 2.3, Sinatra and plain Rack applications.
+
+Version compatible with Rails 3.0 is currently in the works and is going to be available to
+the public in August-September of 2011.
 
 
 == Who are the authors?
