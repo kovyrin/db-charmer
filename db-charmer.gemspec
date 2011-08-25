@@ -15,10 +15,6 @@ Gem::Specification.new do |s|
 
   s.rdoc_options = [ '--charset=UTF-8' ]
 
-  s.add_development_dependency 'rspec'
-  s.add_development_dependency 'yard'
-  s.add_development_dependency 'actionpack'
-
   s.files            = `git ls-files`.split("\n")
   s.require_paths    = [ 'lib' ]
   s.extra_rdoc_files = [ 'LICENSE', 'README.rdoc' ]
@@ -26,5 +22,8 @@ Gem::Specification.new do |s|
   # Dependencies
   s.add_dependency 'activesupport', '>= 3.0'
   s.add_dependency 'activerecord', '~> 3.0'
-end
 
+  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'yard'
+  s.add_development_dependency 'actionpack'
+end
