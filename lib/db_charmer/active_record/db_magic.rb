@@ -69,18 +69,14 @@ module DbCharmer
         self.db_charmer_slaves = slaves.collect do |slave|
           coerce_to_connection_proxy(slave, should_exist)
         end
-        return unless db_charmer_slaves.any?
+        return if db_charmer_slaves.empty?
 
         # Enable on_slave/on_master methods
         self.extend(DbCharmer::ActiveRecord::MultiDbProxy::MasterSlaveClassMethods)
 
-        # Enable automatic master/slave queries routing
-        if DbCharmer.rails2?
-          self.extend(DbCharmer::ActiveRecord::MasterSlaveRouting)
-        else
-          self.extend(DbCharmer::ActiveRecord::MasterSlaveRouting::ClassMethods)
-          self.send(:include, DbCharmer::ActiveRecord::MasterSlaveRouting::InstanceMethods)
-        end
+        # Enable automatic master/slave queries routing (we have specialized versions on those modules for rails2/3)
+        self.extend(DbCharmer::ActiveRecord::MasterSlaveRouting::ClassMethods)
+        self.send(:include, DbCharmer::ActiveRecord::MasterSlaveRouting::InstanceMethods)
       end
 
     end
