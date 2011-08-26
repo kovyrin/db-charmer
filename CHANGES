@@ -1,5 +1,7 @@
 1.7.0 (not released yet):
 
+Beta feature: Rails 3 support
+
 Beta feature: Added force_slave_reads functionality. Now we could have models with slaves
 that are not used by default, but could be turned on globally (per-controller or per-action).
 

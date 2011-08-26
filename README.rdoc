@@ -576,12 +576,13 @@ the DbCharmer Users Group mailing list:
 
 == What Ruby and Rails implementations does it work for?
 
-We have a continuous integration setups for this plugin on MRI 1.8.7 with Rails 2.2 and 2.3.
+We have a continuous integration setups for this plugin on MRI 1.8.7 with Rails 2.2, 2.3 and 3.0.
 We use the plugin in production on Scribd.com with MRI (Ruby Enterprise Edition) 1.8.7 and
 Rails 2.2, Rails 2.3, Sinatra and plain Rack applications.
 
-Version compatible with Rails 3.0 is currently in the works and is going to be available to
-the public in August-September of 2011.
+Starting with version 1.7.0 we support Rails 3.0, but until further notice we consider it a 
+beta-quality feature since we do not run any production software on this version of Rails. If you
+run your application on Rails 3.0, please contact the author.
 
 
 == Who are the authors?
