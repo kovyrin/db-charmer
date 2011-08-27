@@ -59,12 +59,15 @@ module DbCharmer
         end
 
         # Connection switching (changes the default relation connection)
-        def on_db(con)
-          old_connection = db_charmer_connection
-          self.db_charmer_connection = con
-          clone
-        ensure
-          self.db_charmer_connection = old_connection
+        def on_db(con, &block)
+          if block_given?
+            @klass.on_db(con, &block)
+          else
+            clone.tap do |result|
+              result.db_charmer_connection = con
+              result.db_charmer_connection_is_forced = true
+            end
+          end
         end
 
         # Make sure we get the right connection here
