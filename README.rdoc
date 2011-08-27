@@ -563,9 +563,9 @@ establish shard connections in a loop.
 == Documentation/Questions
 
 For more information on the plugin internals, please check out the source code. All the plugin's
-code is ~100% covered with tests that were placed in a separate staging rails project located
-at http://github.com/kovyrin/db-charmer-sandbox. The project has unit tests for all or at least the
-most of the parts of plugin's code.
+code is ~100% covered with tests (located in a separate staging rails project located
+at http://github.com/kovyrin/db-charmer-sandbox). The project has unit tests for all or at
+least the most actively used code paths.
 
 If you have any questions regarding this project, you could contact the author using
 the DbCharmer Users Group mailing list:
@@ -576,11 +576,15 @@ the DbCharmer Users Group mailing list:
 
 == What Ruby and Rails implementations does it work for?
 
-We have a continuous integration setups for this plugin on MRI 1.8.7 with Rails 2.2, 2.3 and 3.0.
-We use the plugin in production on Scribd.com with MRI (Ruby Enterprise Edition) 1.8.7 and
-Rails 2.2, Rails 2.3, Sinatra and plain Rack applications.
+We have a continuous integration setup for this gem on with Rails 2.2, 2.3 and 3.0 using a few
+different versions of Ruby. For more information about the build matrix please visit
+http://github.com/kovyrin/db-charmer-sandbox web site.
 
-Starting with version 1.7.0 we support Rails 3.0, but until further notice we consider it a 
+In addition to CI testing, we use this gem in production on Scribd.com (one of the largest RoR
+sites in the world) with Ruby Enterprise Edition and Rails 2.2, Rails 2.3, Sinatra and plain
+Rack applications.
+
+Starting with version 1.7.0 we support Rails 3.0, but until further notice we consider it a
 beta-quality feature since we do not run any production software on this version of Rails. If you
 run your application on Rails 3.0, please contact the author.
 
