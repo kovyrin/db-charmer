@@ -393,28 +393,34 @@ impact, but it is worth noting.
 == Simple Sharding Support
 
 Starting with the release 1.6.0 of +DbCharmer+ we have added support for simple database sharding
-to our ActiveRecord extensions. The feature is still in alpha stage and should not be used in
-production without complete understanding of the principles of its work.
+to our ActiveRecord extensions. Even though this feature is tested in production, we do not recommend
+using it in your applications without complete understanding of the principles of its work.
 
-At this point we support three sharding methods:
+At this point we support four sharding methods:
 
-1) range - really simple sharding method that allows you to take a table, slice is to a set of
+1) +range+ - really simple sharding method that allows you to take a table, slice is to a set of
 smaller tables with pre-defined ranges of primary keys and then put those smaller tables to
 different databases/servers. This could be useful for situations where you have a huge table that
 is slowly growing and you just want to keep it simple and split the table load into a few servers
 without building any complex sharding schemes.
 
-2) hash_map - pretty simple sharding method that allows you to take a table and slice it to a set
+2) +hash_map+ - pretty simple sharding method that allows you to take a table and slice it to a set
 of smaller tables by some key that has a pre-defined key of values. For example, list of US mailing
 addresses could be sharded by states, where you'd be able to define which states are stored in which
 databases/servers.
 
-3) db_block_map - this is a really complex sharding method that allows you to shard your table into a
+3) +db_block_map+ - this is a really complex sharding method that allows you to shard your table into a
 set of small fixed-size blocks that then would be assigned to a set of shards (databases/servers).
 Whenever you would need an additional blocks they would be allocated automatically and then balanced
 across the shards you have defined in your database. This method could be used to scale out huge
 tables with hundreds of millions to billions of rows and allows relatively easy re-sharding techniques
 to be implemented on top.
+
+4) +db_block_group_map+ - really similar to the +db_block_map+ method with a single difference: this method
+allows you to have a set of databases (table groups) on each server and every group would be handled as a 
+separate shard of data. This approach is really useful for pre-sharding of your data before scaling your
+application out. You can easily start with one server, having 10-20-50 separate databases, and then
+move those databases to different servers as you see your database outgrow one machine.
 
 
 === How to enable sharding?
@@ -512,17 +518,17 @@ allows you to switch to the default shard:
   Text.on_default_shard.create(:body => 'hello', :user_id => 123)
 
 And finally, there is a method that allows you to run your code on each shard in the system (at this
-point the method is supported in db_block_map method only):
+point the method is supported in db_block_map and db_block_group_map methods only):
 
   Event.on_each_shard { |event| event.delete_all }
 
 
 === Defining your own sharding methods
 
-It is possing with +DbCharmer+ for the users to define their own sharding methods. You need to do a
+It is possible with +DbCharmer+ for the users to define their own sharding methods. You need to do a
 few things to implement your very own sharding scheme:
 
-1) Create a class with a name DbCharmer::Sharding::Method::YourOwnName
+1) Create a class with a name <tt>DbCharmer::Sharding::Method::YourOwnName</tt>
 
 2) Implement at least a constructor <tt>initialize(config)</tt> and a lookup instance
 method <tt>shard_for_key(key)</tt> that would return either a connection name from <tt>database.yml</tt>
@@ -532,7 +538,7 @@ file or just a hash of connection parameters for rails connection adapters.
 
   DbCharmer::Sharding.register_connection(
     :name => :some_name,
-    :method => :your_own_name,    # your sharder class name in lower case
+    :method => :your_own_name,    # your sharding method class name in lower case
     ... some additional parameters if needed ...
   )
 
@@ -553,15 +559,14 @@ would return +true+ if you do support default shard specification and +false+ ot
 === Adding support for shards enumeration in your custom sharding methods
 
 To add shards enumeration support to your custom-sharded models you need to implement
-just one instance method +shard_connections+ on your sharded class. This method should
-return an array of sharding connection names or connection configurations to be used to
-establish shard connections in a loop.
+an instance method +shard_connections+ on your class. This method should return an array of
+sharding connection names or connection configurations to be used to establish connections in a loop.
 
 
 == Documentation/Questions
 
 For more information on the plugin internals, please check out the source code. All the plugin's
-code is ~100% covered with tests (located in a separate staging rails project located
+code is ~100% covered with tests (located in a separate staging rails project
 at http://github.com/kovyrin/db-charmer-sandbox). The project has unit tests for all or at
 least the most actively used code paths.
 
@@ -569,7 +574,7 @@ If you have any questions regarding this project, you could contact the author u
 the DbCharmer Users Group mailing list:
 
 - Group Info: http://groups.google.com/group/db-charmer
-- Subscribe using the info page or by sending an email to db-charmer-subscribe@googlegroups.com
+- Subscribe using the info page or by sending an email to mailto:db-charmer-subscribe@googlegroups.com
 
 
 == What Ruby and Rails implementations does it work for?
