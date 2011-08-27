@@ -1,33 +1,31 @@
 = DB Charmer - ActiveRecord Connection Magic Plugin
 
-+DbCharmer+ is a simple yet powerful plugin for ActiveRecord that does a few things:
++DbCharmer+ is a simple yet powerful plugin for ActiveRecord that significantly extends its ability to work with 
+multiple databases and/or database servers. The major features we add to ActiveRecord are:
 
-1. Allows you to easily manage AR models' connections (+switch_connection_to+ method)
-2. Allows you to switch AR models' default connections to a separate servers/databases
-3. Allows you to easily choose where your query should go (<tt>Model.on_*</tt> methods family)
-4. Allows you to automatically send read queries to your slaves while masters would handle all the updates.
-5. Adds multiple databases migrations to ActiveRecord
+1. Simple management for AR model connections (+switch_connection_to+ method)
+2. Switching of default AR model connections to separate servers/databases
+3. Ability to easily choose where your query should go (<tt>Model.on_*</tt> methods family)
+4. Automated master/slave queries routing (selects go to a slave, updates handled by the master).
+5. Multiple database migrations with very flexible query routing controls.
+6. Simple database sharding functionality with multiple sharding methods (value, range, mapping table).
 
 
 == Installation
 
-There are two options when approaching db-charmer installation:
-* using the gem (recommended)
-* install as a Rails plugin
+There are two options when approaching +DbCharmer+ installation:
+* using the gem (recommended and the only way of using it with Rails 3.0+)
+* install as a Rails plugin (works in Rails 2.x only)
 
-To install as a gem, add this to your environment.rb:
+To install as a gem, add this to your Gemfile:
 
-  config.gem 'db-charmer', :lib => 'db_charmer'
+  gem 'db-charmer', :require => 'db_charmer'
 
-And then run the command:
-
-  sudo rake gems:install
-
-To install db-charmer as a Rails plugin use this:
+To install +DbCharmer+ as a Rails plugin use the following command:
 
   script/plugin install git://github.com/kovyrin/db-charmer.git
 
-_Notice_: If you use db-charmer in a non-rails project, you may need to set <tt>DbCharmer.env</tt> to a correct value
+_Notice_: If you use +DbCharmer+ in a non-rails project, you may need to set <tt>DbCharmer.env</tt> to a correct value
 before using any of its connection management methods. Correct value here is a valid <tt>database.yml</tt>
 first-level section name.
 
