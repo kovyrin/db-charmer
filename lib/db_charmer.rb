@@ -1,3 +1,6 @@
+# In Rails 2.2 they did not add it to the autoload so it won't work w/o this require
+require 'active_record/version' unless defined?(::ActiveRecord::VERSION::MAJOR)
+
 module DbCharmer
   # Configure autoload
   autoload :Sharding, 'db_charmer/sharding'
