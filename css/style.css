@@ -178,7 +178,7 @@ body {
     border-left: 1px solid #7B776C;
     color: #E7E4D6;
     padding: 0px 20px;
-    line-height: 40px;
+    line-height: 50px;
     font-size: 18px;
     text-decoration: none;
     display: inline-block;
@@ -186,7 +186,7 @@ body {
 }
 
 #main-menu ul li a:hover {
-    color: #E17000;
+    text-decoration: underline;
 }
 
 #main-menu ul li.current a {
@@ -298,7 +298,7 @@ pre {
     top: 0;
     left: 0;
     width: 100%;
-    height: 40px;
+    height: 50px;
     z-index: 10;
     -moz-box-shadow: 0px 5px 5px rgba(65, 61, 54, 0.8);
     -webkit-box-shadow: 0px 5px 5px rgba(65, 61, 54, 0.8);
