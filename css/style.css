@@ -310,6 +310,15 @@ pre {
 }
 
 #forkme {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+}
+
+#forkme p {
     background: #CC6600;
     margin: 0;
     padding: 2px;
