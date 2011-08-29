@@ -63,7 +63,7 @@ td { vertical-align: top; }
 
 
 /* ==|== primary styles =====================================================
-   Author: 
+   Author:
    ========================================================================== */
 
 body {
@@ -316,10 +316,10 @@ pre {
     position: absolute;
     width: 200px;
     top: 40px;
-    left: -40px;
+    right: -40px;
     font-weight: bold;
-    -webkit-transform: rotate(-45deg); 
-    -moz-transform: rotate(-45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
     -moz-box-shadow: -5px 5px 15px rgba(65, 61, 54, 0.7);
     -webkit-box-shadow: -5px 5px 15px rgba(65, 61, 54, 0.7);
     box-shadow: -5px 5px 15px rgba(65, 61, 54, 0.7);
@@ -376,13 +376,13 @@ pre {
 
 
 /* ==|== print styles ======================================================= */
- 
+
 @media print {
-  * { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; } 
+  * { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; }
   a, a:visited { text-decoration: underline; }
   a[href]:after { content: " (" attr(href) ")"; }
   abbr[title]:after { content: " (" attr(title) ")"; }
-  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; } 
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }
   pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
   thead { display: table-header-group; }
   tr, img { page-break-inside: avoid; }
