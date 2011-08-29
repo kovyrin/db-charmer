@@ -3,7 +3,7 @@ $(document).ready(function() {
     var mainMenu = $('#main-menu');
 
     $.waypoints.settings.scrollThrottle = 30;
-    mainMenu.waypoint(function(event, direction) {
+    $('#main-menu-wrap').waypoint(function(event, direction) {
         container.toggleClass('sticky', direction === "down");
         event.stopPropagation();
     }, { offset: 0 });
@@ -24,7 +24,7 @@ $(document).ready(function() {
 
     if (currentFile == "index") {
         // Register each article as a waypoint.
-        $('#main article').waypoint({ offset: '50%' });
+        $('#main article').waypoint({ offset: 100 });
 
         // The same for all waypoints
         container.delegate('#main article', 'waypoint.reached', function(event, direction) {
