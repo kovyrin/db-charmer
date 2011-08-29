@@ -22,7 +22,7 @@ $(document).ready(function() {
     });
     if (!found) links.eq(0).addClass('current');
 
-    if (file == "index") {
+    if (currentFile == "index") {
         // Register each article as a waypoint.
         $('#main article').waypoint({ offset: '50%' });
 
