@@ -26,6 +26,7 @@ layout: default
     <tt>database.yml</tt> first-level section name.</p>
 </article>
 
+
 <article id="connections">
   <header><h2>Easy ActiveRecord Connection Management</h2></header>
 
@@ -86,4 +87,114 @@ production:
   in some hierarchy (for example, you can’t switch AR::Base connection and
   see all your models switched to the new connection, use the classic
   <tt>establish_connection</tt> instead).</p>
+</article>
+
+
+<article id="migrations">
+  <header><h2>Multiple DB Migrations</h2></header>
+
+  <p>In every application that works with many databases, there is need in a
+  convenient schema migrations mechanism.</p>
+
+  <p>All Rails users already have this mechanism - rails migrations. So in
+  <tt>DbCharmer</tt>, we’ve made it possible to seamlessly use multiple
+  databases in Rails migrations.</p>
+
+  <p>There are two methods available in migrations to operate on more than one
+  database:</p>
+  <ol>
+  <li>
+  <p>Global connection change method - used to switch whole migration to a
+  non-default database.</p>
+  </li>
+  <li>
+  <p>Block-level connection change method - could be used to do only a part of a
+  migration on a non-default db.</p>
+  </li>
+  </ol><p>Migration class example (global connection rewrite):</p>
+
+{% highlight ruby %}
+class MultiDbTest < ActiveRecord::Migration
+  db_magic :connection => :second_db
+
+  def self.up
+    create_table :test_table, :force => true do |t|
+      t.string :test_string
+      t.timestamps
+    end
+  end
+
+  def self.down
+    drop_table :test_table
+  end
+end
+{% endhighlight %}
+
+  <p>Migration class example (block-level connection rewrite):</p>
+
+{% highlight ruby %}
+class MultiDbTest < ActiveRecord::Migration
+  def self.up
+    on_db :second_db do
+      create_table :test_table, :force => true do |t|
+        t.string :test_string
+        t.timestamps
+      end
+    end
+  end
+
+  def self.down
+    on_db :second_db { drop_table :test_table }
+  end
+end
+{% endhighlight %}
+
+
+  <p>Migration class example (global connection rewrite, multiple connections
+  with the same table):</p>
+
+{% highlight ruby %}
+class MultiDbTest < ActiveRecord::Migration
+  db_magic :connections => [:second_db, :default]
+
+  def self.up
+    create_table :test_table, :force => true do |t|
+      t.string :test_string
+      t.timestamps
+    end
+  end
+
+  def self.down
+    drop_table :test_table
+  end
+end
+{% endhighlight %}
+
+  <p><i>Note:</i> both :connection and :connections can take an array of connections)</p>
+
+  <h3>Default Migrations Connection</h3>
+
+  <p>Starting with DbCharmer version 1.6.10 it is possible to call
+  <tt>ActiveRecord::Migration.db_magic</tt> and specify default migration
+  connection that would be used by all migrations without excplicitly
+  switched connections. If you want to switch your migration to the default
+  ActiveRecord connection, just use <tt>db_magic :connection =>
+  :default</tt>.</p>
+
+  <h3>Invalid Connection Names Handling</h3>
+
+  <p>By default in all environments <tt>on_db</tt> and <tt>db_magic</tt>
+  statments would fail if specified connection does not exist in
+  database.yml. It is possible to make <tt>DbCharmer</tt> ignore such
+  situations in non-production environments so that rails would create the
+  tables in your single database (especially useful in test databases).</p>
+
+  <p>This behaviour is controlled by the
+  <tt>DbCharmer.connections_should_exist</tt> configuration attribute which
+  could be set from a rails initializer.</p>
+
+  <p><i>Warning:</i> if in test environment you use separate connections and
+  master-slave support in DbCharmer, make sure you disable transactional
+  fixtures support in Rails. Without this change you’re going to see all
+  kinds of weird data visibility problems in your tests.</p>
 </article>
