@@ -472,6 +472,209 @@ DbCharmer.with_remapped_databases(:logs => :big_logs_slave) { ... }
   model classes. It is very careful to only patch the models it needs to.
   However, if you use <code>with_remapped_databases</code> and remap the default
   database (<tt>:master</tt>), then it has no choice but to patch all
-  subclasses of +ActiveRecord::Base+. This should not cause any serious
+  subclasses of <tt>ActiveRecord::Base</tt>. This should not cause any serious
   problems or any big performance impact, but it is worth noting.</p>
+</article>
+
+
+<article id="sharding">
+  <header><h2>Simple Sharding Support</h2></header>
+
+  <p>Starting with the release 1.6.0 of <tt>DbCharmer</tt> we have added support
+  for simple database sharding to our ActiveRecord extensions. Even though
+  this feature is tested in production, we do not recommend using it in your
+  applications without complete understanding of the principles of its work.</p>
+
+  <p>At this point we support four sharding methods:</p>
+
+  <p>1) <code>range</code> - really simple sharding method that allows you to take a
+  table, slice is to a set of smaller tables with pre-defined ranges of
+  primary keys and then put those smaller tables to different
+  databases/servers. This could be useful for situations where you have a
+  huge table that is slowly growing and you just want to keep it simple and
+  split the table load into a few servers without building any complex
+  sharding schemes.</p>
+
+  <p>2) <code>hash_map</code> - pretty simple sharding method that allows you to
+  take a table and slice it to a set of smaller tables by some key that has a
+  pre-defined key of values. For example, list of US mailing addresses could
+  be sharded by states, where you’d be able to define which states are
+  stored in which databases/servers.</p>
+
+  <p>3) <code>db_block_map</code> - this is a really complex sharding method that
+  allows you to shard your table into a set of small fixed-size blocks that
+  then would be assigned to a set of shards (databases/servers). Whenever you
+  would need an additional blocks they would be allocated automatically and
+  then balanced across the shards you have defined in your database. This
+  method could be used to scale out huge tables with hundreds of millions to
+  billions of rows and allows relatively easy re-sharding techniques to be
+  implemented on top.</p>
+
+  <p>4) <code>db_block_group_map</code> - really similar to the
+  <code>db_block_map</code> method with a single difference: this method allows
+  you to have a set of databases (table groups) on each server and every
+  group would be handled as a  separate shard of data. This approach is
+  really useful for pre-sharding of your data before scaling your application
+  out. You can easily start with one server, having 10-20-50 separate
+  databases, and then move those databases to different servers as you see
+  your database outgrow one machine.</p>
+
+  <h3>How to enable sharding?</h3>
+
+  <p>To enable sharding extensions you need to take a few things:</p>
+
+  <p>1) Create a Rails initializer (on run this code when you initialize your
+  script/application) with a set of sharded connections defined. Each
+  connection would have a name, sharding method and an optional set of
+  parameters to initialize the sharding method of your choice.</p>
+
+  <p>2) Specify sharding connection you want to use in your models.</p>
+
+  <p>3) Specify the shard you want to use before doing any operations on your
+  models.</p>
+
+  <p>For more details please check out the following documentation sections.</p>
+
+  <h3>Sharded Connections</h3>
+
+  <p>Sharded connection is a simple abstractions that allows you to specify all
+  sharding parameters for a cluster in one place and then use this
+  centralized configuration in your models. Here are a few examples of
+  sharded connections initialization calls:</p>
+
+  <p>1) Sample range-based sharded connection:</p>
+
+{% highlight ruby %}
+TEXTS_SHARDING_RANGES = {                 # This hash maps possible key ranges to db connections
+  0...100   => :shard1,
+  100..200  => :shard2,
+  :default  => :shard3
+}
+
+DbCharmer::Sharding.register_connection(
+  :name => :texts,
+  :method => :range,
+  :ranges => TEXTS_SHARDING_RANGES        # Pass our mapping to the sharding method
+)
+{% endhighlight %}
+  
+
+  <p>2) Sample hash map sharded connection:</p>
+
+{% highlight ruby %}
+SHARDING_MAP = {                          # This hash will map our keys to db connections
+  'US'  => :us_users,
+  'CA'  => :ca_users,
+  :default  => :other_users
+}
+
+DbCharmer::Sharding.register_connection(
+  :name => :users,
+  :method => :hash_map,
+  :map => SHARDING_MAP                    # Pass our map to the sharding method
+)
+{% endhighlight %}
+
+  <p>3) Sample database block map sharded connection:</p>
+
+{% highlight ruby %}
+DbCharmer::Sharding.register_connection(
+  :name => :social,
+  :method => :db_block_map,
+  :block_size => 10000,                   # Number of keys per block
+  :map_table => :event_shards_map,        # Table with blocks to shards mapping
+  :shards_table => :event_shards_info,    # Shards connection information table
+  :connection => :social_shard_info       # What connection to use to read the map
+)
+{% endhighlight %}
+
+  <p>After your sharded connection is defined, you could use it in your models:</p>
+
+{% highlight ruby %}
+class Text < ActiveRecord::Base
+  db_magic :sharded => {
+    :key => :id,
+    :sharded_connection => :texts
+  }
+end
+
+class Event < ActiveRecord::Base
+  db_magic :sharded => {
+    :key => :to_uid,
+    :sharded_connection => :social
+  }
+end
+{% endhighlight %}
+
+  <h3>Switching connections in sharded models</h3>
+
+  <p>Every time you need to perform an operation on a sharded model, you need to
+  specify on which shard you want to do it. We have a method for this which
+  would look familiar for the people that use <tt>DbCharmer</tt> for
+  non-sharded environments since it looks and works just like those per-query
+  connection management methods:</p>
+
+{% highlight ruby %}
+Event.shard_for(10).find(:conditions => { :to_uid => 123 }, :limit => 5)
+Text.shard_for(123).find_by_id(123)
+{% endhighlight %}
+
+  <p>There is another method that could be used with range and hash_map sharding
+  methods, this method allows you to switch to the default shard:</p>
+
+{% highlight ruby %}
+Text.on_default_shard.create(:body => 'hello', :user_id => 123)
+{% endhighlight %}
+
+  <p>And finally, there is a method that allows you to run your code on each
+  shard in the system (at this point the method is supported in db_block_map
+  and db_block_group_map methods only):</p>
+
+{% highlight ruby %}
+Event.on_each_shard { |event| event.delete_all }
+{% endhighlight %}
+
+  <h3>Defining your own sharding methods</h3>
+
+  <p>It is possible with <tt>DbCharmer</tt> for the users to define their own
+  sharding methods. You need to do a few things to implement your very own
+  sharding scheme:</p>
+
+  <p>1) Create a class with a name <code>DbCharmer::Sharding::Method::YourOwnName</code></p>
+
+  <p>2) Implement at least a constructor <code>initialize(config)</code> and a
+  lookup instance method <code>shard_for_key(key)</code> that would return either
+  a connection name from <tt>database.yml</tt> file or just a hash of
+  connection parameters for rails connection adapters.</p>
+
+  <p>3) Register your sharded connection using the following call:</p>
+
+{% highlight ruby %}
+DbCharmer::Sharding.register_connection(
+  :name => :some_name,
+  :method => :your_own_name,    # your sharding method class name in lower case
+  ... some additional parameters if needed ...
+)
+{% endhighlight %}
+
+  <p>4) Use your sharded connection as any standard one.</p>
+
+  <h3>Adding support for default shards in your custom sharding methods</h3>
+
+  <p>If you want to be able to use <code>on_default_shard</code> method on your
+  custom-sharded models, you need to do two things:</p>
+
+  <p>1) implement <code>support_default_shard?</code> instance method on your
+  sharded class that would return <tt>true</tt> if you do support default
+  shard specification and <tt>false</tt> otherwise.</p>
+
+  <p>2) implement <tt>:default</tt> symbol support as a key in your
+  <code>shard_for_key</code> method.</p>
+
+  <h3>Adding support for shards enumeration in your custom sharding methods</h3>
+
+  <p>To add shards enumeration support to your custom-sharded models you need to
+  implement an instance method <code>shard_connections</code> on your class. This
+  method should return an array of sharding connection names or connection
+  configurations to be used to establish connections in a loop.</p>  
 </article>
