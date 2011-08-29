@@ -244,6 +244,8 @@ body {
     margin-top: 20px;
     color: #E7E4D6;
     font-family: Sans-Serif;
+    font-size: 16px;
+    line-height: 1.5em;
 }
 
 #main article header {
@@ -287,10 +289,18 @@ body {
   color: #E17000;
 }
 
-pre {
+pre, article code {
     background: #322F2A;
     padding: 5px 5px 5px 20px;
     border: 1px solid #5C5A52;
+}
+
+article code {
+    padding: 2px;
+}
+
+article pre code {
+    padding: 0px;
 }
 
 .sticky #main-menu {
