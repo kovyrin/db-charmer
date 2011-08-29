@@ -371,7 +371,7 @@ class ProfilesController < Application
 end
 {% endhighlight %}
 
-  <p>Notice: Before using this method you need to enable
+  <p><em>Notice</em>: Before using this method you need to enable
   ActionController support in <tt>DbCharmer</tt>. You need to call
   <code>DbCharmer.enable_controller_magic!</code> method from your project
   initialization code.</p>
@@ -390,7 +390,7 @@ DbCharmer.force_slave_reads do
 end
 {% endhighlight %}
 
-  <p>Notice: At this point the feature considered beta and should be used with
+  <p><em>Notice</em>: At this point the feature considered beta and should be used with
   caution. It is fully covered with tests, but there still could be
   unexpected issues when used in real-world applications.</p>
   </li>
@@ -417,12 +417,12 @@ Post.on_db(:olap) { User.posts.count }
 @user.posts.on_slave.find(:title => 'Hello, world!')
 {% endhighlight %}
 
-  <p>Notice: Since ActiveRecord associations implemented as proxies for
+  <p><em>Notice</em>: Since <tt>ActiveRecord</tt> associations implemented as proxies for
   resulting objects/collections, it is possible to use our connection
   switching methods even without chained methods:</p>
 
 {% highlight ruby %}
-@post.user.on_slave # would return post's author
+@post.user.on_slave   # would return post's author
 @photo.owner.on_slave # would return photo's owner
 {% endhighlight %}
 
