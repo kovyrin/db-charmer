@@ -11,13 +11,13 @@ layout: default
     </ul>
 
     <p>To install as a gem, add this to your environment.rb:</p>
-    <pre><code>config.gem 'db-charmer', :lib => 'db_charmer'</code></pre>
+    {% highlight ruby %}config.gem 'db-charmer', :lib => 'db_charmer'{% endhighlight %}
 
     <p>And then run the command:</p>
-    <pre><code>sudo rake gems:install</code></pre>
+    {% highlight console %}sudo rake gems:install{% endhighlight %}
 
     <p>To install db-charmer as a Rails plugin use this:</p>
-    <pre><code>script/plugin install git://github.com/kovyrin/db-charmer.git</code></pre>
+    {% highlight console %}script/plugin install git://github.com/kovyrin/db-charmer.git{% endhighlight %}
 
     <p>Notice: If you use db-charmer in a non-rails project, you may need to set DbCharmer.env to a correct value before using any of its connection management methods. Correct value here is a valid database.yml first-level section name.</p>
 </article>
