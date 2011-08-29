@@ -250,7 +250,7 @@ body {
     padding-top: 10px;
 }
 
-#main article header h2 {
+#main article h2,h3,h4 {
     color: #E17000;
     font-weight: normal;
 }
