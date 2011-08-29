@@ -96,7 +96,7 @@ production:
   <p>In every application that works with many databases, there is need in a
   convenient schema migrations mechanism.</p>
 
-  <p>All Rails users already have this mechanism - rails migrations. So in
+  <p>All Rails users already have this mechanism – rails migrations. So in
   <tt>DbCharmer</tt>, we’ve made it possible to seamlessly use multiple
   databases in Rails migrations.</p>
 
@@ -104,11 +104,11 @@ production:
   database:</p>
   <ol>
   <li>
-  <p>Global connection change method - used to switch whole migration to a
+  <p>Global connection change method – used to switch whole migration to a
   non-default database.</p>
   </li>
   <li>
-  <p>Block-level connection change method - could be used to do only a part of a
+  <p>Block-level connection change method – could be used to do only a part of a
   migration on a non-default db.</p>
   </li>
   </ol><p>Migration class example (global connection rewrite):</p>
@@ -263,7 +263,7 @@ end
   methods we’ve added to ActiveRecord models:</p>
 
   <ol>
-  <li><p><code>on_master</code> - this method could be used in two forms: block form
+  <li><p><code>on_master</code> – this method could be used in two forms: block form
   and proxy form. In the block form you could force connection switch for a
   block of code:</p>
 
@@ -284,12 +284,12 @@ User.on_master.exists?(:login => login, :password => password)
 {% endhighlight %}
   </li>
   
-  <li><code>on_slave</code> - this method is used to force a query to be run on a
+  <li><code>on_slave</code> – this method is used to force a query to be run on a
   slave even in situations when it’s been previously forced to use the
   master. If there is more than one slave, one would be selected randomly.
   Tis method has two forms as well: block and proxy.</li>
 
-  <li><p><code>on_db(connection)</code> - this method is what makes two previous
+  <li><p><code>on_db(connection)</code> – this method is what makes two previous
   methods possible. It is used to switch a model’s connection to some db
   for a short block of code or even for one statement (two forms). It accepts
   the same range of values as the <code>switch_connection_to</code> method does.
@@ -498,7 +498,7 @@ DbCharmer.with_remapped_databases(:logs => :big_logs_slave) { ... }
   <p>At this point we support four sharding methods:</p>
 
   <ol>
-  <li><code>range</code> - really simple sharding method that allows you to take a
+  <li><code>range</code> – really simple sharding method that allows you to take a
   table, slice is to a set of smaller tables with pre-defined ranges of
   primary keys and then put those smaller tables to different
   databases/servers. This could be useful for situations where you have a
@@ -506,13 +506,13 @@ DbCharmer.with_remapped_databases(:logs => :big_logs_slave) { ... }
   split the table load into a few servers without building any complex
   sharding schemes.</li>
 
-  <li><code>hash_map</code> - pretty simple sharding method that allows you to
+  <li><code>hash_map</code> – pretty simple sharding method that allows you to
   take a table and slice it to a set of smaller tables by some key that has a
   pre-defined key of values. For example, list of US mailing addresses could
   be sharded by states, where you’d be able to define which states are
   stored in which databases/servers.</li>
 
-  <li><code>db_block_map</code> - this is a really complex sharding method that
+  <li><code>db_block_map</code> – this is a really complex sharding method that
   allows you to shard your table into a set of small fixed-size blocks that
   then would be assigned to a set of shards (databases/servers). Whenever you
   would need an additional blocks they would be allocated automatically and
@@ -521,7 +521,7 @@ DbCharmer.with_remapped_databases(:logs => :big_logs_slave) { ... }
   billions of rows and allows relatively easy re-sharding techniques to be
   implemented on top.</li>
 
-  <li><code>db_block_group_map</code> - really similar to the
+  <li><code>db_block_group_map</code> – really similar to the
   <code>db_block_map</code> method with a single difference: this method allows
   you to have a set of databases (table groups) on each server and every
   group would be handled as a  separate shard of data. This approach is
