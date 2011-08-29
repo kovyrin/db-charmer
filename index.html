@@ -84,7 +84,7 @@ production:
   <p><em>Warning:</em> All the connection switching calls would switch connection
   <strong>only</strong> for those classes the method called on. You can’t call the
   <code>switch_connection_to</code> method and switch connection for a base class
-  in some hierarchy (for example, you can’t switch AR::Base connection and
+  in some hierarchy (for example, you can’t switch <tt>ActiveRecord::Base</tt> connection and
   see all your models switched to the new connection, use the classic
   <code>establish_connection</code> instead).</p>
 </article>
@@ -283,7 +283,7 @@ User.on_master.find_by_activation_code(code)
 User.on_master.exists?(:login => login, :password => password)
 {% endhighlight %}
   </li>
-  
+
   <li><code>on_slave</code> – this method is used to force a query to be run on a
   slave even in situations when it’s been previously forced to use the
   master. If there is more than one slave, one would be selected randomly.
@@ -338,7 +338,7 @@ class User < ActiveRecord::Base
 end
 {% endhighlight %}
   </li>
-  
+
   <li><p><code>ActionController.force_slave_reads</code> class method. This
   method could be used to enable per-controller (when called with no
   arguments), or per-action (<tt>:only</tt> and <tt>:except</tt> params)
@@ -591,7 +591,7 @@ DbCharmer::Sharding.register_connection(
 )
 {% endhighlight %}
   </li>
-  
+
   <li><p>Sample database block map sharded connection:</p>
 
 {% highlight ruby %}
@@ -701,5 +701,5 @@ DbCharmer::Sharding.register_connection(
   <p>To add shards enumeration support to your custom-sharded models you need to
   implement an instance method <code>shard_connections</code> on your class. This
   method should return an array of sharding connection names or connection
-  configurations to be used to establish connections in a loop.</p>  
+  configurations to be used to establish connections in a loop.</p>
 </article>
