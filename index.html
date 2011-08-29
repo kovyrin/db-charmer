@@ -4,7 +4,7 @@ layout: default
 
 <article id="installation">
     <header><h2>Installation</h2></header>
-    <p>There are two options when approaching <tt>DbCharmer</tt> installation:</p>
+    <p>There are two options when approaching DbCharmer installation:</p>
     <ul>
     <li>
     <p>using the gem (recommended and the only way of using it with Rails 3.0+)</p>
@@ -16,11 +16,11 @@ layout: default
 
     {% highlight ruby %}gem 'db-charmer', :require => 'db_charmer'{% endhighlight %}
 
-    <p>To install <tt>DbCharmer</tt> as a Rails plugin use the following command:</p>
+    <p>To install DbCharmer as a Rails plugin use the following command:</p>
 
     {% highlight console %}./script/plugin install git://github.com/kovyrin/db-charmer.git{% endhighlight %}
 
-    <p><em>Notice:</em> If you use <tt>DbCharmer</tt> in a non-rails project, you
+    <p><em>Notice:</em> If you use DbCharmer in a non-rails project, you
     may need to set <code>DbCharmer.env</code> to a correct value before using any
     of its connection management methods. Correct value here is a valid
     <tt>database.yml</tt> first-level section name.</p>
@@ -97,7 +97,7 @@ production:
   convenient schema migrations mechanism.</p>
 
   <p>All Rails users already have this mechanism – rails migrations. So in
-  <tt>DbCharmer</tt>, we’ve made it possible to seamlessly use multiple
+  DbCharmer, we’ve made it possible to seamlessly use multiple
   databases in Rails migrations.</p>
 
   <p>There are two methods available in migrations to operate on more than one
@@ -185,7 +185,7 @@ end
 
   <p>By default in all environments <code>on_db</code> and <code>db_magic</code>
   statments would fail if specified connection does not exist in
-  <tt>database.yml</tt>. It is possible to make <tt>DbCharmer</tt> ignore such
+  <tt>database.yml</tt>. It is possible to make DbCharmer ignore such
   situations in non-production environments so that rails would create the
   tables in your single database (especially useful in test databases).</p>
 
@@ -211,7 +211,7 @@ end
 
   <p>So, after using ActsAsReadonlyable plugin for some time, upon switching to
   Rails 2.2 we’ve decided to collect all of our master-slave code in one plugin
-  and release it. <tt>DbCharmer</tt> adds the following features to Rails models:</p>
+  and release it. DbCharmer adds the following features to Rails models:</p>
 
   <h3>Auto-Switching all Reads to the Slave(s)</h3>
 
@@ -321,7 +321,7 @@ Post.on_db(:foo).first
   accounts. But in some cases (like logged-out profile page views, etc) it
   would be perfectly reasonable to switch all reads to the slave.</p>
 
-  <p>For this use-case starting with <tt>DbCharmer</tt> release 1.7.0 we have a
+  <p>For this use-case starting with DbCharmer release 1.7.0 we have a
   feature called forced slave reads. It consists of a few separate small
   features that together make it really powerful:</p>
 
@@ -372,7 +372,7 @@ end
 {% endhighlight %}
 
   <p><em>Notice:</em> Before using this method you need to enable
-  ActionController support in <tt>DbCharmer</tt>. You need to call
+  ActionController support in DbCharmer. You need to call
   <code>DbCharmer.enable_controller_magic!</code> method from your project
   initialization code.</p>
   </li>
@@ -426,7 +426,7 @@ Post.on_db(:olap) { User.posts.count }
 @photo.owner.on_slave # would return photo's owner
 {% endhighlight %}
 
-  <p>Starting with <tt>DbCharmer</tt> release 1.4 it is possible to use prefix
+  <p>Starting with DbCharmer release 1.4 it is possible to use prefix
   notation for <tt>has_many</tt> and HABTM associations connection switching:</p>
 
 {% highlight ruby %}
@@ -436,7 +436,7 @@ Post.on_db(:olap) { User.posts.count }
 
   <h3>Named Scopes Support</h3>
 
-  <p>To make it easier for <tt>DbCharmer</tt> users to use connections switching
+  <p>To make it easier for DbCharmer users to use connections switching
   methods with named scopes, we’ve added <tt>on_*</tt> methods support on
   the scopes as well. All the following scope chains would do exactly the
   same way (the query would be executed on the <tt>:foo</tt> database connection):</p>
@@ -470,15 +470,15 @@ DbCharmer.with_remapped_databases(:logs => :big_logs_slave) { ... }
   <p>Any model whose default database is <tt>:logs</tt> (e.g., <code>db_charmer
   :connection => :logs</code>) will now have its connection switched to
   <tt>:big_logs_slave</tt> in that block. This is lower precedence than any
-  other <tt>DbCharmer</tt> method, so <code>Model.on_db(:foo).find(...)</code>
+  other DbCharmer method, so <code>Model.on_db(:foo).find(...)</code>
   and such things will still use the database they specify, not the one that
   model was remapped to.</p>
 
   <p>You can specify any number of remappings at once, and you can also use
   <tt>:master</tt> as a database name that matches any model that has not had
-  its connection set by <tt>DbCharmer</tt> at all.</p>
+  its connection set by DbCharmer at all.</p>
 
-  <p><em>Notice:</em> <tt>DbCharmer</tt> works via <code>alias_method_chain</code> in
+  <p><em>Notice:</em> DbCharmer works via <code>alias_method_chain</code> in
   model classes. It is very careful to only patch the models it needs to.
   However, if you use <code>with_remapped_databases</code> and remap the default
   database (<tt>:master</tt>), then it has no choice but to patch all
@@ -490,7 +490,7 @@ DbCharmer.with_remapped_databases(:logs => :big_logs_slave) { ... }
 <article id="sharding">
   <header><h2>Simple Sharding Support</h2></header>
 
-  <p>Starting with the release 1.6.0 of <tt>DbCharmer</tt> we have added support
+  <p>Starting with the release 1.6.0 of DbCharmer we have added support
   for simple database sharding to our ActiveRecord extensions. Even though
   this feature is tested in production, we do not recommend using it in your
   applications without complete understanding of the principles of its work.</p>
@@ -629,7 +629,7 @@ end
 
   <p>Every time you need to perform an operation on a sharded model, you need to
   specify on which shard you want to do it. We have a method for this which
-  would look familiar for the people that use <tt>DbCharmer</tt> for
+  would look familiar for the people that use DbCharmer for
   non-sharded environments since it looks and works just like those per-query
   connection management methods:</p>
 
@@ -655,7 +655,7 @@ Event.on_each_shard { |event| event.delete_all }
 
   <h3>Defining your own sharding methods</h3>
 
-  <p>It is possible with <tt>DbCharmer</tt> for the users to define their own
+  <p>It is possible with DbCharmer for the users to define their own
   sharding methods. You need to do a few things to implement your very own
   sharding scheme:</p>
 
