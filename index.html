@@ -21,7 +21,7 @@ layout: default
     {% highlight console %}./script/plugin install git://github.com/kovyrin/db-charmer.git{% endhighlight %}
 
     <p><em>Notice</em>: If you use <tt>DbCharmer</tt> in a non-rails project, you
-    may need to set <tt>DbCharmer.env</tt> to a correct value before using any
+    may need to set <code>DbCharmer.env</code> to a correct value before using any
     of its connection management methods. Correct value here is a valid
     <tt>database.yml</tt> first-level section name.</p>
 </article>
@@ -30,13 +30,13 @@ layout: default
 <article id="connections">
   <header><h2>Easy ActiveRecord Connection Management</h2></header>
 
-  <p>As a part of this plugin we’ve added <tt>switch_connection_to</tt> method
+  <p>As a part of this plugin we’ve added <code>switch_connection_to</code> method
   that accepts many different kinds of db connections specifications and uses
   them on a model. We support:</p>
   <ol>
     <li>Strings and symbols as the names of connection configuration blocks in <tt>database.yml</tt></li>
     <li>ActiveRecord models (we’d use connection currently set up on a model)</li>
-    <li>Database connections (<tt>Model.connection</tt>)</li>
+    <li>Database connections (<code>Model.connection</code>)</li>
     <li><tt>Nil</tt> values to reset model to default connection</li>
   </ol>
 
@@ -70,7 +70,7 @@ production:
     database: foo
 {% endhighlight %}
 
-  <p>The <tt>switch_connection_to</tt> method has an optional second parameter
+  <p>The <code>switch_connection_to</code> method has an optional second parameter
   <tt>should_exist</tt> which is true by default. This parameter is used when
   the method is called with a string or a symbol connection name and there is
   no such connection configuration in the <tt>database.yml</tt> file. If this
@@ -83,10 +83,10 @@ production:
 
   <p><b>Warning</b>: All the connection switching calls would switch connection
   <b>only</b> for those classes the method called on. You can’t call the
-  <tt>switch_connection_to</tt> method and switch connection for a base class
+  <code>switch_connection_to</code> method and switch connection for a base class
   in some hierarchy (for example, you can’t switch AR::Base connection and
   see all your models switched to the new connection, use the classic
-  <tt>establish_connection</tt> instead).</p>
+  <code>establish_connection</code> instead).</p>
 </article>
 
 
@@ -175,26 +175,303 @@ end
   <h3>Default Migrations Connection</h3>
 
   <p>Starting with DbCharmer version 1.6.10 it is possible to call
-  <tt>ActiveRecord::Migration.db_magic</tt> and specify default migration
-  connection that would be used by all migrations without excplicitly
+  <code>ActiveRecord::Migration.db_magic</code> and specify default migration
+  connection that would be used by all migrations without explicitly
   switched connections. If you want to switch your migration to the default
-  ActiveRecord connection, just use <tt>db_magic :connection =>
-  :default</tt>.</p>
+  ActiveRecord connection, just use
+  <code>db_magic :connection => :default</code>.</p>
 
   <h3>Invalid Connection Names Handling</h3>
 
-  <p>By default in all environments <tt>on_db</tt> and <tt>db_magic</tt>
+  <p>By default in all environments <code>on_db</code> and <code>db_magic</code>
   statments would fail if specified connection does not exist in
-  database.yml. It is possible to make <tt>DbCharmer</tt> ignore such
+  <tt>database.yml</tt>. It is possible to make <tt>DbCharmer</tt> ignore such
   situations in non-production environments so that rails would create the
   tables in your single database (especially useful in test databases).</p>
 
   <p>This behaviour is controlled by the
-  <tt>DbCharmer.connections_should_exist</tt> configuration attribute which
+  <code>DbCharmer.connections_should_exist</code> configuration attribute which
   could be set from a rails initializer.</p>
 
   <p><i>Warning:</i> if in test environment you use separate connections and
   master-slave support in DbCharmer, make sure you disable transactional
   fixtures support in Rails. Without this change you’re going to see all
   kinds of weird data visibility problems in your tests.</p>
+</article>
+
+
+<article id="master-slave">
+  <header><h2>Using Models in Master-Slave Environments</h2></header>
+
+  <p>Master-slave replication is the most popular scale-out technique in a
+  medium-sized and large database-centric applications today. There are some
+  rails plugins out there that help developers to use slave servers in their
+  models but none of them were flexible enough for us to start using them in
+  a huge application we work on.</p>
+
+  <p>So, after using ActsAsReadonlyable plugin for some time, upon switching to
+  Rails 2.2 we’ve decided to collect all of our master-slave code in one plugin
+  and release it. <tt>DbCharmer</tt> adds the following features to Rails models:</p>
+
+  <h3>Auto-Switching all Reads to the Slave(s)</h3>
+
+  <p>When you create a model, you could use <code>db_magic :slave => :blah</code>
+  or <code>db_magic :slaves => [ :foo, :bar ]</code> commands in your model to
+  set up reads redirection mode when all your find/count/exist/etc methods
+  will be reading data from your slave (or a bunch of slaves in a round-robin
+  manner). Here is an example:</p>
+
+{% highlight ruby %}
+class Foo < ActiveRecord::Base
+  db_magic :slave => :slave01
+end
+
+class Bar < ActiveRecord::Base
+  db_magic :slaves => [ :slave01, :slave02 ]
+end
+{% endhighlight %}
+
+  <h3>Default Connection Switching</h3>
+
+  <p>If you have more than one master-slave cluster (or simply more than one
+  database) in your database environment, then you might want to change the
+  default database connection of some of your models. You could do that by
+  using <code>db_magic :connection => :foo</code> call from your models.
+  Example:</p>
+
+{% highlight ruby %}
+class Foo < ActiveRecord::Base
+  db_magic :connection => :foo
+end
+{% endhighlight %}
+
+  <p>Sample model on a separate master-slave cluster (so, separate main
+  connection + a slave connection):</p>
+
+{% highlight ruby %}
+class Bar < ActiveRecord::Base
+  db_magic :connection => :bar, :slave => :bar_slave
+end
+{% endhighlight %}
+
+  <h3>Per-Query Connection Management</h3>
+
+  <p>Sometimes you have select queries that you know you want to run on the
+  master. This could happen for example when you have just added some data
+  and need to read it back and not sure if it made it all the way to the
+  slave yet or no. For this situation and a few others there is a set of
+  methods we’ve added to ActiveRecord models:</p>
+
+  <p>1) <code>on_master</code> - this method could be used in two forms: block form
+  and proxy form. In the block form you could force connection switch for a
+  block of code:</p>
+
+{% highlight ruby %}
+User.on_master do
+  user = User.find_by_login('foo')
+  user.update_attributes!(:activated => true)
+end
+{% endhighlight %}
+
+  <p>In the proxy form this method could be used to force one query to be
+  performed on the master database server:</p>
+
+{% highlight ruby %}
+Comment.on_master.last(:limit => 5)
+User.on_master.find_by_activation_code(code)
+User.on_master.exists?(:login => login, :password => password)
+{% endhighlight %}
+
+  <p>2) <code>on_slave</code> - this method is used to force a query to be run on a
+  slave even in situations when it’s been previously forced to use the
+  master. If there is more than one slave, one would be selected randomly.
+  Tis method has two forms as well: block and proxy.</p>
+
+  <p>3) <code>on_db(connection)</code> - this method is what makes two previous
+  methods possible. It is used to switch a model’s connection to some db
+  for a short block of code or even for one statement (two forms). It accepts
+  the same range of values as the <code>switch_connection_to</code> method does.
+  Example:</p>
+
+{% highlight ruby %}
+Comment.on_db(:olap).count
+Post.on_db(:foo).find(:first)
+{% endhighlight %}
+
+  <p>By default in development and test environments you could use non-existing
+  connections in your <code>on_db</code> calls and rails would send all your
+  queries to a single default database. In production <code>on_db</code> won’t
+  accept non-existing names.</p>
+
+  <p>This behaviour is controlled by the
+  <code>DbCharmer.connections_should_exist</code> configuration attribute which
+  could be set from a rails initializer.</p>
+
+  <h3>Forced Slave Reads</h3>
+
+  <p>In some cases we could have models that are too important to be used in
+  default “send all reads to the slave” mode, but we still would like to
+  be able to switch them to this mode sometimes. For example, you could have
+  <tt>User</tt> model, which you would like to keep from lagging with your
+  slaves because users do not like to see outdated information about their
+  accounts. But in some cases (like logged-out profile page views, etc) it
+  would be perfectly reasonable to switch all reads to the slave.</p>
+
+  <p>For this use-case starting with <tt>DbCharmer</tt> release 1.7.0 we have a
+  feature called forced slave reads. It consists of a few separate small
+  features that together make it really powerful:</p>
+
+  <p>1) <code>:force_slave_reads => false</code> option for
+  <tt>ActiveRecord</tt>‘s <code>db_magic</code> method. This option could be
+  used to disable automated slave reads on your models so that you could call
+  <code>on_slave</code> or use other methods to enable slave reads when you need
+  it. Example:</p>
+
+{% highlight ruby %}
+class User < ActiveRecord::Base
+  db_magic :slave => slave01, :forced_slave_reads => false
+end
+{% endhighlight %}
+
+  <p>2) <code>ActionController.force_slave_reads</code> class method. This
+  method could be used to enable per-controller (when called with no
+  arguments), or per-action (<tt>:only</tt> and <tt>:except</tt> params)
+  forced reads from slaves. This is really useful for actions in which you
+  know you could tolerate some slave lag so all your models with slaves
+  defined will send their reads to slaves. Example:</p>
+
+{% highlight ruby %}
+class ProfilesController < Application
+  force_slave_reads :except => [ :login, :logout ]
+  ...
+end
+{% endhighlight %}
+
+  <p>3) <code>ActionController#force_slave_reads!</code> instance method,
+  that could be used within your actions or in controller filters to
+  temporarily switch your models to forced slave reads mode. This method
+  could be useful for cases when the same actions could be called by
+  logged-in  and anonymous users. Then you could authorize users in
+  <code>before_filter</code> and call <code>force_slave_reads!</code> method for
+  anonymous page views.</p>
+
+{% highlight ruby %}
+class ProfilesController < Application
+  before_filter do
+    force_slave_reads! unless current_user
+  end
+  ...
+end
+{% endhighlight %}
+
+  <p>Notice: Before using this method you need to enable
+  ActionController support in <tt>DbCharmer</tt>. You need to call
+  <code>DbCharmer.enable_controller_magic!</code> method from your project
+  initialization code.</p>
+
+  <p>4) <code>DbCharmer.force_slave_reads</code> method that could be used with a
+  block of ruby code and would enable forced slave reads mode until the end
+  of the block execution. This is really powerful feature allowing high
+  granularity in your control of forced slave reads mode. Example:</p>
+
+{% highlight ruby %}
+DbCharmer.force_slave_reads do
+  ...
+  total_users = User.count
+  ...
+end
+{% endhighlight %}
+
+  <p>Notice: At this point the feature considered beta and should be used with
+  caution. It is fully covered with tests, but there still could be
+  unexpected issues when used in real-world applications.</p>
+
+  <h3>Associations Connection Management</h3>
+
+  <p>ActiveRecord models can have an associations with each other and since
+  every model has its own database connections, it becomes pretty hard to
+  manage connections in a chained calls like <code>User.posts.count</code>. With
+  a class-only connection switching methods this call would look like the
+  following if we’d want to count posts on a separate database:</p>
+
+{% highlight ruby %}
+Post.on_db(:olap) { User.posts.count }
+{% endhighlight %}
+
+  <p>Apparently this is not the best way to write the code and we’ve
+  implemented an <tt>on_*</tt> methods on associations as well so you could
+  do things like this:</p>
+
+{% highlight ruby %}
+@user.posts.on_db(:olap).count
+@user.posts.on_slave.find(:title => 'Hello, world!')
+{% endhighlight %}
+
+  <p>Notice: Since ActiveRecord associations implemented as proxies for
+  resulting objects/collections, it is possible to use our connection
+  switching methods even without chained methods:</p>
+
+{% highlight ruby %}
+@post.user.on_slave # would return post's author
+@photo.owner.on_slave # would return photo's owner
+{% endhighlight %}
+
+  <p>Starting with <tt>DbCharmer</tt> release 1.4 it is possible to use prefix
+  notation for has_many and HABTM associations connection switching:</p>
+
+{% highlight ruby %}
+@user.on_db(:foo).posts
+@user.on_slave.posts
+{% endhighlight %}
+
+  <h3>Named Scopes Support</h3>
+
+  <p>To make it easier for <tt>DbCharmer</tt> users to use connections switching
+  methods with named scopes, we’ve added <tt>on_*</tt> methods support on
+  the scopes as well. All the following scope chains would do exactly the
+  same way (the query would be executed on the :foo database connection):</p>
+
+{% highlight ruby %}
+Post.on_db(:foo).published.with_comments.spam_marked.count
+Post.published.on_db(:foo).with_comments.spam_marked.count
+Post.published.with_comments.on_db(:foo).spam_marked.count
+Post.published.with_comments.spam_marked.on_db(:foo).count
+{% endhighlight %}
+
+  <p>And now, add this feature to our associations support and here is what we
+  could do:</p>
+
+{% highlight ruby %}
+@user.on_db(:archive).posts.published.all
+@user.posts.on_db(:olap).published.count
+@user.posts.published.on_db(:foo).first
+{% endhighlight %}
+
+  <h3>Bulk Connection Management</h3>
+
+  <p>Sometimes you want to run code where a large number of tables may be used,
+  and you’d like them all to use an alternate database. You can now do
+  this:</p>
+
+{% highlight ruby %}
+DbCharmer.with_remapped_databases(:logs => :big_logs_slave) { ... }
+{% endhighlight %}
+
+  <p>Any model whose default database is <tt>:logs</tt> (e.g., <code>db_charmer
+  :connection => :logs</code>) will now have its connection switched to
+  <tt>:big_logs_slave</tt> in that block. This is lower precedence than any
+  other <tt>DbCharmer</tt> method, so <code>Model.on_db(:foo).find(...)</code>
+  and such things will still use the database they specify, not the one that
+  model was remapped to.</p>
+
+  <p>You can specify any number of remappings at once, and you can also use
+  <tt>:master</tt> as a database name that matches any model that has not had
+  its connection set by <tt>DbCharmer</tt> at all.</p>
+
+  <p><b>Note</b>: <tt>DbCharmer</tt> works via <code>alias_method_chain</code> in
+  model classes. It is very careful to only patch the models it needs to.
+  However, if you use <code>with_remapped_databases</code> and remap the default
+  database (<tt>:master</tt>), then it has no choice but to patch all
+  subclasses of +ActiveRecord::Base+. This should not cause any serious
+  problems or any big performance impact, but it is worth noting.</p>
 </article>
