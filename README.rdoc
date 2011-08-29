@@ -10,6 +10,8 @@ multiple databases and/or database servers. The major features we add to ActiveR
 5. Multiple database migrations with very flexible query routing controls.
 6. Simple database sharding functionality with multiple sharding methods (value, range, mapping table).
 
+For more information on the project, you can check out our web site at http://kovyrin.github.com/db-charmer.
+
 
 == Installation
 
@@ -23,7 +25,7 @@ To install as a gem, add this to your Gemfile:
 
 To install +DbCharmer+ as a Rails plugin use the following command:
 
-  script/plugin install git://github.com/kovyrin/db-charmer.git
+  ./script/plugin install git://github.com/kovyrin/db-charmer.git
 
 _Notice_: If you use +DbCharmer+ in a non-rails project, you may need to set <tt>DbCharmer.env</tt> to a correct value
 before using any of its connection management methods. Correct value here is a valid <tt>database.yml</tt>
@@ -565,7 +567,8 @@ sharding connection names or connection configurations to be used to establish c
 
 == Documentation/Questions
 
-For more information on the plugin internals, please check out the source code. All the plugin's
+For more information about the library, please visit our site at http://kovyrin.github.com/db-charmer.
+If you need more defails on DbCharmer internals, please check out the source code. All the plugin's
 code is ~100% covered with tests (located in a separate staging rails project
 at http://github.com/kovyrin/db-charmer-sandbox). The project has unit tests for all or at
 least the most actively used code paths.
