@@ -185,6 +185,15 @@ body {
     text-shadow: 1px 1px 2px #000;
 }
 
+#main-menu ul li a:hover {
+    color: #E17000;
+}
+
+#main-menu ul li.current a {
+    background-color: #686358;
+}
+
+
 #main-menu ul li:last-child {
     border-right: 1px solid #7B776C;
     padding-right: 3px;
@@ -254,6 +263,10 @@ body {
 
 #main article:last-child {
     margin-bottom: 30px;
+}
+
+#main a:hover {
+    color: #E17000;
 }
 
 #footer {
