@@ -71,7 +71,7 @@ production:
 {% endhighlight %}
 
   <p>The <code>switch_connection_to</code> method has an optional second parameter
-  <tt>should_exist</tt> which is true by default. This parameter is used when
+  <tt>should_exist</tt> which is <tt>true</tt> by default. This parameter is used when
   the method is called with a string or a symbol connection name and there is
   no such connection configuration in the <tt>database.yml</tt> file. If this
   parameter is <tt>true</tt>, an exception would be raised, otherwise, the
@@ -170,7 +170,7 @@ class MultiDbTest < ActiveRecord::Migration
 end
 {% endhighlight %}
 
-  <p><em>Notice:</em> both :connection and :connections can take an array of connections)</p>
+  <p><em>Notice:</em> both <tt>:connection</tt> and <tt>:connections</tt> can take an array of connections)</p>
 
   <h3>Default Migrations Connection</h3>
 
@@ -217,7 +217,7 @@ end
 
   <p>When you create a model, you could use <code>db_magic :slave => :blah</code>
   or <code>db_magic :slaves => [ :foo, :bar ]</code> commands in your model to
-  set up reads redirection mode when all your find/count/exist/etc methods
+  set up reads redirection mode when all your <tt>find</tt>/<tt>count</tt>/<tt>exist</tt>/etc methods
   will be reading data from your slave (or a bunch of slaves in a round-robin
   manner). Here is an example:</p>
 
@@ -287,7 +287,7 @@ User.on_master.exists?(:login => login, :password => password)
   <li><code>on_slave</code> – this method is used to force a query to be run on a
   slave even in situations when it’s been previously forced to use the
   master. If there is more than one slave, one would be selected randomly.
-  Tis method has two forms as well: block and proxy.</li>
+  This method has two forms as well: block and proxy.</li>
 
   <li><p><code>on_db(connection)</code> – this method is what makes two previous
   methods possible. It is used to switch a model’s connection to some db
@@ -427,7 +427,7 @@ Post.on_db(:olap) { User.posts.count }
 {% endhighlight %}
 
   <p>Starting with <tt>DbCharmer</tt> release 1.4 it is possible to use prefix
-  notation for has_many and HABTM associations connection switching:</p>
+  notation for <tt>has_many</tt> and HABTM associations connection switching:</p>
 
 {% highlight ruby %}
 @user.on_db(:foo).posts
@@ -439,7 +439,7 @@ Post.on_db(:olap) { User.posts.count }
   <p>To make it easier for <tt>DbCharmer</tt> users to use connections switching
   methods with named scopes, we’ve added <tt>on_*</tt> methods support on
   the scopes as well. All the following scope chains would do exactly the
-  same way (the query would be executed on the :foo database connection):</p>
+  same way (the query would be executed on the <tt>:foo</tt> database connection):</p>
 
 {% highlight ruby %}
 Post.on_db(:foo).published.with_comments.spam_marked.count
