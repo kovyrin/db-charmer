@@ -4,43 +4,89 @@ layout: default
 
 <article>
     <header><h2>Installation</h2></header>
-    <p>There are two options when approaching db-charmer installation:</p>
+    <p>There are two options when approaching <tt>DbCharmer</tt> installation:</p>
     <ul>
-        <li>using the gem (recommended)</li>
-        <li>install as a Rails plugin</li>
-    </ul>
+    <li>
+    <p>using the gem (recommended and the only way of using it with Rails 3.0+)</p>
+    </li>
+    <li>
+    <p>install as a Rails plugin (works in Rails 2.x only)</p>
+    </li>
+    </ul><p>To install as a gem, add this to your Gemfile:</p>
 
-    <p>To install as a gem, add this to your environment.rb:</p>
-    {% highlight ruby %}config.gem 'db-charmer', :lib => 'db_charmer'{% endhighlight %}
+    {% highlight ruby %}gem 'db-charmer', :require => 'db_charmer'{% endhighlight %}
 
-    <p>And then run the command:</p>
-    {% highlight console %}sudo rake gems:install{% endhighlight %}
+    <p>To install <tt>DbCharmer</tt> as a Rails plugin use the following command:</p>
 
-    <p>To install db-charmer as a Rails plugin use this:</p>
-    {% highlight console %}script/plugin install git://github.com/kovyrin/db-charmer.git{% endhighlight %}
+    {% highlight console %}./script/plugin install git://github.com/kovyrin/db-charmer.git{% endhighlight %}
 
-    <p>Notice: If you use db-charmer in a non-rails project, you may need to set DbCharmer.env to a correct value before using any of its connection management methods. Correct value here is a valid database.yml first-level section name.</p>
+    <p><em>Notice</em>: If you use <tt>DbCharmer</tt> in a non-rails project, you
+    may need to set <tt>DbCharmer.env</tt> to a correct value before using any
+    of its connection management methods. Correct value here is a valid
+    <tt>database.yml</tt> first-level section name.</p>
 </article>
 
-<article>
-    <header><h2>Easy ActiveRecord Connection Management</h2></header>
 
-    <p>As a part of this plugin we’ve added switch_connection_to method that accepts many different kinds of db connections specifications and uses them on a model. We support:</p>
-    <ol>
-        <li>Strings and symbols as the names of connection configuration blocks in database.yml.</li>
-        <li>ActiveRecord models (we’d use connection currently set up on a model).</li>
-        <li>Database connections (Model.connection)</li>
-        <li>Nil values to reset model to default connection.</li>
-    </ol>
-    <p>Sample code:</p>
-    
+
+
+<article>
+  <header><h2>Easy ActiveRecord Connection Management</h2></header>
+
+  <p>As a part of this plugin we’ve added <tt>switch_connection_to</tt> method
+  that accepts many different kinds of db connections specifications and uses
+  them on a model. We support:</p>
+  <ol>
+    <li>Strings and symbols as the names of connection configuration blocks in <tt>database.yml</tt></li>
+    <li>ActiveRecord models (we’d use connection currently set up on a model)</li>
+    <li>Database connections (<tt>Model.connection</tt>)</li>
+    <li><tt>Nil</tt> values to reset model to default connection</li>
+  </ol>
+
+  <p>Sample code:</p>
+
 {% highlight ruby %}
-class Foo > ActiveRecord::Model; end
+class Foo < ActiveRecord::Model; end
 
 Foo.switch_connection_to(:blah)
 Foo.switch_connection_to('foo')
 Foo.switch_connection_to(Bar)
 Foo.switch_connection_to(Baz.connection)
 Foo.switch_connection_to(nil)
+
 {% endhighlight %}
+
+  <p>Sample <tt>database.yml</tt> configuration:</p>
+
+{% highlight yaml %}
+production:
+  blah:
+    adapter: mysql
+    username: blah
+    host: blah.local
+    database: blah
+
+  foo:
+    adapter: mysql
+    username: foo
+    host: foo.local
+    database: foo
+{% endhighlight %}
+
+  <p>The <tt>switch_connection_to</tt> method has an optional second parameter
+  <tt>should_exist</tt> which is true by default. This parameter is used when
+  the method is called with a string or a symbol connection name and there is
+  no such connection configuration in the <tt>database.yml</tt> file. If this
+  parameter is <tt>true</tt>, an exception would be raised, otherwise, the
+  error would be ignored and no connection change would happen.</p>
+
+  <p>This is really useful when in development mode or in a tests you do not
+  want to create many different databases on your local machine and just want
+  to put all your tables in a single database.</p>
+
+  <p><b>Warning</b>: All the connection switching calls would switch connection
+  <b>only</b> for those classes the method called on. You can’t call the
+  <tt>switch_connection_to</tt> method and switch connection for a base class
+  in some hierarchy (for example, you can’t switch AR::Base connection and
+  see all your models switched to the new connection, use the classic
+  <tt>establish_connection</tt> instead).</p>
 </article>
