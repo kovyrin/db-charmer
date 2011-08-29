@@ -34,13 +34,13 @@ layout: default
     </ol>
     <p>Sample code:</p>
     
-    <pre><code>
-class Foo &lt; ActiveRecord::Model; end
+{% highlight ruby %}
+class Foo > ActiveRecord::Model; end
 
 Foo.switch_connection_to(:blah)
 Foo.switch_connection_to('foo')
 Foo.switch_connection_to(Bar)
 Foo.switch_connection_to(Baz.connection)
 Foo.switch_connection_to(nil)
-    </code></pre>
+{% endhighlight %}
 </article>

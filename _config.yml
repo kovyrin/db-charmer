@@ -2,7 +2,11 @@ pygments: true
 auto: true
 server: true
 permalink: none
+
 baseurl: /db-charmer/
+
+exclude:
+ - Rakefile
 
 title: DbCharmer - Connection Magic for ActiveRecord
 description: DbCharmer is a simple yet powerful plugin for ActiveRecord that significantly extends its ability to work with multiple databases and/or database servers.
