@@ -291,8 +291,12 @@ body {
 
 pre, article code {
     background: #322F2A;
-    padding: 5px 5px 5px 20px;
     border: 1px solid #5C5A52;
+}
+
+pre {
+    padding: 5px 5px 5px 20px;
+    line-height: 1.2em;
 }
 
 article code {
