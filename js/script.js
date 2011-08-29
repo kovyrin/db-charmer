@@ -8,25 +8,38 @@ $(document).ready(function() {
         event.stopPropagation();
     }, { offset: 0 });
 
-    // Register each article as a waypoint.
-    $('#main article').waypoint({ offset: '50%' });
-
-    // The same for all waypoints
-    container.delegate('#main article', 'waypoint.reached', function(event, direction) {
-        var $active = $(this);
-
-        if (direction === "up") {
-            $active = $active.prev();
-        }
-        if (!$active.length) $active.end();
-
-        $('.current', mainMenu).removeClass('current');
-        $('a[href="#' + $active.attr('id') + '"]', mainMenu).parent().addClass('current');
-    });
-
-    $('a', mainMenu).click(function() {
+    var currentFile, match = location.pathname.match('/([^/]*?\.html)$');
+    currentFile = match ? match[1] : 'index.html';
+    found = false;
+    var links = $('a', mainMenu).click(function() {
         $(this).addClass('current');
-    }).eq(0).addClass('current');
+    }).each(function(idx, el) {
+        if (found) return;
+        if (el.getAttribute("href").indexOf(currentFile) == 0) {
+            $(el).parent().addClass('current')
+            found = true;
+        }
+    });
+    if (!found) links.eq(0).addClass('current');
+
+    if (file == "index.html") {
+        // Register each article as a waypoint.
+        $('#main article').waypoint({ offset: '50%' });
+
+        // The same for all waypoints
+        container.delegate('#main article', 'waypoint.reached', function(event, direction) {
+            var $active = $(this);
+
+            if (direction === "up") {
+                $active = $active.prev();
+            }
+            if (!$active.length) $active = $('#main article:first-child');
+
+            $('.current', mainMenu).removeClass('current');
+            $('a[href="index.html#' + $active.attr('id') + '"]', mainMenu).parent().addClass('current');
+            $('a[href="' + $active.attr('id') + '.html#' + $active.attr('id') + '"]', mainMenu).parent().addClass('current');
+        });
+    }
 
     // Wicked credit to
     // http://www.zachstronaut.com/posts/2009/01/18/jquery-smooth-scroll-bugs.html
@@ -42,7 +55,7 @@ $(document).ready(function() {
     });
 
     // Smooth scrolling for internal links
-    $("a[href^='#']").click(function(event) {
+    $("a[href^='#'],a[href^='" + currentFile + "#']").click(function(event) {
         event.preventDefault();
 
         var $this = $(this),
@@ -51,8 +64,9 @@ $(document).ready(function() {
 
         $(scrollElement).stop().animate({
             'scrollTop': $target.offset().top
-        }, 500, 'swing', function() {
+        }, 300, 'swing', function() {
             window.location.hash = target;
         });
 
-    });});
+    });
+});
