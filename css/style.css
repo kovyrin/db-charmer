@@ -67,12 +67,17 @@ td { vertical-align: top; }
    ========================================================================== */
 
 body {
+}
+
+#container {
     border-top: 5px solid #CC6600;
+    min-width: 996px;
 }
 
 #header {
     background: #EDEAE0 url(../img/top-bg.png);
-    overflow: hidden;
+    min-width: 996px;
+    position: relative;
 }
 
 #header:before {
@@ -105,17 +110,17 @@ body {
     width: 946px;
     margin-top: -60px;
     padding-left: 50px;
+    overflow: hidden;
 }
 
-#main-description:after {
-    content: ' ';
+#header hr {
     height: 4px;
     display: block;
-    width: 300%;
-    margin-left: -100%;
     bottom: 0px;
     background: #8F8B7E;
     opacity: 0.37;
+    margin: 0;
+    padding: 0;
 }
 
 #main-description h3 {
@@ -326,10 +331,11 @@ article pre code {
 #forkme {
     position: absolute;
     right: 0px;
-    top: 0px;
+    top: -5px;
     width: 200px;
     height: 200px;
     overflow: hidden;
+    z-index: 5;
 }
 
 #forkme p {
