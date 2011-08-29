@@ -29,6 +29,21 @@ layout: default
   3.0, please contact the author.</p>
 
 
+  <h3>Where can I find a changelog for the latest release?</h3>
+  
+  <p>There are two ways of getting a list of changes for any particular version:</p>
+  
+  <ul>
+    <li>You can check out the <a href="https://github.com/kovyrin/db-charmer/blob/master/CHANGES">CHANGES</a> file</li>
+    <li>Since all the changes are tagged in git, you can use <code>git log</code> command (or Github's web interface) to get a list of commits between any two versions:
+{% highlight bash %}
+git log v1.6.5..v1.6.6 # to get a list of changes between two versions
+git log v1.6.5..HEAD   # to get a list of all the changes since v1.6.5
+{% endhighlight %}
+    </li>
+  </ul>
+
+
   <h3>Who are the authors?</h3>
 
   <p>This plugin has been created in Scribd.com for our internal use and then
