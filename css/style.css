@@ -199,13 +199,24 @@ body {
 }
 
 
-#main-menu ul li:last-child {
+#main-menu ul li:last-child, #main-menu ul li.right-border {
     border-right: 1px solid #7B776C;
     padding-right: 3px;
 }
 
-#main-menu ul li:last-child a {
+#main-menu ul li:last-child {
+    float: none;
+}
+
+#main-menu ul li:last-child a, #main-menu ul li.right-border a {
     border-right: 1px solid #9D998D;
+}
+
+#main-menu ul li:last-child a {
+    display: block;
+    width: auto;
+    text-align: center;
+    padding-right: 0;
 }
 
 #main, body {
