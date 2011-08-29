@@ -2,7 +2,45 @@
 layout: default
 ---
 
-test
+<article>
+    <header><h2>Installation</h2></header>
+    <p>There are two options when approaching db-charmer installation:</p>
+    <ul>
+        <li>using the gem (recommended)</li>
+        <li>install as a Rails plugin</li>
+    </ul>
 
-{% include test.html %}
+    <p>To install as a gem, add this to your environment.rb:</p>
+    <pre><code>config.gem 'db-charmer', :lib => 'db_charmer'</code></pre>
 
+    <p>And then run the command:</p>
+    <pre><code>sudo rake gems:install</code></pre>
+
+    <p>To install db-charmer as a Rails plugin use this:</p>
+    <pre><code>script/plugin install git://github.com/kovyrin/db-charmer.git</code></pre>
+
+    <p>Notice: If you use db-charmer in a non-rails project, you may need to set DbCharmer.env to a correct value before using any of its connection management methods. Correct value here is a valid database.yml first-level section name.</p>
+</article>
+
+<article>
+    <header><h2>Easy ActiveRecord Connection Management</h2></header>
+
+    <p>As a part of this plugin we’ve added switch_connection_to method that accepts many different kinds of db connections specifications and uses them on a model. We support:</p>
+    <ol>
+        <li>Strings and symbols as the names of connection configuration blocks in database.yml.</li>
+        <li>ActiveRecord models (we’d use connection currently set up on a model).</li>
+        <li>Database connections (Model.connection)</li>
+        <li>Nil values to reset model to default connection.</li>
+    </ol>
+    <p>Sample code:</p>
+    
+    <pre><code>
+class Foo &lt; ActiveRecord::Model; end
+
+Foo.switch_connection_to(:blah)
+Foo.switch_connection_to('foo')
+Foo.switch_connection_to(Bar)
+Foo.switch_connection_to(Baz.connection)
+Foo.switch_connection_to(nil)
+    </code></pre>
+</article>

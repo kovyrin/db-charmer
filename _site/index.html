@@ -1,20 +1,140 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html>
-  <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <meta name="author" content="Oleksiy Kovyrin" />
-    <meta name="description" content="DbCharmer is a simple yet powerful plugin for ActiveRecord that significantly extends its ability to work with multiple databases and/or database servers." />
-    <meta name="generator" content="Jekyll" />
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <meta name="author" content="Oleksiy Kovyrin" />
+  <meta name="description" content="DbCharmer is a simple yet powerful plugin for ActiveRecord that significantly extends its ability to work with multiple databases and/or database servers." />
+  <meta name="generator" content="Jekyll" />
+
+  <title>DbCharmer - Connection Magic for ActiveRecord</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- CSS concatenated and minified via ant build script-->
+  <link rel="stylesheet" href="/db-charmer/css/style.css">
+  <!-- end CSS-->
+
+  <script src="/db-charmer/js/libs/modernizr-2.0.6.min.js"></script>
+</head>
+
+<body>
+
+  <div id="container">
+    <header id="header">
+        <h1><a href="#">DbCharmer</a></h1>
+        <div id="main-description">
+            <h3>ActiveRecord Connection Magic Plugin</h3>
+            <p>Rails plugin that significantly extends ActiveRecord's ability to work with multiple databases and/or database servers:</p>
+            <ul>
+                <li>Simple ActiveRecord model connections management (<code>switch_connection_to</code> to switch to separate servers/databases)</li>
+                <li>Ability to easily control queries execution (<code>Model.on_*</code> methods to choose a connection for your queries)</li>
+                <li>Automated master/slave queries routing (<code>SELECTs</code> go to a slave, DML queries are handled by the master)</li>
+                <li>Multiple database migrations with very flexible query routing controls</li>
+                <li>Simple database sharding functionality with multiple sharding methods (value, range, mapping table)</li>
+            </ul>
+        </div>
+        <nav id="main-menu">
+            <ul>
+                <li><a href="#">Installation</a></li>
+                <li><a href="#">Connections</a></li>
+                <li><a href="#">Migrations</a></li>
+                <li><a href="#">Master-Slave</a></li>
+                <li><a href="#">Sharding</a></li>
+                <li><a href="#">FAQ</a></li>
+            </ul>
+        </nav>
+        <p id="forkme"><a href="#">Fork me on GitHub</a></p>
+    </header>
+
+    <div id="main" role="main">
+        <article>
+    <header><h2>Installation</h2></header>
+    <p>There are two options when approaching db-charmer installation:</p>
+    <ul>
+        <li>using the gem (recommended)</li>
+        <li>install as a Rails plugin</li>
+    </ul>
+
+    <p>To install as a gem, add this to your environment.rb:</p>
+    <pre><code>config.gem 'db-charmer', :lib => 'db_charmer'</code></pre>
+
+    <p>And then run the command:</p>
+    <pre><code>sudo rake gems:install</code></pre>
+
+    <p>To install db-charmer as a Rails plugin use this:</p>
+    <pre><code>script/plugin install git://github.com/kovyrin/db-charmer.git</code></pre>
+
+    <p>Notice: If you use db-charmer in a non-rails project, you may need to set DbCharmer.env to a correct value before using any of its connection management methods. Correct value here is a valid database.yml first-level section name.</p>
+</article>
+
+<article>
+    <header><h2>Easy ActiveRecord Connection Management</h2></header>
+
+    <p>As a part of this plugin we’ve added switch_connection_to method that accepts many different kinds of db connections specifications and uses them on a model. We support:</p>
+    <ol>
+        <li>Strings and symbols as the names of connection configuration blocks in database.yml.</li>
+        <li>ActiveRecord models (we’d use connection currently set up on a model).</li>
+        <li>Database connections (Model.connection)</li>
+        <li>Nil values to reset model to default connection.</li>
+    </ol>
+    <p>Sample code:</p>
     
-    <title>DbCharmer - Connection Magic for ActiveRecord</title>
+    <pre><code>
+class Foo &lt; ActiveRecord::Model; end
 
-    <link rel="stylesheet" href="/db-charmer/stylesheets/site.css" type="text/css" media="screen" charset="utf-8"/>
-  </head>
-  <body>
-    test
+Foo.switch_connection_to(:blah)
+Foo.switch_connection_to('foo')
+Foo.switch_connection_to(Bar)
+Foo.switch_connection_to(Baz.connection)
+Foo.switch_connection_to(nil)
+    </code></pre>
+</article>
+        
+    </div>
 
-hello from include
+    <footer id="footer">
+        <p>Copyright &copy; 2011 <a href="http://kovyrin.net/">Oleksiy Kovyrin</a> | Designed by <a href="http://kovyrina.info/">Tetyana Kovyrina</a></p>
+    </footer>
+  </div> <!--! end of #container -->
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.2.min.js"><\/script>')</script>
+
+<!-- scripts concatenated and minified via ant build script-->
+<script defer src="js/libs/waypoints-1.1.js"></script>
+<script defer src="js/plugins.js"></script>
+<script defer src="js/script.js"></script>
+<!-- end scripts-->
 
 
-  </body>
+<script> // Change UA-XXXXX-X to be your site's ID
+  window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
+  Modernizr.load({
+    load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
+  });
+</script>
+
+<script>
+$(document).ready(function() {
+    var container = $('#container');
+    $.waypoints.settings.scrollThrottle = 30;
+    container.waypoint(function(event, direction) {
+        // ...
+    }).find('#main-menu').waypoint(function(event, direction) {
+        container.toggleClass('sticky', direction === "down");
+        event.stopPropagation();
+    });
+});
+</script
+
+
+</body>
 </html>
