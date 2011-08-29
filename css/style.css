@@ -171,6 +171,7 @@ body {
 
 #main-menu ul {
     overflow: hidden;
+    width: 998px;
 }
 
 #main-menu ul li {
