@@ -4,6 +4,66 @@ layout: default
 
 <article id="contribute">
   <header><h2>How to contribute to the project?</h2></header>
+
+  <h3>I have found a bug! What should I do?</h3>
   
-  <p>Just send me a $100 cheque :-)</p>
+  <p>Our bug tracking is located on Github: <a href="https://github.com/kovyrin/db-charmer/issues">DbCharmer 
+  Issues Tracker</a>. If you think you've found a bug in <tt>DbCharmer</tt>, here is a list of steps you need 
+  to take:</p>
+  
+  <ol>
+    <li><a href="https://github.com/kovyrin/db-charmer/issues">Search for a similar existing ticket</a></li>
+    <li><a href="https://github.com/kovyrin/db-charmer/issues/new">Create a new ticket</a> <i>(If you’re sure 
+      it doesn’t already exist)</i> or <b>Update</b> the existing ticket.</li>
+    <li>Add detailed instructions on how to reproduce the bug:
+      <ul>
+        <li>Include <tt>DbCharmer</tt> version and Rails version you’re using</li>
+        <li>If possible, include your database configuration file (strip passwords, host names and any other sensible information first)</li>
+        <li>Describe how you're connecting the library to your project (gem, plugin)</li>
+        <li>If you can, you could try to create a failing spec for <a href="https://github.com/kovyrin/db-charmer-sandbox">
+          db-charmer-sandbox</a> project and give a link to your spec in the issue</li>
+      </ul>
+    </li>
+  </ol>
+
+  <p>If you can't create a bug report, you could just join our mailing list (more info on the 
+  <a href="faq.html">FAQ page</a>) and try to explain your problem there and we would try to figure it out together.</p>
+
+
+
+  <h3>I have a code I would like to contribute (including bug fixes)!</h3>
+  
+  <p>So, you've started using <tt>DbCharmer</tt> and figured out a way to improve it. And instead of asking
+  for a feature you've implemented it yourself. Or you've found and fixed a nasty bug. Or you just wanted
+  to point out a missing comma in our README file. In any case your patches are very welcome! Here is what
+  you need to do:</p>
+    
+  <ol>
+    <li>Fork the <a href="https://github.com/kovyrin/db-charmer">project on Github</a></li>
+    <li>Make your changes and commit them</li>
+    <li>Test your changes, preferably by writing a test case in <a href="https://github.com/kovyrin/db-charmer-sandbox">
+      db-charmer-sandbox</a> project fork</li>
+    <li>If you're trying to add new functionality, please explain it in the README file</li>
+    <li>Send us a pull request and/or explain your patch in our <a href="faq.html">mailing list</a></li>
+  </ol>
+
+  <p>By submitting your code to the project you agree it will be published under the MIT license you can find in our 
+  <a href="https://github.com/kovyrin/db-charmer/blob/master/LICENSE">LICENSE</a> file.</p>
+
+
+
+  <h3>More resources on using Github and contributing to open-source projects</h3>
+  
+  <p>Here is a list of resources on using Github to contribute to open-source projects we think could help to better understand the concept of forking, sending pull requests, etc:</p>
+  
+  <ul>
+    <li>Github Help has a really comprehensive set of manuals on contributing to open-source:
+      <ul>
+        <li><a href="http://help.github.com/fork-a-repo/">Fork a Repo</a> - manual about forking repositories</li>
+        <li><a href="http://help.github.com/be-social/">Be Social</a> - watching repositories and authors</li>
+        <li><a href="http://help.github.com/send-pull-requests/">Send Pull Requests</a> - information about the most important step you need to take when contributing, asking the author to pull your changes in.</li>
+      </ul>
+    </li>
+    <li>"<a href="http://www.youtube.com/watch?v=38ShL5YWigA">How to contribute to any project at Github</a>" video on Youtube.</li>
+  </ul>
 </article>
