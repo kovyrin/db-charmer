@@ -283,6 +283,10 @@ body {
     margin-bottom: 30px;
 }
 
+#main a {
+    color: #8D8B7E;
+}
+
 #main a:hover {
     color: #E17000;
 }
