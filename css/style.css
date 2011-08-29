@@ -100,8 +100,7 @@ body {
 
 #header h1 a {
     text-indent: -1000px;
-/*    border: 1px solid red;*/
-    display: block;
+    display: inline-block;
     line-height: 60px;
     width: 353px;
 }
