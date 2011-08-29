@@ -327,7 +327,7 @@ Post.on_db(:foo).first
 
   <ol>
   <li><p><code>:force_slave_reads => false</code> option for
-  <tt>ActiveRecord</tt>‘s <code>db_magic</code> method. This option could be
+  ActiveRecord‘s <code>db_magic</code> method. This option could be
   used to disable automated slave reads on your models so that you could call
   <code>on_slave</code> or use other methods to enable slave reads when you need
   it. Example:</p>
@@ -417,7 +417,7 @@ Post.on_db(:olap) { User.posts.count }
 @user.posts.on_slave.find_by_title('Hello, world!')
 {% endhighlight %}
 
-  <p><em>Notice:</em> Since <tt>ActiveRecord</tt> associations implemented as proxies for
+  <p><em>Notice:</em> Since ActiveRecord associations implemented as proxies for
   resulting objects/collections, it is possible to use our connection
   switching methods even without chained methods:</p>
 
