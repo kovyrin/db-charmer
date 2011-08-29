@@ -300,7 +300,7 @@ article code {
 }
 
 article pre code {
-    padding: 0px;
+    padding: 0; border: 0; line-height: 1em; font-size: 14px;
 }
 
 .sticky #main-menu {
