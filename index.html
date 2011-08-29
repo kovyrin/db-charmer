@@ -297,7 +297,7 @@ User.on_master.exists?(:login => login, :password => password)
 
 {% highlight ruby %}
 Comment.on_db(:olap).count
-Post.on_db(:foo).find(:first)
+Post.on_db(:foo).first
 {% endhighlight %}
 
   <p>By default in development and test environments you could use non-existing
@@ -414,7 +414,7 @@ Post.on_db(:olap) { User.posts.count }
 
 {% highlight ruby %}
 @user.posts.on_db(:olap).count
-@user.posts.on_slave.find(:title => 'Hello, world!')
+@user.posts.on_slave.find_by_title('Hello, world!')
 {% endhighlight %}
 
   <p><em>Notice</em>: Since <tt>ActiveRecord</tt> associations implemented as proxies for
@@ -634,7 +634,7 @@ end
   connection management methods:</p>
 
 {% highlight ruby %}
-Event.shard_for(10).find(:conditions => { :to_uid => 123 }, :limit => 5)
+Event.shard_for(10).all(:conditions => { :to_uid => 123 }, :limit => 5)
 Text.shard_for(123).find_by_id(123)
 {% endhighlight %}
 
