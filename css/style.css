@@ -259,10 +259,19 @@ body {
 #footer {
     background: #322F2A;
     color: #8D8B7E;
+    font-size: 11px;
 }
 
 #footer p {
-    padding: 10px 0;
+    padding: 10px 0 10px;
+}
+
+#footer a {
+  color: #8D8B7E;
+}
+
+#footer a:hover {
+  color: #E17000;
 }
 
 pre {
