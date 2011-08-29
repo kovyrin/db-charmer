@@ -20,7 +20,7 @@ layout: default
 
     {% highlight console %}./script/plugin install git://github.com/kovyrin/db-charmer.git{% endhighlight %}
 
-    <p><em>Notice</em>: If you use <tt>DbCharmer</tt> in a non-rails project, you
+    <p><em>Notice:</em> If you use <tt>DbCharmer</tt> in a non-rails project, you
     may need to set <code>DbCharmer.env</code> to a correct value before using any
     of its connection management methods. Correct value here is a valid
     <tt>database.yml</tt> first-level section name.</p>
@@ -81,8 +81,8 @@ production:
   want to create many different databases on your local machine and just want
   to put all your tables in a single database.</p>
 
-  <p><b>Warning</b>: All the connection switching calls would switch connection
-  <b>only</b> for those classes the method called on. You can’t call the
+  <p><em>Warning:</em> All the connection switching calls would switch connection
+  <strong>only</strong> for those classes the method called on. You can’t call the
   <code>switch_connection_to</code> method and switch connection for a base class
   in some hierarchy (for example, you can’t switch AR::Base connection and
   see all your models switched to the new connection, use the classic
@@ -170,7 +170,7 @@ class MultiDbTest < ActiveRecord::Migration
 end
 {% endhighlight %}
 
-  <p><i>Note:</i> both :connection and :connections can take an array of connections)</p>
+  <p><em>Notice:</em> both :connection and :connections can take an array of connections)</p>
 
   <h3>Default Migrations Connection</h3>
 
@@ -193,7 +193,7 @@ end
   <code>DbCharmer.connections_should_exist</code> configuration attribute which
   could be set from a rails initializer.</p>
 
-  <p><i>Warning:</i> if in test environment you use separate connections and
+  <p><em>Warning:</em> if in test environment you use separate connections and
   master-slave support in DbCharmer, make sure you disable transactional
   fixtures support in Rails. Without this change you’re going to see all
   kinds of weird data visibility problems in your tests.</p>
@@ -371,7 +371,7 @@ class ProfilesController < Application
 end
 {% endhighlight %}
 
-  <p><em>Notice</em>: Before using this method you need to enable
+  <p><em>Notice:</em> Before using this method you need to enable
   ActionController support in <tt>DbCharmer</tt>. You need to call
   <code>DbCharmer.enable_controller_magic!</code> method from your project
   initialization code.</p>
@@ -390,7 +390,7 @@ DbCharmer.force_slave_reads do
 end
 {% endhighlight %}
 
-  <p><em>Notice</em>: At this point the feature considered beta and should be used with
+  <p><em>Notice:</em> At this point the feature considered beta and should be used with
   caution. It is fully covered with tests, but there still could be
   unexpected issues when used in real-world applications.</p>
   </li>
@@ -417,7 +417,7 @@ Post.on_db(:olap) { User.posts.count }
 @user.posts.on_slave.find_by_title('Hello, world!')
 {% endhighlight %}
 
-  <p><em>Notice</em>: Since <tt>ActiveRecord</tt> associations implemented as proxies for
+  <p><em>Notice:</em> Since <tt>ActiveRecord</tt> associations implemented as proxies for
   resulting objects/collections, it is possible to use our connection
   switching methods even without chained methods:</p>
 
@@ -478,7 +478,7 @@ DbCharmer.with_remapped_databases(:logs => :big_logs_slave) { ... }
   <tt>:master</tt> as a database name that matches any model that has not had
   its connection set by <tt>DbCharmer</tt> at all.</p>
 
-  <p><b>Note</b>: <tt>DbCharmer</tt> works via <code>alias_method_chain</code> in
+  <p><em>Notice:</em> <tt>DbCharmer</tt> works via <code>alias_method_chain</code> in
   model classes. It is very careful to only patch the models it needs to.
   However, if you use <code>with_remapped_databases</code> and remap the default
   database (<tt>:master</tt>), then it has no choice but to patch all
@@ -634,7 +634,7 @@ end
   connection management methods:</p>
 
 {% highlight ruby %}
-Event.shard_for(10).all(:conditions => { :to_uid => 123 }, :limit => 5)
+Event.shard_for(10).where(:to_uid => 123).limit(5)
 Text.shard_for(123).find_by_id(123)
 {% endhighlight %}
 
