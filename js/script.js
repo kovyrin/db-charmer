@@ -8,21 +8,21 @@ $(document).ready(function() {
         event.stopPropagation();
     }, { offset: 0 });
 
-    var currentFile, match = location.pathname.match('/([^/]*?\.html)$');
-    currentFile = match ? match[1] : 'index.html';
+    var currentFile, match = location.pathname.match('/([^/]*?)\.html$');
+    currentFile = match ? match[1] : 'index';
     found = false;
     var links = $('a', mainMenu).click(function() {
         $(this).addClass('current');
     }).each(function(idx, el) {
         if (found) return;
-        if (el.getAttribute("href").indexOf(currentFile) == 0) {
+        if (el.getAttribute("href").indexOf(currentFile + '.html') == 0 || el.getAttribute("href").indexOf('#' + currentFile) >= 0) {
             $(el).parent().addClass('current')
             found = true;
         }
     });
     if (!found) links.eq(0).addClass('current');
 
-    if (file == "index.html") {
+    if (file == "index") {
         // Register each article as a waypoint.
         $('#main article').waypoint({ offset: '50%' });
 
@@ -55,7 +55,7 @@ $(document).ready(function() {
     });
 
     // Smooth scrolling for internal links
-    $("a[href^='#'],a[href^='" + currentFile + "#']").click(function(event) {
+    $("a[href^='#'],a[href^='" + currentFile + ".html#']").click(function(event) {
         event.preventDefault();
 
         var $this = $(this),
