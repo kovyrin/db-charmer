@@ -7,7 +7,8 @@ module DbCharmer
         ASSOCIATION_TYPES.each do |association_type|
           base.class_eval <<-EOF, __FILE__, __LINE__ + 1
             def self.preload_#{association_type}_association(records, reflection, preload_options = {})
-              if self.db_charmer_top_level_connection? || self.db_charmer_default_connection != reflection.klass.db_charmer_default_connection
+              if self.db_charmer_top_level_connection? || reflection.options[:polymorphic] ||
+                    self.db_charmer_default_connection != reflection.klass.db_charmer_default_connection
                 return super(records, reflection, preload_options)
               end
               reflection.klass.on_db(self) do
