@@ -334,7 +334,7 @@ Post.on_db(:foo).first
 
 {% highlight ruby %}
 class User < ActiveRecord::Base
-  db_magic :slave => slave01, :forced_slave_reads => false
+  db_magic :slave => slave01, :force_slave_reads => false
 end
 {% endhighlight %}
   </li>
