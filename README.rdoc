@@ -1,6 +1,6 @@
 = DB Charmer - ActiveRecord Connection Magic Plugin
 
-+DbCharmer+ is a simple yet powerful plugin for ActiveRecord that significantly extends its ability to work with 
++DbCharmer+ is a simple yet powerful plugin for ActiveRecord that significantly extends its ability to work with
 multiple databases and/or database servers. The major features we add to ActiveRecord are:
 
 1. Simple management for AR model connections (+switch_connection_to+ method)
@@ -292,7 +292,7 @@ send their reads to slaves. Example:
 
 3) <tt>force_slave_reads!</tt> +ActionController+ instance method, that could be used within
 your actions or in controller filters to temporarily switch your models to forced slave reads
-mode. This method could be useful for cases when the same actions could be called by logged-in 
+mode. This method could be useful for cases when the same actions could be called by logged-in
 and anonymous users. Then you could authorize users in <tt>before_filter</tt> and call
 <tt>force_slave_reads!</tt> method for anonymous page views.
 
@@ -419,7 +419,7 @@ tables with hundreds of millions to billions of rows and allows relatively easy 
 to be implemented on top.
 
 4) +db_block_group_map+ - really similar to the +db_block_map+ method with a single difference: this method
-allows you to have a set of databases (table groups) on each server and every group would be handled as a 
+allows you to have a set of databases (table groups) on each server and every group would be handled as a
 separate shard of data. This approach is really useful for pre-sharding of your data before scaling your
 application out. You can easily start with one server, having 10-20-50 separate databases, and then
 move those databases to different servers as you see your database outgrow one machine.
