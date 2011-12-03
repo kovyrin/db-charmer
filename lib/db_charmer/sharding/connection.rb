@@ -22,7 +22,7 @@ module DbCharmer
       def support_default_shard?
         sharder.respond_to?(:support_default_shard?) && sharder.support_default_shard?
       end
-      
+
       def default_connection
         @default_connection ||= DbCharmer::Sharding::StubConnection.new(self)
       end
