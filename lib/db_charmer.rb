@@ -14,6 +14,11 @@ module DbCharmer
     ::ActiveRecord::VERSION::MAJOR > 2
   end
 
+  # Used in all Rails3.2-specific places
+  def self.rails32?
+    rails3? && ::ActiveRecord::VERSION::MINOR >= 2
+  end
+
   # Used in all Rails2-specific places
   def self.rails2?
     ::ActiveRecord::VERSION::MAJOR == 2
@@ -159,7 +164,12 @@ end
 
 # Enable multi-db migrations
 require 'db_charmer/active_record/migration/multi_db_migrations'
-ActiveRecord::Migration.extend(DbCharmer::ActiveRecord::Migration::MultiDbMigrations)
+ActiveRecord::Migration.send(:include, DbCharmer::ActiveRecord::Migration::MultiDbMigrations)
+
+if DbCharmer.rails32?
+  require 'db_charmer/rails32/active_record/migration/command_recorder'
+  ActiveRecord::Migration::CommandRecorder.send(:include, DbCharmer::ActiveRecord::Migration::CommandRecorder)
+end
 
 # Enable the magic
 if DbCharmer.rails3?

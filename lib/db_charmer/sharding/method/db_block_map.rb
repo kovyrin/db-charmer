@@ -201,7 +201,7 @@ module DbCharmer
 
         # Prepare model for working with our shards table
         def prepare_shard_model
-          ShardInfo.set_table_name(shards_table)
+          ShardInfo.table_name = shards_table
           ShardInfo.switch_connection_to(connection)
         end
 
