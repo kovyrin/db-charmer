@@ -55,7 +55,7 @@ module DbCharmer
 
       protected
 
-        class_eval <<-EOF
+        class_eval <<-EOF, __FILE__, __LINE__+1
           def #{DISPATCH_METHOD}_with_forced_slave_reads(*args, &block)
             DbCharmer.with_controller(self) do
               #{DISPATCH_METHOD}_without_forced_slave_reads(*args, &block)
