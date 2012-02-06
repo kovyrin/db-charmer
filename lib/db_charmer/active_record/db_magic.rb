@@ -37,7 +37,7 @@ module DbCharmer
 
       def setup_children_magic(opt)
         self.db_charmer_opts = opt.clone
-        
+
         unless self.respond_to?(:inherited_with_db_magic)
           class << self
             def inherited_with_db_magic(child)
@@ -47,7 +47,7 @@ module DbCharmer
             end
             alias_method_chain :inherited, :db_magic
           end
-        end      
+        end
       end
 
       def setup_sharding_magic(config)
@@ -88,4 +88,3 @@ module DbCharmer
     end
   end
 end
-
