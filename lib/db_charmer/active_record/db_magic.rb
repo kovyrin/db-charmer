@@ -41,7 +41,9 @@ module DbCharmer
         unless self.respond_to?(:inherited_with_db_magic)
           class << self
             def inherited_with_db_magic(child)
+              o = inherited_without_db_magic(child)
               child.db_magic(self.db_charmer_opts)
+              o
             end
             alias_method_chain :inherited, :db_magic
           end
