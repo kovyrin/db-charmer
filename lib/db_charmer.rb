@@ -183,8 +183,19 @@ require 'db_charmer/active_record/db_magic'
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::DbMagic)
 
 # Setup association preload magic
-require 'db_charmer/active_record/association_preload'
-ActiveRecord::Base.extend(DbCharmer::ActiveRecord::AssociationPreload)
+if DbCharmer.rails32?
+  require 'db_charmer/rails32/active_record/preloader/association'
+  ActiveRecord::Associations::Preloader::Association.send(:include, DbCharmer::ActiveRecord::Preloader::Association)
+  require 'db_charmer/rails32/active_record/preloader/has_and_belongs_to_many'
+  ActiveRecord::Associations::Preloader::HasAndBelongsToMany.send(:include, DbCharmer::ActiveRecord::Preloader::HasAndBelongsToMany)
+else
+  require 'db_charmer/active_record/association_preload'
+  ActiveRecord::Base.extend(DbCharmer::ActiveRecord::AssociationPreload)
+
+  # Open up really useful API method
+  ActiveRecord::AssociationPreload::ClassMethods.send(:public, :preload_associations)
+end
+
 
 class ::ActiveRecord::Base
   class << self
