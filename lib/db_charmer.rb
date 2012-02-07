@@ -139,25 +139,37 @@ end
 
 # Enable connection proxy for associations
 # WARNING: Inject methods to association class right here (they proxy include calls somewhere else, so include does not work)
-module ActiveRecord
-  module Associations
-    class AssociationProxy
-      def proxy?
-        true
-      end
+association_proxy_class = DbCharmer.rails32? ? ActiveRecord::Associations::CollectionProxy : ActiveRecord::Associations::AssociationProxy
+association_proxy_class.class_eval do
+  def proxy?
+    true
+  end
 
-      def on_db(con, proxy_target = nil, &block)
-        proxy_target ||= self
-        @reflection.klass.on_db(con, proxy_target, &block)
-      end
+  if DbCharmer.rails32?
+    def on_db(con, proxy_target = nil, &block)
+      proxy_target ||= self
+      @association.klass.on_db(con, proxy_target, &block)
+    end
 
-      def on_slave(con = nil, &block)
-        @reflection.klass.on_slave(con, self, &block)
-      end
+    def on_slave(con = nil, &block)
+      @association.klass.on_slave(con, self, &block)
+    end
 
-      def on_master(&block)
-        @reflection.klass.on_master(self, &block)
-      end
+    def on_master(&block)
+      @association.klass.on_master(self, &block)
+    end
+  else
+    def on_db(con, proxy_target = nil, &block)
+      proxy_target ||= self
+      @reflection.klass.on_db(con, proxy_target, &block)
+    end
+
+    def on_slave(con = nil, &block)
+      @reflection.klass.on_slave(con, self, &block)
+    end
+
+    def on_master(&block)
+      @reflection.klass.on_master(self, &block)
     end
   end
 end
