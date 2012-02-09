@@ -2,14 +2,19 @@ module DbCharmer
   module ActiveRecord
     module Migration
       module MultiDbMigrations
-        extend ActiveSupport::Concern
 
-        included do
-          if DbCharmer.rails31?
-            alias_method_chain :migrate, :db_wrapper
-          else
-            class << self
+        def self.append_features(base)
+          return false if base < self
+          super
+          base.extend const_get("ClassMethods") if const_defined?("ClassMethods")
+
+          base.class_eval do
+            if DbCharmer.rails31?
               alias_method_chain :migrate, :db_wrapper
+            else
+              class << self
+                alias_method_chain :migrate, :db_wrapper
+              end
             end
           end
         end
