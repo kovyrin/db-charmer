@@ -5,7 +5,7 @@ module DbCharmer
         extend ActiveSupport::Concern
 
         included do
-          if DbCharmer.rails32?
+          if DbCharmer.rails31?
             alias_method_chain :migrate, :db_wrapper
           else
             class << self
@@ -24,7 +24,7 @@ module DbCharmer
             @@multi_db_names[self.name] = names
           end
 
-          unless DbCharmer.rails32?
+          unless DbCharmer.rails31?
             def migrate_with_db_wrapper(direction)
               if names = multi_db_names
                 names.each do |multi_db_name|

@@ -38,7 +38,7 @@ module DbCharmer
           def connection_pool_with_magic
             abstract_connection_class = connection.abstract_connection_class rescue nil # respond_to? doesn't work on connection_proxy...
             if abstract_connection_class
-              connection_handler.retrieve_connection_pool(connection.abstract_connection_class) || connection_pool_without_magic
+              connection_handler.retrieve_connection_pool(abstract_connection_class) || connection_pool_without_magic
             else
               connection_pool_without_magic
             end

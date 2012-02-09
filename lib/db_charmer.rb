@@ -14,9 +14,9 @@ module DbCharmer
     ::ActiveRecord::VERSION::MAJOR > 2
   end
 
-  # Used in all Rails3.2-specific places
-  def self.rails32?
-    rails3? && ::ActiveRecord::VERSION::MINOR >= 2
+  # Used in all Rails3.1-specific places
+  def self.rails31?
+    rails3? && ::ActiveRecord::VERSION::MINOR >= 1
   end
 
   # Used in all Rails2-specific places
@@ -139,13 +139,13 @@ end
 
 # Enable connection proxy for associations
 # WARNING: Inject methods to association class right here (they proxy include calls somewhere else, so include does not work)
-association_proxy_class = DbCharmer.rails32? ? ActiveRecord::Associations::CollectionProxy : ActiveRecord::Associations::AssociationProxy
+association_proxy_class = DbCharmer.rails31? ? ActiveRecord::Associations::CollectionProxy : ActiveRecord::Associations::AssociationProxy
 association_proxy_class.class_eval do
   def proxy?
     true
   end
 
-  if DbCharmer.rails32?
+  if DbCharmer.rails31?
     def on_db(con, proxy_target = nil, &block)
       proxy_target ||= self
       @association.klass.on_db(con, proxy_target, &block)
@@ -178,8 +178,8 @@ end
 require 'db_charmer/active_record/migration/multi_db_migrations'
 ActiveRecord::Migration.send(:include, DbCharmer::ActiveRecord::Migration::MultiDbMigrations)
 
-if DbCharmer.rails32?
-  require 'db_charmer/rails32/active_record/migration/command_recorder'
+if DbCharmer.rails31?
+  require 'db_charmer/rails31/active_record/migration/command_recorder'
   ActiveRecord::Migration::CommandRecorder.send(:include, DbCharmer::ActiveRecord::Migration::CommandRecorder)
 end
 
@@ -195,10 +195,10 @@ require 'db_charmer/active_record/db_magic'
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::DbMagic)
 
 # Setup association preload magic
-if DbCharmer.rails32?
-  require 'db_charmer/rails32/active_record/preloader/association'
+if DbCharmer.rails31?
+  require 'db_charmer/rails31/active_record/preloader/association'
   ActiveRecord::Associations::Preloader::Association.send(:include, DbCharmer::ActiveRecord::Preloader::Association)
-  require 'db_charmer/rails32/active_record/preloader/has_and_belongs_to_many'
+  require 'db_charmer/rails31/active_record/preloader/has_and_belongs_to_many'
   ActiveRecord::Associations::Preloader::HasAndBelongsToMany.send(:include, DbCharmer::ActiveRecord::Preloader::HasAndBelongsToMany)
 else
   require 'db_charmer/active_record/association_preload'
