@@ -276,7 +276,7 @@ This option could be used to disable automated slave reads on your models so tha
 call <tt>on_slave</tt> or use other methods to enable slave reads when you need it. Example:
 
   class User < ActiveRecord::Base
-    db_magic :slave => slave01, :forced_slave_reads => false
+    db_magic :slave => slave01, :force_slave_reads => false
   end
 
 2) <tt>force_slave_reads</tt> +ActionController+ class method. This method could be used to
