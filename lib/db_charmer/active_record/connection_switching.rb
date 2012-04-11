@@ -34,6 +34,16 @@ module DbCharmer
             db_charmer_remapped_connection || db_charmer_connection_proxy || connection_without_magic
           end
           alias_method_chain :connection, :magic
+
+          def connection_pool_with_magic
+            abstract_connection_class = connection.abstract_connection_class rescue nil # respond_to? doesn't work on connection_proxy...
+            if abstract_connection_class
+              connection_handler.retrieve_connection_pool(abstract_connection_class) || connection_pool_without_magic
+            else
+              connection_pool_without_magic
+            end
+          end
+          alias_method_chain :connection_pool, :magic
         end
       end
 
