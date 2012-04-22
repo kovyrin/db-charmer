@@ -1,3 +1,10 @@
+1.7.1 (2012-04-22):
+
+Beta feature: Rails 3.1 and 3.2 support
+
+Thanks to the community and Eugene Pimenov we now have support for Rails up to 3.2.1.
+
+----------------------------------------------------------------------------------------
 1.7.0 (2011-08-29):
 
 Beta feature: Rails 3 support
