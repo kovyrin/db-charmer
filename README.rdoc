@@ -16,7 +16,7 @@ For more information on the project, you can check out our web site at http://ko
 == Installation
 
 There are two options when approaching +DbCharmer+ installation:
-* using the gem (recommended and the only way of using it with Rails 3.0+)
+* using the gem (recommended and the only way of using it with Rails 3.2+)
 * install as a Rails plugin (works in Rails 2.x only)
 
 To install as a gem, add this to your Gemfile:
@@ -582,17 +582,17 @@ the DbCharmer Users Group mailing list:
 
 == What Ruby and Rails implementations does it work for?
 
-We have a continuous integration setup for this gem on with Rails 2.2, 2.3 and 3.0 using a few
+We have a continuous integration setup for this gem on with Rails 2.3, 3.0, 3.1 and 3.2 using a few
 different versions of Ruby. For more information about the build matrix please visit
 http://github.com/kovyrin/db-charmer-sandbox web site.
 
-In addition to CI testing, we use this gem in production on Scribd.com (one of the largest RoR
+In addition to CI testing, this gem is used in production on Scribd.com (one of the largest RoR
 sites in the world) with Ruby Enterprise Edition and Rails 2.2, Rails 2.3, Sinatra and plain
 Rack applications.
 
-Starting with version 1.7.0 we support Rails 3.0, but until further notice we consider it a
+Starting with version 1.7.0 we support Rails 3.0-3.2, but until further notice we consider it a
 beta-quality feature since we do not run any production software on this version of Rails. If you
-run your application on Rails 3.0, please contact the author.
+run your application on Rails 3.x and having any issues with the gem, please contact the author.
 
 
 == Who are the authors?
@@ -605,8 +605,12 @@ Other contributors who have helped with the development of this library are (alp
 * Allen Madsen
 * Andrew Geweke
 * Ashley Martens
+* Cauê Guerra
+* David Dai
 * Dmytro Shteflyuk
 * Eric Lindvall
+* Eugene Pimenov
+* Jonathan Viney
 * Gregory Man
 * Michael Birk
 * Tyler McMullen
