@@ -4,7 +4,7 @@ module DbCharmer
 
       module ClassMethods
         @@db_charmer_force_slave_reads_actions = {}
-        def force_slave_reads(params)
+        def force_slave_reads(params = {})
           @@db_charmer_force_slave_reads_actions[self.name] = {
             :except => params[:except] ? [*params[:except]].map(&:to_s) : [],
             :only => params[:only] ? [*params[:only]].map(&:to_s) : []
