@@ -91,9 +91,6 @@ private
   end
 end
 
-# Add useful methods to global object
-require 'db_charmer/core_extensions'
-
 require 'db_charmer/connection_factory'
 require 'db_charmer/connection_proxy'
 require 'db_charmer/force_slave_reads'

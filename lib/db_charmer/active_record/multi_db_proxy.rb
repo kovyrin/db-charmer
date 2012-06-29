@@ -20,7 +20,11 @@ module DbCharmer
             res = proxy_target.__send__(meth, *args, &block)
 
             # If result is a scope/association, return a new proxy for it, otherwise return the result itself
-            (res.proxy?) ? OnDbProxy.new(res, @slave) : res
+            if res.respond_to?(:proxy) && res.proxy?
+              OnDbProxy.new(res, @slave)
+            else
+              res
+            end
           end
         end
       end
