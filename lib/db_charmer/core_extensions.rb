@@ -17,7 +17,7 @@ class Object
 end
 
 class NilClass
-  def try(method, *options, &block)
+  def try(*args)
     nil
   end
 end
