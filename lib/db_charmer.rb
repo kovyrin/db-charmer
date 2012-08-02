@@ -89,6 +89,12 @@ private
       @@hijack_new_classes = old_hijack_new_classes
     end
   end
+
+  class Railtie < Rails::Railtie
+    rake_tasks do
+      load "tasks/databases.rake"
+    end
+  end
 end
 
 # Add useful methods to global object
