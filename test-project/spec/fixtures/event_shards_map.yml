@@ -3,15 +3,21 @@ block1:
   end_id: 10
   shard_id: 1
   block_size: 10
+  created_at: <%= Time.now.to_s(:db) %>
+  updated_at: <%= Time.now.to_s(:db) %>
 
 block2:
   start_id: 10
   end_id: 20
   shard_id: 2
   block_size: 10
+  created_at: <%= Time.now.to_s(:db) %>
+  updated_at: <%= Time.now.to_s(:db) %>
 
 block3:
   start_id: 20
   end_id: 30
   shard_id: 1
   block_size: 10
+  created_at: <%= Time.now.to_s(:db) %>
+  updated_at: <%= Time.now.to_s(:db) %>
