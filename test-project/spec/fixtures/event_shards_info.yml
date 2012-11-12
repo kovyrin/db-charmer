@@ -5,7 +5,7 @@ shard1:
   open: 1
   enabled: 1
   blocks_count: 2
-  created_at: Time.now.to_s(:db)
+  created_at: <%= Time.now.to_s(:db) %>
 
 shard2:
   id: 2
@@ -14,7 +14,7 @@ shard2:
   open: 1
   enabled: 1
   blocks_count: 1
-  created_at: Time.now.to_s(:db)
+  created_at: <%= Time.now.to_s(:db) %>
 
 empty:
   id: 3
