@@ -24,6 +24,11 @@ module DbCharmer
     ::ActiveRecord::VERSION::MAJOR == 2
   end
 
+  # Used in all Rails2-specific places
+  def self.rails324?
+    ActiveRecord::VERSION::STRING == '3.2.4'
+  end
+
   # Accessors
   @@connections_should_exist = true
   mattr_accessor :connections_should_exist
@@ -90,6 +95,9 @@ private
     end
   end
 end
+
+# Print warning about the broken Rails 2.3.4
+puts "WARNING: Rails 3.2.4 is not officially supported by DbCharmer. Please upgrade." if DbCharmer.rails324?
 
 # Add useful methods to global object
 require 'db_charmer/core_extensions'
