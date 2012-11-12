@@ -5,17 +5,15 @@ describe "DbCharmer#with_remapped_databases" do
     DbCharmer.connections_should_exist = false
   end
 
-  before :each do
-    @logs_connection = DbCharmer::ConnectionFactory.connect(:logs)
-    @slave_connection = DbCharmer::ConnectionFactory.connect(:slave01)
-    @master_connection = Avatar.connection
+  let(:logs_connection) { DbCharmer::ConnectionFactory.connect(:logs) }
+  let(:slave_connection) { DbCharmer::ConnectionFactory.connect(:slave01) }
+  let(:master_connection) { Avatar.connection }
 
+  before :each do
     class User < ActiveRecord::Base
       db_magic :connection => :slave01
     end
   end
-
-  attr_reader :logs_connection, :slave_connection, :master_connection
 
   def should_have_connection(model_class, connection)
     model_class.connection.object_id.should == connection.object_id
@@ -81,11 +79,14 @@ describe "DbCharmer#with_remapped_databases" do
   end
 
   it "should successfully run selects on the right database" do
+    # We need this call to make sure rails would fetch columns info from the logs server before we mess its connection up
+    LogRecord.all
+
+    # Remap LogRecord connection to slave01 and make sure selects would go there (even though we do not have the table there)
     DbCharmer.with_remapped_databases(:logs => :slave01) do
       logs_connection.should_not_receive(:select_all)
-      slave_connection.abstract_connection_class.retrieve_connection.stub(:columns).and_return([])
       slave_connection.should_receive(:select_all).and_return([])
-      LogRecord.all.should == [ ]
+      LogRecord.all.should be_empty
     end
   end
 
