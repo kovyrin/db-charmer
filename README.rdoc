@@ -590,8 +590,8 @@ CI is running on TravisCI.org: https://travis-ci.org/kovyrin/db-charmer
 At the moment we have the following build matrix:
 
 * Rails versions:
-  - 2.x ![Build Status: rails 2.x](https://secure.travis-ci.org/kovyrin/db-charmer-sandbox.png?branch=rails2x)
-  - 3.x ![Build Status: rails 3.x](https://secure.travis-ci.org/kovyrin/db-charmer.png?branch=master)
+  - 2.x {<img src="https://secure.travis-ci.org/kovyrin/db-charmer-sandbox.png?branch=rails23" alt="Build Status: Rails 2.x" />}[https://travis-ci.org/kovyrin/db-charmer-sandbox]
+  - 3.x {<img src="https://secure.travis-ci.org/kovyrin/db-charmer.png?branch=master" alt="Build Status: Rails 3.x" />}[https://travis-ci.org/kovyrin/db-charmer])
 * Ruby versions:
   - 1.8.7
   - Ruby Enterprise Edition (1.8.7)
