@@ -583,16 +583,29 @@ the DbCharmer Users Group mailing list:
 == What Ruby and Rails implementations does it work for?
 
 We have a continuous integration setup for this gem on with Rails 2.3, 3.0, 3.1 and 3.2 using a few
-different versions of Ruby. For more information about the build matrix please visit
-http://github.com/kovyrin/db-charmer-sandbox web site.
+different versions of Ruby.
+
+CI is running on TravisCI.org: https://travis-ci.org/kovyrin/db-charmer
+
+At the moment we have the following build matrix:
+
+* Rails versions:
+  - 2.x ![Build Status: rails 2.x](https://secure.travis-ci.org/kovyrin/db-charmer-sandbox.png?branch=rails2x)
+  - 3.x ![Build Status: rails 3.x](https://secure.travis-ci.org/kovyrin/db-charmer.png?branch=master)
+* Ruby versions:
+  - 1.8.7
+  - Ruby Enterprise Edition (1.8.7)
+  - 1.9.3 (Rails 3 only since older versions do not support new ruby releases)
+* Databases:
+  - MySQL
 
 In addition to CI testing, this gem is used in production on Scribd.com (one of the largest RoR
 sites in the world) with Ruby Enterprise Edition and Rails 2.2, Rails 2.3, Sinatra and plain
 Rack applications.
 
-Starting with version 1.7.0 we support Rails 3.0-3.2, but until further notice we consider it a
-beta-quality feature since we do not run any production software on this version of Rails. If you
-run your application on Rails 3.x and having any issues with the gem, please contact the author.
+Starting with version 1.8.0 we support Rails versions up to 3.2.8. Please note, that Rails 3.2.4
+is not officially supported. Your code may work on that version, but no bug reports will be
+accepted about this version.
 
 
 == Who are the authors?

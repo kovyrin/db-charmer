@@ -1,3 +1,14 @@
+1.8.0 (2012-11-12):
+
+Added support for Rails versions up to 3.2.9. Please note, that Rails 3.2.4 is not officially
+supported. Your code may work on that version, but no bug reports will be accepted about this
+version.
+
+Tests for DbCharmer have been moved to the gem repository to make Travis-CI integration more
+stable. We do not put test files into the gem inself so it should not be a problem for most
+of the users. If you still use db-charmer as a plugin, please switch to gem mode.
+
+----------------------------------------------------------------------------------------
 1.7.1 (2012-04-22):
 
 Beta feature: Rails 3.1 and 3.2 support
