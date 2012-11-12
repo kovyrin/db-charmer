@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe "Named scopes" do
   fixtures :users, :posts
 
