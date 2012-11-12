@@ -1,0 +1,23 @@
+one:
+  id: 1
+  title: MyString
+  body: MyText
+  user_id: 1
+
+two:
+  id: 2
+  title: MyString
+  body: MyText
+  user_id: 2
+
+windoze:
+  id: 3
+  title: Windows Sucks
+  body: Yeah, it does!
+  user_id: 3
+
+foo:
+  id: 4
+  title: Foo
+  body: Foo body
+  user_id: 3

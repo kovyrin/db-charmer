@@ -1,0 +1,23 @@
+shard1:
+  id: 1
+  db_host: localhost
+  db_name: db_charmer_events_test_shard01
+  open: 1
+  enabled: 1
+  blocks_count: 2
+
+shard2:
+  id: 2
+  db_host: localhost
+  db_name: db_charmer_events_test_shard02
+  open: 1
+  enabled: 1
+  blocks_count: 1
+
+empty:
+  id: 3
+  db_host: localhost
+  db_name: db_charmer_events_test_shard01  
+  open: 1
+  enabled: 1
+  blocks_count: 0

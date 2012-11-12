@@ -1,0 +1,2 @@
+class Toyota < Car
+end

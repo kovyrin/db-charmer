@@ -1,0 +1,21 @@
+language: ruby
+rvm:
+  - 1.8.7
+  - ree
+  - 1.9.3
+
+env:
+  - RAILS_VERSION=3.0.17
+  - RAILS_VERSION=3.1.8
+  - RAILS_VERSION=3.2.3
+
+notifications:
+  recipients:
+    - alexey@kovyrin.net
+
+script: test-project/script/cruise_build
+
+# whitelist branches
+branches:
+  only:
+    - master

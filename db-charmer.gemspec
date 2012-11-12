@@ -15,7 +15,9 @@ Gem::Specification.new do |s|
 
   s.rdoc_options = [ '--charset=UTF-8' ]
 
-  s.files            = `git ls-files`.split("\n")
+  s.files         = Dir['lib/**/*'] + Dir['*.rb']
+  s.files        += %w[ README.rdoc LICENSE CHANGES ]
+
   s.require_paths    = [ 'lib' ]
   s.extra_rdoc_files = [ 'LICENSE', 'README.rdoc' ]
 

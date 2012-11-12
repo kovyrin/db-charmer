@@ -1,0 +1,8 @@
+<h1>Posts</h1>
+<br/>
+<% @posts.each do |post| %>
+  <p>
+    Post #<%= post.id %><br/>
+    <pre><%= post.inspect %></pre>
+  </p>
+<% end %>

@@ -1,0 +1,11 @@
+log/*.log
+db/schema.*
+.idea
+TAGS
+config/database.yml
+.bundle
+tmp
+.DS_Store
+vendor
+Gemfile.lock
+doc

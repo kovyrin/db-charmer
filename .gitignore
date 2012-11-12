@@ -1,4 +1,4 @@
-/doc
-/pkg
+doc
+pkg
 .DS_Store
-/_site
+_site
