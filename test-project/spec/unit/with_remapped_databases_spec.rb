@@ -86,6 +86,7 @@ describe "DbCharmer#with_remapped_databases" do
     DbCharmer.with_remapped_databases(:logs => :slave01) do
       logs_connection.should_not_receive(:select_all)
       slave_connection.should_receive(:select_all).and_return([])
+      stub_columns_for_rails31 slave_connection
       LogRecord.all.should be_empty
     end
   end
