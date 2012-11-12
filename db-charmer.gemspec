@@ -22,8 +22,8 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = [ 'LICENSE', 'README.rdoc' ]
 
   # Dependencies
-  s.add_dependency 'activesupport', '<= 3.2.8'
-  s.add_dependency 'activerecord', '<= 3.2.8'
+  s.add_dependency 'activesupport', '<= 3.2.9'
+  s.add_dependency 'activerecord', '<= 3.2.9'
 
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'yard'
