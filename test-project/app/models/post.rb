@@ -1,5 +1,6 @@
 class Post < ActiveRecord::Base
-  db_magic :slave => :slave01, :force_slave_reads => false
+  DB_MAGIC_DEFAULT_PARAMS = { :slave => :slave01, :force_slave_reads => false }
+  db_magic DB_MAGIC_DEFAULT_PARAMS
 
   belongs_to :user
   has_and_belongs_to_many :categories

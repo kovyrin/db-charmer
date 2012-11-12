@@ -14,6 +14,10 @@ describe "ActiveRecord in finder methods" do
     User.db_magic :connection => nil
   end
 
+  after do
+    Post.db_magic(Post::DB_MAGIC_DEFAULT_PARAMS)
+  end
+
   it "should switch all belongs_to association connections when :include is used" do
     User.connection.should_not_receive(:select_all)
     Post.on_db(:slave01).all(:include => :user)
