@@ -15,6 +15,7 @@ fi
 echo "-----------------------------------------------------------------------------------------------------------------"
 echo " * Running specs for Rails version $RAILS_VERSION..."
 echo " * Ruby version: `ruby --version`"
+echo " * DbCharmer gem version: '${DB_CHARMER_GEM:-trunk}'"
 echo "-----------------------------------------------------------------------------------------------------------------"
 
 # Test environment

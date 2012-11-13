@@ -7,9 +7,12 @@ gem 'rspec'
 gem 'rspec-rails'
 
 # Load DbCharmer as a gem
-if ENV['DB_CHARMER_GEM'] == ''
-  gem 'db-charmer', :path => '..', :require => 'db_charmer'
+if ENV['DB_CHARMER_GEM'].to_s == ''
+  gem_path = File.expand_path(File.dirname(File.dirname(__FILE__)))
+  puts "Using on-disk db-charmer code from '#{gem_path}'..."
+  gem 'db-charmer', :path => gem_path, :require => 'db_charmer'
 else
+  puts "Using db-charmer gem: #{ENV['DB_CHARMER_GEM']}..."
   gem 'db-charmer', ENV['DB_CHARMER_GEM'], :require => 'db_charmer'
 end
 
