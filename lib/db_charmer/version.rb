@@ -1,9 +1,9 @@
 module DbCharmer
   module Version
     MAJOR = 1
-    MINOR = 7
-    PATCH = 1
-    BUILD = nil
+    MINOR = 8
+    PATCH = 0
+    BUILD = "pre1"
 
     STRING = [MAJOR, MINOR, PATCH, BUILD].compact.join('.')
   end
