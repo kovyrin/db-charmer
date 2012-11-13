@@ -7,7 +7,11 @@ gem 'rspec'
 gem 'rspec-rails'
 
 # Load DbCharmer as a gem
-gem 'db-charmer', :path => '..', :require => 'db_charmer'
+if ENV['DB_CHARMER_GEM'] == ''
+  gem 'db-charmer', :path => '..', :require => 'db_charmer'
+else
+  gem 'db-charmer', ENV['DB_CHARMER_GEM'], :require => 'db_charmer'
+end
 
 # Detect Rails version we need to use
 rails_version_file = File.expand_path("../.rails-version", __FILE__)
