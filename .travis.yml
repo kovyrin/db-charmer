@@ -17,7 +17,14 @@ notifications:
 
 script: ./ci_build
 
-# whitelist branches
+# Whitelist branches to test
 branches:
   only:
     - master
+
+# Build matrix configuration
+matrix:
+  exclude:
+    # Do not run Rails 2.x tests on ruby 1.9
+    - rvm: 1.9.3
+      env: RAILS_VERSION=2.x
