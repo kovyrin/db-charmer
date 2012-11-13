@@ -182,31 +182,33 @@ describe "Multi-db migractions" do
     end
   end
 
-  describe 'with db_magic calls in instance methods', :rails => '>= 3.1' do
-    it "should send all up requests to specified connection" do
-      ActiveRecord::Base.connection.should_receive(:execute).with("UPDATE log_records SET level = 'hoho'")
-      connection_with_name(:logs).should_receive(:execute).with("UPDATE log_records SET level = 'hoho'")
-      SpecMultiDbMigration5.migrate(:up)
+  if DbCharmer.rails31?
+    describe 'with db_magic calls in instance methods' do
+      it "should send all up requests to specified connection" do
+        ActiveRecord::Base.connection.should_receive(:execute).with("UPDATE log_records SET level = 'hoho'")
+        connection_with_name(:logs).should_receive(:execute).with("UPDATE log_records SET level = 'hoho'")
+        SpecMultiDbMigration5.migrate(:up)
+      end
+
+      it "should send all down requests to specified connection" do
+        ActiveRecord::Base.connection.should_receive(:execute).with("UPDATE log_records SET level = 'blah'")
+        connection_with_name(:logs).should_receive(:execute).with("UPDATE log_records SET level = 'blah'")
+        SpecMultiDbMigration5.migrate(:down)
+      end
     end
 
-    it "should send all down requests to specified connection" do
-      ActiveRecord::Base.connection.should_receive(:execute).with("UPDATE log_records SET level = 'blah'")
-      connection_with_name(:logs).should_receive(:execute).with("UPDATE log_records SET level = 'blah'")
-      SpecMultiDbMigration5.migrate(:down)
-    end
-  end
+    describe 'with db_magic calls in recorder' do
+      it "should send all up requests to specified connection" do
+        ActiveRecord::Base.connection.should_not_receive(:execute)
+        connection_with_name(:logs).should_receive(:execute).with(/CREATE TABLE/)
+        SpecMultiDbMigration6.migrate(:up)
+      end
 
-  describe 'with db_magic calls in recorder', :rails => '>= 3.1' do
-    it "should send all up requests to specified connection" do
-      ActiveRecord::Base.connection.should_not_receive(:execute)
-      connection_with_name(:logs).should_receive(:execute).with(/CREATE TABLE/)
-      SpecMultiDbMigration6.migrate(:up)
-    end
-
-    it "should send all down requests to specified connection" do
-      ActiveRecord::Base.connection.should_not_receive(:execute)
-      connection_with_name(:logs).should_receive(:execute).with(/DROP TABLE/)
-      SpecMultiDbMigration6.migrate(:down)
+      it "should send all down requests to specified connection" do
+        ActiveRecord::Base.connection.should_not_receive(:execute)
+        connection_with_name(:logs).should_receive(:execute).with(/DROP TABLE/)
+        SpecMultiDbMigration6.migrate(:down)
+      end
     end
   end
 end
