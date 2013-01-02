@@ -1,3 +1,8 @@
+1.8.1 (2013-01-02):
+
+Bumped up rails dependencies up to 3.2.10.
+
+----------------------------------------------------------------------------------------
 1.8.0 (2012-11-12):
 
 Added support for Rails versions up to 3.2.9. Please note, that Rails 3.2.4 is not officially
