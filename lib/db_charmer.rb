@@ -1,5 +1,6 @@
 # In Rails 2.2 they did not add it to the autoload so it won't work w/o this require
 require 'active_record/version' unless defined?(::ActiveRecord::VERSION::MAJOR)
+require 'active_support/core_ext'
 
 module DbCharmer
   # Configure autoload
@@ -108,6 +109,7 @@ require 'db_charmer/force_slave_reads'
 
 # Add our custom class-level attributes to AR models
 require 'db_charmer/active_record/class_attributes'
+require 'active_record'
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::ClassAttributes)
 
 # Enable connections switching in AR
