@@ -10,6 +10,7 @@ module DbCharmer
     autoload :ForceSlaveReads, 'db_charmer/action_controller/force_slave_reads'
   end
 
+  #-------------------------------------------------------------------------------------------------
   # Used in all Rails3-specific places
   def self.rails3?
     ::ActiveRecord::VERSION::MAJOR > 2
@@ -30,37 +31,45 @@ module DbCharmer
     ActiveRecord::VERSION::STRING == '3.2.4'
   end
 
+  #-------------------------------------------------------------------------------------------------
+  # Returns true if we're running within a Rails project
+  def self.running_with_rails?
+    defined?(Rails) && Rails.respond_to?(:env)
+  end
+
+  # Returns current environment name based on Rails or Rack environment variables
+  def self.detect_environment
+    return Rails.env if running_with_rails?
+    ENV['RAILS_ENV'] || ENV['RACK_ENV'] || 'default'
+  end
+
+  # Try to detect current environment or use development by default
+  @@env = DbCharmer.detect_environment
+  mattr_accessor :env
+
+  #-------------------------------------------------------------------------------------------------
   # Accessors
   @@connections_should_exist = true
   mattr_accessor :connections_should_exist
-
-  # Try to detect current environment or use development by default
-  if defined?(Rails) && Rails.respond_to?('env')
-    @@env = Rails.env
-  elsif ENV['RAILS_ENV']
-    @@env = ENV['RAILS_ENV']
-  elsif ENV['RACK_ENV']
-    @@env = ENV['RACK_ENV']
-  else
-    @@env = 'development'
-  end
-  mattr_accessor :env
 
   def self.connections_should_exist?
     !! connections_should_exist
   end
 
+  #-------------------------------------------------------------------------------------------------
+  def self.logger
+    return Rails.logger if running_with_rails?
+    @@logger ||= Logger.new(STDERR)
+  end
+
+  #-------------------------------------------------------------------------------------------------
   # Extend ActionController to support forcing slave reads
   def self.enable_controller_magic!
     ::ActionController::Base.extend(DbCharmer::ActionController::ForceSlaveReads::ClassMethods)
     ::ActionController::Base.send(:include, DbCharmer::ActionController::ForceSlaveReads::InstanceMethods)
   end
 
-  def self.logger
-    return Rails.logger if defined?(Rails)
-    @logger ||= Logger.new(STDERR)
-  end
-
+  #-------------------------------------------------------------------------------------------------
   def self.with_remapped_databases(mappings, &proc)
     old_mappings = ::ActiveRecord::Base.db_charmer_database_remappings
     begin
@@ -97,6 +106,7 @@ private
   end
 end
 
+#---------------------------------------------------------------------------------------------------
 # Print warning about the broken Rails 2.3.4
 puts "WARNING: Rails 3.2.4 is not officially supported by DbCharmer. Please upgrade." if DbCharmer.rails324?
 
@@ -218,8 +228,9 @@ else
   ActiveRecord::AssociationPreload::ClassMethods.send(:public, :preload_associations)
 end
 
-
-class ::ActiveRecord::Base
+#---------------------------------------------------------------------------------------------------
+# Hijack connection on all new AR classes when we're in a block with main AR connection remapped
+class ActiveRecord::Base
   class << self
     def inherited_with_hijacking(subclass)
       out = inherited_without_hijacking(subclass)
