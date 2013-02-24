@@ -35,7 +35,7 @@ module DbCharmer
   mattr_accessor :connections_should_exist
 
   # Try to detect current environment or use development by default
-  if defined?(Rails)
+  if defined?(Rails) && Rails.respond_to?('env')
     @@env = Rails.env
   elsif ENV['RAILS_ENV']
     @@env = ENV['RAILS_ENV']
