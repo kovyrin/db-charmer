@@ -26,7 +26,7 @@ module DbCharmer
     ::ActiveRecord::VERSION::MAJOR == 2
   end
 
-  # Used in all Rails2-specific places
+  # Detect broken Rails version
   def self.rails324?
     ActiveRecord::VERSION::STRING == '3.2.4'
   end
