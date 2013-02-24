@@ -6,8 +6,8 @@ rvm:
 
 env:
   - RAILS_VERSION=2.x
-  - RAILS_VERSION=3.0.17
-  - RAILS_VERSION=3.1.8
+  - RAILS_VERSION=3.0.20
+  - RAILS_VERSION=3.1.11
   - RAILS_VERSION=3.2.3
   - RAILS_VERSION=3.2.12
   - RAILS_VERSION=3.2.12 DB_CHARMER_GEM=1.8.3
@@ -36,11 +36,11 @@ matrix:
 
     # Do not run Rails 3.0 tests on ruby 2.0
     - rvm: 2.0.0
-      env: RAILS_VERSION=3.0.17
+      env: RAILS_VERSION=3.0.20
 
     # Do not run Rails 3.1 tests on ruby 2.0
     - rvm: 2.0.0
-      env: RAILS_VERSION=3.1.8
+      env: RAILS_VERSION=3.1.11
 
     # Do not run early Rails 3.2 tests on ruby 2.0
     - rvm: 2.0.0
