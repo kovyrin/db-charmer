@@ -66,13 +66,16 @@ module DbCharmer
       end
 
       #-----------------------------------------------------------------------------
-      @@db_charmer_connection_levels = Hash.new(0)
+      def db_charmer_connection_levels
+        Thread.current[:db_charmer_connection_levels] ||= Hash.new(0)
+      end
+
       def db_charmer_connection_level=(level)
-        @@db_charmer_connection_levels[self.name] = level
+        db_charmer_connection_levels[self.name] = level
       end
 
       def db_charmer_connection_level
-        @@db_charmer_connection_levels[self.name] || 0
+        db_charmer_connection_levels[self.name] || 0
       end
 
       def db_charmer_top_level_connection?
@@ -80,24 +83,23 @@ module DbCharmer
       end
 
       #-----------------------------------------------------------------------------
-      @@db_charmer_database_remappings = Hash.new
       def db_charmer_remapped_connection
-        return nil if (db_charmer_connection_level || 0) > 0
+        return nil unless db_charmer_top_level_connection?
         name = :master
         proxy = db_charmer_connection_proxy
         name = proxy.db_charmer_connection_name.to_sym if proxy
 
-        remapped = @@db_charmer_database_remappings[name]
+        remapped = db_charmer_database_remappings[name]
         remapped ? DbCharmer::ConnectionFactory.connect(remapped, true) : nil
       end
 
       def db_charmer_database_remappings
-        @@db_charmer_database_remappings
+        Thread.current[:db_charmer_database_remappings] ||= Hash.new
       end
 
       def db_charmer_database_remappings=(mappings)
         raise "Mappings must be nil or respond to []" if mappings && (! mappings.respond_to?(:[]))
-        @@db_charmer_database_remappings = mappings || { }
+        Thread.current[:db_charmer_database_remappings] = mappings || {}
       end
     end
   end
