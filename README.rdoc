@@ -595,8 +595,8 @@ At the moment we have the following build matrix:
   - 3.2
 * Ruby versions:
   - 1.8.7
-  - Ruby Enterprise Edition (1.8.7)
-  - 1.9.3 (Rails 3 only since older versions do not support new ruby releases)
+  - 1.9.3 (Rails 3.0+ only)
+  - 2.0.0 (Rails 3.2+ only)
 * Databases:
   - MySQL
 
@@ -604,9 +604,17 @@ In addition to CI testing, this gem is used in production on Scribd.com (one of 
 sites in the world) with Ruby Enterprise Edition and Rails 2.2, Rails 2.3, Sinatra and plain
 Rack applications.
 
-Starting with version 1.8.0 we support Rails versions up to 3.2.8. Please note, that Rails 3.2.4
+Starting with version 1.8.0 we support Rails versions 3.2.8 and higher. Please note, that Rails 3.2.4
 is not officially supported. Your code may work on that version, but no bug reports will be
 accepted about this version.
+
+
+== Is it Thread-Safe?
+
+Starting with version 1.9.0 we have started working on making the code thread-safe and making sure
+DbCharmer works correctly in multi-threaded environments. At this moment we consider multi-threaded
+mode experimental. If you use it and it works for you - please let us know, if it does not - please
+make sure to file a ticket so that we could improve the code and make it work in your situation.
 
 
 == Who are the authors?

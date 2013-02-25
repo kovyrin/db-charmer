@@ -1,3 +1,15 @@
+1.9.0 (unreleased yet):
+
+All of the major changes in this version are related to our initial push towards making
+DbCharmer thread-safe and making sure it works correctly in multi-threaded environments.
+
+Please note, that even though we now test DbCharmer in multi-threaded environments, we still
+consider multi-threaded support experimental.
+
+Bug fixes: Improved Rails environment detection (sometimes DbCharmer would use
+Rails-specific code while running in non-rails projects).
+
+----------------------------------------------------------------------------------------
 1.8.4 (2013-03-18):
 
 Bumped up rails dependencies up to 3.2.13.
