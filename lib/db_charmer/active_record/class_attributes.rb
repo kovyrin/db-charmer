@@ -10,7 +10,7 @@ module DbCharmer
         @@db_charmer_opts[self.name] || {}
       end
 
-      #-----------------------------------------------------------------------------
+      #---------------------------------------------------------------------------------------------
       def db_charmer_connection_proxies
         Thread.current[:db_charmer_connection_proxies] ||= {}
       end
@@ -23,7 +23,7 @@ module DbCharmer
         db_charmer_connection_proxies[self.name]
       end
 
-      #-----------------------------------------------------------------------------
+      #---------------------------------------------------------------------------------------------
       @@db_charmer_default_connections = {}
       def db_charmer_default_connection=(conn)
         @@db_charmer_default_connections[self.name] = conn
@@ -33,7 +33,7 @@ module DbCharmer
         @@db_charmer_default_connections[self.name]
       end
 
-      #-----------------------------------------------------------------------------
+      #---------------------------------------------------------------------------------------------
       @@db_charmer_slaves = {}
       def db_charmer_slaves=(slaves)
         @@db_charmer_slaves[self.name] = slaves
@@ -48,7 +48,7 @@ module DbCharmer
         db_charmer_slaves[rand(db_charmer_slaves.size)]
       end
 
-      #-----------------------------------------------------------------------------
+      #---------------------------------------------------------------------------------------------
       def db_charmer_force_slave_reads_flags
         Thread.current[:db_charmer_force_slave_reads] ||= {}
       end
@@ -68,7 +68,7 @@ module DbCharmer
         db_charmer_force_slave_reads || DbCharmer.force_slave_reads?
       end
 
-      #-----------------------------------------------------------------------------
+      #---------------------------------------------------------------------------------------------
       def db_charmer_connection_levels
         Thread.current[:db_charmer_connection_levels] ||= Hash.new(0)
       end
@@ -85,7 +85,7 @@ module DbCharmer
         db_charmer_connection_level.zero?
       end
 
-      #-----------------------------------------------------------------------------
+      #---------------------------------------------------------------------------------------------
       def db_charmer_remapped_connection
         return nil unless db_charmer_top_level_connection?
         name = :master
