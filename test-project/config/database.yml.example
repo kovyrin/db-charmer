@@ -2,7 +2,7 @@ common: &common
   adapter: mysql
   encoding: utf8
   reconnect: false
-  pool: 1
+  pool: 10
   username: root
   password:
 
