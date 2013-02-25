@@ -11,19 +11,6 @@ module DbCharmer
       end
 
       #---------------------------------------------------------------------------------------------
-      def db_charmer_connection_proxies
-        Thread.current[:db_charmer_connection_proxies] ||= {}
-      end
-
-      def db_charmer_connection_proxy=(proxy)
-        db_charmer_connection_proxies[self.name] = proxy
-      end
-
-      def db_charmer_connection_proxy
-        db_charmer_connection_proxies[self.name]
-      end
-
-      #---------------------------------------------------------------------------------------------
       @@db_charmer_default_connections = {}
       def db_charmer_default_connection=(conn)
         @@db_charmer_default_connections[self.name] = conn
@@ -43,9 +30,23 @@ module DbCharmer
         @@db_charmer_slaves[self.name] || []
       end
 
+      # Returns a random connection from the list of slaves configured for this AR class
       def db_charmer_random_slave
         return nil unless db_charmer_slaves.any?
         db_charmer_slaves[rand(db_charmer_slaves.size)]
+      end
+
+      #---------------------------------------------------------------------------------------------
+      def db_charmer_connection_proxies
+        Thread.current[:db_charmer_connection_proxies] ||= {}
+      end
+
+      def db_charmer_connection_proxy=(proxy)
+        db_charmer_connection_proxies[self.name] = proxy
+      end
+
+      def db_charmer_connection_proxy
+        db_charmer_connection_proxies[self.name]
       end
 
       #---------------------------------------------------------------------------------------------
