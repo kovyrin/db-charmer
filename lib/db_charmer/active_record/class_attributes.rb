@@ -49,13 +49,16 @@ module DbCharmer
       end
 
       #-----------------------------------------------------------------------------
-      @@db_charmer_force_slave_reads = {}
+      def db_charmer_force_slave_reads_flags
+        Thread.current[:db_charmer_force_slave_reads] ||= {}
+      end
+
       def db_charmer_force_slave_reads=(force)
-        @@db_charmer_force_slave_reads[self.name] = force
+        db_charmer_force_slave_reads_flags[self.name] = force
       end
 
       def db_charmer_force_slave_reads
-        @@db_charmer_force_slave_reads[self.name]
+        db_charmer_force_slave_reads_flags[self.name]
       end
 
       # Slave reads are used in two cases:
