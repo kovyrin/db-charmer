@@ -2,6 +2,7 @@
 require 'active_record/version' unless defined?(::ActiveRecord::VERSION::MAJOR)
 require 'active_support/core_ext'
 
+#---------------------------------------------------------------------------------------------------
 module DbCharmer
   # Configure autoload
   autoload :Sharding, 'db_charmer/sharding'
@@ -68,64 +69,33 @@ module DbCharmer
     ::ActionController::Base.extend(DbCharmer::ActionController::ForceSlaveReads::ClassMethods)
     ::ActionController::Base.send(:include, DbCharmer::ActionController::ForceSlaveReads::InstanceMethods)
   end
-
-  #-------------------------------------------------------------------------------------------------
-  def self.with_remapped_databases(mappings, &proc)
-    old_mappings = ::ActiveRecord::Base.db_charmer_database_remappings
-    begin
-      ::ActiveRecord::Base.db_charmer_database_remappings = mappings
-      if mappings[:master] || mappings['master']
-        with_all_hijacked(&proc)
-      else
-        proc.call
-      end
-    ensure
-      ::ActiveRecord::Base.db_charmer_database_remappings = old_mappings
-    end
-  end
-
-  def self.hijack_new_classes?
-    @@hijack_new_classes
-  end
-
-private
-
-  @@hijack_new_classes = false
-  def self.with_all_hijacked
-    old_hijack_new_classes = @@hijack_new_classes
-    begin
-      @@hijack_new_classes = true
-      subclasses_method = DbCharmer.rails3? ? :descendants : :subclasses
-      ::ActiveRecord::Base.send(subclasses_method).each do |subclass|
-        subclass.hijack_connection!
-      end
-      yield
-    ensure
-      @@hijack_new_classes = old_hijack_new_classes
-    end
-  end
 end
 
 #---------------------------------------------------------------------------------------------------
 # Print warning about the broken Rails 2.3.4
 puts "WARNING: Rails 3.2.4 is not officially supported by DbCharmer. Please upgrade." if DbCharmer.rails324?
 
+#---------------------------------------------------------------------------------------------------
 # Add useful methods to global object
 require 'db_charmer/core_extensions'
 
 require 'db_charmer/connection_factory'
 require 'db_charmer/connection_proxy'
 require 'db_charmer/force_slave_reads'
+require 'db_charmer/with_remapped_databases'
 
+#---------------------------------------------------------------------------------------------------
 # Add our custom class-level attributes to AR models
 require 'db_charmer/active_record/class_attributes'
 require 'active_record'
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::ClassAttributes)
 
+#---------------------------------------------------------------------------------------------------
 # Enable connections switching in AR
 require 'db_charmer/active_record/connection_switching'
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::ConnectionSwitching)
 
+#---------------------------------------------------------------------------------------------------
 # Enable AR logging extensions
 if DbCharmer.rails3?
   require 'db_charmer/rails3/abstract_adapter/connection_name'
@@ -137,12 +107,14 @@ else
   ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, DbCharmer::AbstractAdapter::LogFormatting)
 end
 
+#---------------------------------------------------------------------------------------------------
 # Enable connection proxy in AR
 require 'db_charmer/active_record/multi_db_proxy'
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::MultiDbProxy::ClassMethods)
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::MultiDbProxy::MasterSlaveClassMethods)
 ActiveRecord::Base.send(:include, DbCharmer::ActiveRecord::MultiDbProxy::InstanceMethods)
 
+#---------------------------------------------------------------------------------------------------
 # Enable connection proxy for relations
 if DbCharmer.rails3?
   require 'db_charmer/rails3/active_record/relation_method'
@@ -151,15 +123,19 @@ if DbCharmer.rails3?
   ActiveRecord::Relation.send(:include, DbCharmer::ActiveRecord::Relation::ConnectionRouting)
 end
 
+#---------------------------------------------------------------------------------------------------
 # Enable connection proxy for scopes (rails 2.x only)
 if DbCharmer.rails2?
   require 'db_charmer/rails2/active_record/named_scope/scope_proxy'
   ActiveRecord::NamedScope::Scope.send(:include, DbCharmer::ActiveRecord::NamedScope::ScopeProxy)
 end
 
+#---------------------------------------------------------------------------------------------------
 # Enable connection proxy for associations
-# WARNING: Inject methods to association class right here (they proxy include calls somewhere else, so include does not work)
-association_proxy_class = DbCharmer.rails31? ? ActiveRecord::Associations::CollectionProxy : ActiveRecord::Associations::AssociationProxy
+# WARNING: Inject methods to association class right here because they proxy +include+ calls
+#          somewhere else, which means we could not use +include+ method here
+association_proxy_class = DbCharmer.rails31? ? ActiveRecord::Associations::CollectionProxy :
+                                               ActiveRecord::Associations::AssociationProxy
 association_proxy_class.class_eval do
   def proxy?
     true
@@ -194,6 +170,7 @@ association_proxy_class.class_eval do
   end
 end
 
+#---------------------------------------------------------------------------------------------------
 # Enable multi-db migrations
 require 'db_charmer/active_record/migration/multi_db_migrations'
 ActiveRecord::Migration.send(:include, DbCharmer::ActiveRecord::Migration::MultiDbMigrations)
@@ -203,6 +180,7 @@ if DbCharmer.rails31?
   ActiveRecord::Migration::CommandRecorder.send(:include, DbCharmer::ActiveRecord::Migration::CommandRecorder)
 end
 
+#---------------------------------------------------------------------------------------------------
 # Enable the magic
 if DbCharmer.rails3?
   require 'db_charmer/rails3/active_record/master_slave_routing'
@@ -214,6 +192,7 @@ require 'db_charmer/active_record/sharding'
 require 'db_charmer/active_record/db_magic'
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::DbMagic)
 
+#---------------------------------------------------------------------------------------------------
 # Setup association preload magic
 if DbCharmer.rails31?
   require 'db_charmer/rails31/active_record/preloader/association'
@@ -226,18 +205,4 @@ else
 
   # Open up really useful API method
   ActiveRecord::AssociationPreload::ClassMethods.send(:public, :preload_associations)
-end
-
-#---------------------------------------------------------------------------------------------------
-# Hijack connection on all new AR classes when we're in a block with main AR connection remapped
-class ActiveRecord::Base
-  class << self
-    def inherited_with_hijacking(subclass)
-      out = inherited_without_hijacking(subclass)
-      hijack_connection! if DbCharmer.hijack_new_classes?
-      out
-    end
-
-    alias_method_chain :inherited, :hijacking
-  end
 end
