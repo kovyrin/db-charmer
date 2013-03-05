@@ -36,7 +36,7 @@ $(document).ready(function() {
             if (!$active.length) $active = $('#main article:first-child');
 
             $('.current', mainMenu).removeClass('current');
-            $('a[href="index.html#' + $active.attr('id') + '"]', mainMenu).parent().addClass('current');
+            $('a[href="./#' + $active.attr('id') + '"]', mainMenu).parent().addClass('current');
             $('a[href="' + $active.attr('id') + '.html#' + $active.attr('id') + '"]', mainMenu).parent().addClass('current');
         });
     }
