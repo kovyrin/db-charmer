@@ -34,7 +34,7 @@
     // Redirect to canonical page
     if (location_url != "{{ page.canonical }}") {
       var new_location = "{{ page.canonical }}";
-      if (location_anchor != "") {
+      if (location_anchor) {
         new_location = new_location + "#" + location_anchor;
       }
       window.location.replace(new_location);
