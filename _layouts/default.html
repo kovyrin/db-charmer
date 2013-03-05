@@ -25,6 +25,12 @@
 </head>
 
 <body>
+  <script language="javascript">
+    // Redirect to canonical page
+    if (window.location.href != "{{ page.canonical }}") {
+      window.location.replace("{{ page.canonical }}");
+    }
+  </script>
 
   <div id="container">
     <header id="header">
