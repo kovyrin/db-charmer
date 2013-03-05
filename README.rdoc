@@ -567,7 +567,7 @@ sharding connection names or connection configurations to be used to establish c
 
 == Documentation/Questions
 
-For more information about the library, please visit our site at http://kovyrin.github.com/db-charmer.
+For more information about the library, please visit our site at http://dbcharmer.net/.
 If you need more defails on DbCharmer internals, please check out the source code. All the plugin's
 code is ~100% covered with tests. The project located in <tt>test-project</tt> directory has unit
 tests for all or, at least, the most actively used code paths.
