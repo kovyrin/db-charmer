@@ -3,7 +3,7 @@ auto: true
 server: true
 permalink: none
 
-baseurl: /db-charmer/
+#baseurl: /
 
 exclude:
  - Rakefile
