@@ -26,9 +26,18 @@
 
 <body>
   <script language="javascript">
+    // Parse current location
+    var location_parts = window.location.href.split('#');
+    var location_url = location_parts[0];
+    var location_anchor = location_parts[1];
+
     // Redirect to canonical page
-    if (window.location.href != "{{ page.canonical }}") {
-      window.location.replace("{{ page.canonical }}");
+    if (location_url != "{{ page.canonical }}") {
+      var new_location = "{{ page.canonical }}";
+      if (location_anchor != "") {
+        new_location = new_location + "#" + location_anchor;
+      }
+      window.location.replace(new_location);
     }
   </script>
 
