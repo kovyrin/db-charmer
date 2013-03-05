@@ -10,7 +10,7 @@ multiple databases and/or database servers. The major features we add to ActiveR
 5. Multiple database migrations with very flexible query routing controls.
 6. Simple database sharding functionality with multiple sharding methods (value, range, mapping table).
 
-For more information on the project, you can check out our web site at http://kovyrin.github.com/db-charmer.
+For more information on the project, you can check out our web site at http://dbcharmer.net/.
 
 
 == Installation
