@@ -12,6 +12,10 @@ module DbCharmer
       @db_name = db_name
     end
 
+    def db_charmer_connection
+      @abstract_connection_class.retrieve_connection
+    end
+
     def db_charmer_connection_name
       @db_name
     end
@@ -20,8 +24,17 @@ module DbCharmer
       self
     end
 
+    def nil?
+      false
+    end
+
+    RESPOND_TO_METHODS = [:abstract_connection_class, :db_charmer_connection_name, :db_charmer_connection_proxy, :db_charmer_connection, :nil?].freeze
+    def respond_to?(method)
+      RESPOND_TO_METHODS.include?(method) ? true : db_charmer_connection.send(:respond_to?, method)
+    end
+
     def method_missing(meth, *args, &block)
-      @abstract_connection_class.retrieve_connection.send(meth, *args, &block)
+      db_charmer_connection.send(meth, *args, &block)
     end
   end
 end

@@ -36,9 +36,8 @@ module DbCharmer
           alias_method_chain :connection, :magic
 
           def connection_pool_with_magic
-            abstract_connection_class = connection.abstract_connection_class rescue nil # respond_to? doesn't work on connection_proxy...
-            if abstract_connection_class
-              connection_handler.retrieve_connection_pool(abstract_connection_class) || connection_pool_without_magic
+            if connection.respond_to?(:abstract_connection_class)
+              connection_handler.retrieve_connection_pool(connection.abstract_connection_class) || connection_pool_without_magic
             else
               connection_pool_without_magic
             end
@@ -51,6 +50,10 @@ module DbCharmer
       def coerce_to_connection_proxy(conn, should_exist = true)
         return nil if conn.nil?
 
+        if conn.respond_to?(:db_charmer_connection_proxy)
+          return conn.db_charmer_connection_proxy
+        end
+
         if conn.kind_of?(Symbol) || conn.kind_of?(String)
           return DbCharmer::ConnectionFactory.connect(conn, should_exist)
         end
@@ -59,10 +62,6 @@ module DbCharmer
           conn = conn.symbolize_keys
           raise ArgumentError, "Missing required :connection_name parameter" unless conn[:connection_name]
           return DbCharmer::ConnectionFactory.connect_to_db(conn[:connection_name], conn)
-        end
-
-        if conn.respond_to?(:db_charmer_connection_proxy)
-          return conn.db_charmer_connection_proxy
         end
 
         if conn.kind_of?(::ActiveRecord::ConnectionAdapters::AbstractAdapter) || conn.kind_of?(DbCharmer::Sharding::StubConnection)
@@ -76,7 +75,7 @@ module DbCharmer
       def switch_connection_to(conn, should_exist = true)
         new_conn = coerce_to_connection_proxy(conn, should_exist)
 
-        if db_charmer_connection_proxy.is_a?(DbCharmer::Sharding::StubConnection)
+        if db_charmer_connection_proxy.respond_to?(:set_real_connection)
           db_charmer_connection_proxy.set_real_connection(new_conn)
         end
 
