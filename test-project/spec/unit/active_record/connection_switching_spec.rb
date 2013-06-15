@@ -42,12 +42,11 @@ describe DbCharmer, "AR connection switching" do
 
     context "with a hash parameter" do
       before do
-        @conf = {
-          :adapter => 'mysql',
+        @conf = ActiveRecord::Base.configurations['common'].merge(
           :username => "db_charmer_ro",
           :database => "db_charmer_sandbox_test",
           :connection_name => 'sanbox_ro'
-        }
+        )
       end
 
       it "should fail if there is no :connection_name parameter" do
