@@ -4,6 +4,12 @@
 set -e # Exit on errors
 set -u # Exit on uninitialized variables
 
+RAILS_VERSION=${RAILS_VERSION:-}
+if [ "$RAILS_VERSION" == "" ]; then
+  echo "Please specify rails version using RAILS_VERSION environment variable!"
+  exit 1
+fi
+
 # Change directory according to the rails version
 if [ "$RAILS_VERSION" == "2.x" ]; then
   # Downgrade rubygems because rails 2.3 does not work on 2.0+
