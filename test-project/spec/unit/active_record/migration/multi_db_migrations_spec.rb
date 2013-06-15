@@ -80,6 +80,7 @@ class SpecMultiDbMigration6 < ActiveRecord::Migration
   end
 end
 
+#---------------------------------------------------------------------------------------------------
 describe "Multi-db migractions" do
   before(:all) do
     DbCharmer.connections_should_exist = true
