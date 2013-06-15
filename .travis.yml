@@ -11,6 +11,7 @@ env:
   - RAILS_VERSION=3.2.3
   - RAILS_VERSION=3.2.15
   - RAILS_VERSION=3.2.15 DB_CHARMER_GEM=1.9.0
+  - RAILS_VERSION=4.0.1
 
 notifications:
   recipients:
@@ -46,3 +47,7 @@ matrix:
     # Do not run early Rails 3.2 tests on ruby 2.0
     - rvm: 2.0.0
       env: RAILS_VERSION=3.2.3
+
+    # Do not run Rails 4.x tests on ruby 1.8
+    - rvm: 1.8.7
+      env: RAILS_VERSION=4.0.0.rc2
