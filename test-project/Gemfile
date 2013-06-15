@@ -21,7 +21,7 @@ version ||= ENV['RAILS_VERSION']
 version ||= '4-0-stable'
 
 # Different mysql gem versions for different rails
-if version =~ /^3\.0\./ || version == '3-0-stable'
+if version.to_i < 4
   gem 'mysql', '~> 2.8.1'
 else
   gem 'mysql'
