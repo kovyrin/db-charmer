@@ -1,8 +1,6 @@
 source 'http://rubygems.org'
 
 gem 'rake', "0.9.2.2"
-gem 'mysql'
-
 gem 'rspec'
 gem 'rspec-rails'
 
@@ -21,6 +19,13 @@ rails_version_file = File.expand_path("../.rails-version", __FILE__)
 version = File.exists?(rails_version_file) && File.read(rails_version_file).chomp
 version ||= ENV['RAILS_VERSION']
 version ||= '4-0-stable'
+
+# Different mysql gem versions for different rails
+if version =~ /^3\.0\./ || version == '3-0-stable'
+  gem 'mysql', '~> 2.8.1'
+else
+  gem 'mysql'
+end
 
 # Require gems for selected rails version
 case version
