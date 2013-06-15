@@ -23,7 +23,7 @@ script: ./ci_build
 branches:
   only:
     - master
-    - multithreading
+    - rails4
 
 # Build matrix configuration
 matrix:
