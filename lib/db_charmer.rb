@@ -5,6 +5,7 @@ require 'active_support/core_ext'
 #---------------------------------------------------------------------------------------------------
 module DbCharmer
   # Configure autoload
+  autoload :EmptyObject, 'db_charmer/empty_object'
   autoload :Sharding, 'db_charmer/sharding'
   autoload :Version,  'db_charmer/version'
   module ActionController
@@ -12,6 +13,11 @@ module DbCharmer
   end
 
   #-------------------------------------------------------------------------------------------------
+  # Used in all Rails4-specific places
+  def self.rails4?
+    ::ActiveRecord::VERSION::MAJOR > 3
+  end
+
   # Used in all Rails3-specific places
   def self.rails3?
     ::ActiveRecord::VERSION::MAJOR > 2
@@ -19,7 +25,7 @@ module DbCharmer
 
   # Used in all Rails3.1-specific places
   def self.rails31?
-    rails3? && ::ActiveRecord::VERSION::MINOR >= 1
+    (rails3? && ::ActiveRecord::VERSION::MINOR >= 1) || rails4?
   end
 
   # Used in all Rails2-specific places

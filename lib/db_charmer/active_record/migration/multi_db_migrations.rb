@@ -53,7 +53,7 @@ module DbCharmer
               yield
             ensure
               # Switch it back
-              ::ActiveRecord::Base.verify_active_connections!
+              ::ActiveRecord::Base.connection_handler.clear_all_connections!
               announce "Switching connection back"
               ::ActiveRecord::Base.switch_connection_to(old_proxy)
             end
@@ -127,7 +127,7 @@ module DbCharmer
         ensure
           @connection = old_connection
           # Switch it back
-          ::ActiveRecord::Base.verify_active_connections!
+          ::ActiveRecord::Base.connection_handler.clear_all_connections!
           announce "Switching connection back"
           ::ActiveRecord::Base.switch_connection_to(old_proxy)
         end
