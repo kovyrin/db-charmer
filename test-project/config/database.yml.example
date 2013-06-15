@@ -1,5 +1,5 @@
 common: &common
-  adapter: mysql2
+  adapter: mysql
   encoding: utf8
   reconnect: false
   pool: 10
