@@ -3,7 +3,7 @@ module DbCharmer
     module ConnectionName
 
       # We use this proxy to push connection name down to instrumenters w/o monkey-patching the log method itself
-      class InstrumenterDecorator < ActiveSupport::BasicObject
+      class InstrumenterDecorator < DbCharmer::EmptyObject
         def initialize(adapter, instrumenter)
           @adapter = adapter
           @instrumenter = instrumenter
