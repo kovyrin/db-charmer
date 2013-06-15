@@ -89,12 +89,11 @@ describe DbCharmer::ConnectionFactory do
   context "in connect_to_db method" do
     before do
       DbCharmer::ConnectionFactory.reset!
-      @conf = {
-        :adapter => 'mysql',
+      @conf = ActiveRecord::Base.configurations['common'].merge(
         :username => "db_charmer_ro",
         :database => "db_charmer_sandbox_test",
         :connection_name => 'sanbox_ro'
-      }
+      )
     end
 
     it "should return a connection proxy" do
