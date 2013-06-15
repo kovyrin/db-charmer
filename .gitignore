@@ -2,3 +2,5 @@ doc
 pkg
 .DS_Store
 _site
+.idea
+
