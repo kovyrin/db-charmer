@@ -9,7 +9,7 @@ env:
   - RAILS_VERSION=3.0.20
   - RAILS_VERSION=3.1.12
   - RAILS_VERSION=3.2.3
-  - RAILS_VERSION=3.2.13
+  - RAILS_VERSION=3.2.14
   # Temporary disabled gem testing until our gem with multi-threading support is released
   # - RAILS_VERSION=3.2.13 DB_CHARMER_GEM=1.9.0
 
