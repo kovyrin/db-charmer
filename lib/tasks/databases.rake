@@ -68,7 +68,11 @@ namespace :db_charmer do
 end
 
 def drop_core_and_sub_database(config)
-  drop_database(config)
+  begin
+    drop_database(config)
+  rescue
+    $stderr.puts "#{config['database']} not exists"
+  end  
   config.each_value do | sub_config |
     next unless sub_config.is_a?(Hash)
     next unless sub_config['database']
