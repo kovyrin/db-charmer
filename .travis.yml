@@ -10,7 +10,7 @@ env:
   - RAILS_VERSION=3.1.12
   - RAILS_VERSION=3.2.3
   - RAILS_VERSION=3.2.13
-  - RAILS_VERSION=4.0.0.rc2
+  - RAILS_VERSION=4.0.1
   # Temporary disabled gem testing until our gem with multi-threading support is released
   # - RAILS_VERSION=3.2.13 DB_CHARMER_GEM=1.9.0
 
@@ -51,4 +51,4 @@ matrix:
 
     # Do not run Rails 4.x tests on ruby 1.8
     - rvm: 1.8.7
-      env: RAILS_VERSION=4.0.0.rc2
+      env: RAILS_VERSION=4.0.1
