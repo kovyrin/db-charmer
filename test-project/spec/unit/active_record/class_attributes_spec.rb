@@ -6,10 +6,11 @@ describe DbCharmer, "for ActiveRecord models" do
   context "in db_charmer_connection_proxy methods" do
     before do
       FooModel.db_charmer_connection_proxy = nil
+      FooModel.db_charmer_default_connection = nil
     end
 
     it "should implement both accessor methods" do
-      proxy = mock('connection proxy')
+      proxy = double('connection proxy')
       FooModel.db_charmer_connection_proxy = proxy
       FooModel.db_charmer_connection_proxy.should be(proxy)
     end
@@ -18,10 +19,11 @@ describe DbCharmer, "for ActiveRecord models" do
   context "in db_charmer_default_connection methods" do
     before do
       FooModel.db_charmer_default_connection = nil
+      FooModel.db_charmer_default_connection = nil
     end
 
     it "should implement both accessor methods" do
-      conn = mock('connection')
+      conn = double('connection')
       FooModel.db_charmer_default_connection = conn
       FooModel.db_charmer_default_connection.should be(conn)
     end
@@ -46,7 +48,7 @@ describe DbCharmer, "for ActiveRecord models" do
     end
 
     it "should implement both accessor methods" do
-      proxy = mock('connection proxy')
+      proxy = double('connection proxy')
       FooModel.db_charmer_slaves = [ proxy ]
       FooModel.db_charmer_slaves.should == [ proxy ]
     end
@@ -89,6 +91,7 @@ describe DbCharmer, "for ActiveRecord models" do
   context "in connection method" do
     it "should return AR's original connection if no connection proxy is set" do
       FooModel.db_charmer_connection_proxy = nil
+      FooModel.db_charmer_default_connection = nil
       FooModel.connection.should be_kind_of(ActiveRecord::ConnectionAdapters::AbstractAdapter)
     end
   end
