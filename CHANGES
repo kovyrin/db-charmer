@@ -1,13 +1,20 @@
 1.9.0 (unreleased yet):
 
-All of the major changes in this version are related to our initial push towards making
+Most of the major changes in this version are related to our initial push towards making
 DbCharmer thread-safe and making sure it works correctly in multi-threaded environments.
 
 Please note, that even though we now test DbCharmer in multi-threaded environments, we still
 consider multi-threaded support experimental.
 
-Bug fixes: Improved Rails environment detection (sometimes DbCharmer would use
+Bug fix: Improved Rails environment detection (sometimes DbCharmer would use
 Rails-specific code while running in non-rails projects).
+
+Bug fix: Make sure on_db() method could restore original connection after an exception is
+raised from a DB driver during connection switching (Thanks to Dmytro Shteflyuk for finding
+the issue and helping with debugging).
+
+This is the first release that does not have a really strict constraint for point-releases
+within the Rails 3.2.x branch.
 
 ----------------------------------------------------------------------------------------
 1.8.4 (2013-03-18):
