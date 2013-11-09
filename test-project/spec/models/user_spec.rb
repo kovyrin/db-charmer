@@ -7,6 +7,7 @@ describe User do
       :password => "value for password"
     }
     User.switch_connection_to(nil)
+    User.db_charmer_default_connection = nil
   end
 
   it "should create a new instance given valid attributes" do
