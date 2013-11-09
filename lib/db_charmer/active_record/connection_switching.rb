@@ -31,7 +31,7 @@ module DbCharmer
         class << self
           # Make sure we check our accessors before going to the default connection retrieval method
           def connection_with_magic
-            db_charmer_remapped_connection || db_charmer_connection_proxy || db_charmer_default_connection || connection_without_magic
+            db_charmer_remapped_connection || db_charmer_model_connection_proxy || connection_without_magic
           end
           alias_method_chain :connection, :magic
 

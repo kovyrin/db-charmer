@@ -90,7 +90,7 @@ module DbCharmer
       def db_charmer_remapped_connection
         return nil unless db_charmer_top_level_connection?
         name = :master
-        proxy = db_charmer_connection_proxy
+        proxy = db_charmer_model_connection_proxy
         name = proxy.db_charmer_connection_name.to_sym if proxy
 
         remapped = db_charmer_database_remappings[name]
@@ -104,6 +104,12 @@ module DbCharmer
       def db_charmer_database_remappings=(mappings)
         raise "Mappings must be nil or respond to []" if mappings && (! mappings.respond_to?(:[]))
         Thread.current[:db_charmer_database_remappings] = mappings || {}
+      end
+
+      #---------------------------------------------------------------------------------------------
+      # Returns model-specific connection proxy, ignoring any global connection remappings
+      def db_charmer_model_connection_proxy
+        db_charmer_connection_proxy || db_charmer_default_connection
       end
     end
   end

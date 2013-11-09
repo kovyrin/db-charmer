@@ -41,4 +41,27 @@ describe "DbCharmer integration tests" do
       TestLogRecordWithThreads.connection.db_charmer_connection_name.should == "logs"
     }.join
   end
+
+  it "should use default connection passed in db_magic call when master connection is being remapped" do
+    class TestLogRecordWithThreadsAndRemapping < ActiveRecord::Base
+      self.table_name = :log_records
+      db_magic :connection => :logs
+    end
+
+    # Test in main thread
+    expect {
+      DbCharmer.with_remapped_databases(:master => :slave01) do
+        TestLogRecordWithThreadsAndRemapping.first
+      end
+    }.to_not raise_error
+
+    # Test in another thread
+    Thread.new {
+      expect {
+        DbCharmer.with_remapped_databases(:master => :slave01) do
+          TestLogRecordWithThreadsAndRemapping.first
+        end
+      }.to_not raise_error
+    }.join
+  end
 end unless ENV['SKIP_MT_TESTS']
