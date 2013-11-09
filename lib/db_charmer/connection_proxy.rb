@@ -41,10 +41,10 @@ module DbCharmer
       :set_real_connection
     ].freeze
 
-    def respond_to?(method_name)
+    def respond_to?(method_name, include_all = false)
       return true if RESPOND_TO_METHODS.include?(method_name)
       return false if DOESNT_RESPOND_TO_METHODS.include?(method_name)
-      db_charmer_retrieve_connection.respond_to?(method_name)
+      db_charmer_retrieve_connection.respond_to?(method_name, include_all)
     end
 
     #-----------------------------------------------------------------------------------------------
