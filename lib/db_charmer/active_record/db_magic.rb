@@ -64,8 +64,9 @@ module DbCharmer
       end
 
       def setup_connection_magic(conn, should_exist = true)
-        switch_connection_to(conn, should_exist)
-        self.db_charmer_default_connection = conn
+        conn_proxy = coerce_to_connection_proxy(conn, should_exist)
+        self.db_charmer_default_connection = conn_proxy
+        switch_connection_to(conn_proxy, should_exist)
       end
 
       def setup_slaves_magic(slaves, force_slave_reads, should_exist = true)
