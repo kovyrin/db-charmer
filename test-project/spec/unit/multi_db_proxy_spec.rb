@@ -58,6 +58,8 @@ describe "ActiveRecord model with db_magic" do
         end
 
         it "should restore connection after error" do
+          pending "Disabled in RSpec prior to version 2 because of lack of .any_instance support" unless Object.respond_to?(:any_instance)
+
           User.on_db(:slave01).first
           User.first
           ActiveRecord::Base.connection_handler.clear_all_connections!
