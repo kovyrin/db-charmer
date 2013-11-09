@@ -20,8 +20,36 @@ module DbCharmer
       self
     end
 
+    def db_charmer_retrieve_connection
+      @abstract_connection_class.retrieve_connection
+    end
+
+    def nil?
+      false
+    end
+
+    #-----------------------------------------------------------------------------------------------
+    RESPOND_TO_METHODS = [
+      :abstract_connection_class,
+      :db_charmer_connection_name,
+      :db_charmer_connection_proxy,
+      :db_charmer_retrieve_connection,
+      :nil?
+    ].freeze
+
+    DOESNT_RESPOND_TO_METHODS =[
+      :set_real_connection
+    ].freeze
+
+    def respond_to?(method_name)
+      return true if RESPOND_TO_METHODS.include?(method_name)
+      return false if DOESNT_RESPOND_TO_METHODS.include?(method_name)
+      db_charmer_retrieve_connection.respond_to?(method_name)
+    end
+
+    #-----------------------------------------------------------------------------------------------
     def method_missing(meth, *args, &block)
-      @abstract_connection_class.retrieve_connection.send(meth, *args, &block)
+      db_charmer_retrieve_connection.send(meth, *args, &block)
     end
   end
 end

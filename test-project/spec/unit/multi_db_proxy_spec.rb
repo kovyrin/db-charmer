@@ -48,6 +48,24 @@ describe "ActiveRecord model with db_magic" do
           @blah.on_db(:logs).to_s
           Blah.db_charmer_connection_proxy.should be_nil
         end
+
+        it "should restore connection" do
+          User.first
+          User.connection.object_id.should == User.on_master.connection.object_id
+
+          User.on_db(:slave01).first
+          User.connection.object_id.should == User.on_master.connection.object_id
+        end
+
+        it "should restore connection after error" do
+          User.on_db(:slave01).first
+          User.first
+          ActiveRecord::Base.connection_handler.clear_all_connections!
+          ActiveRecord::ConnectionAdapters::MysqlAdapter.any_instance.stub(:connect) { raise Mysql::Error, 'Connection error' }
+          expect { User.on_db(:slave01).first }.to raise_error(Mysql::Error)
+          ActiveRecord::ConnectionAdapters::MysqlAdapter.any_instance.unstub(:connect)
+          User.connection.connection_name.should == User.on_master.connection.connection_name
+        end
       end
     end
   end
