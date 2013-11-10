@@ -206,3 +206,8 @@ else
   # Open up really useful API method
   ActiveRecord::AssociationPreload::ClassMethods.send(:public, :preload_associations)
 end
+
+# Add gem tasks to Rails app
+if DbCharmer.rails3?
+  require 'db_charmer/railtie.rb'
+end
