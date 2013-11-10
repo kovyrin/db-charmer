@@ -37,7 +37,8 @@ module DbCharmer
       :nil?
     ].freeze
 
-    DOESNT_RESPOND_TO_METHODS =[
+    # Short-circuit some of the methods for which we know there is a separate check in coercion code
+    DOESNT_RESPOND_TO_METHODS = [
       :set_real_connection
     ].freeze
 
