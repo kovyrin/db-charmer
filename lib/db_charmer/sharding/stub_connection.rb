@@ -38,7 +38,9 @@ module DbCharmer
       end
 
       def respond_to?(method_name, include_all = false)
-        super || real_connection.respond_to?(method_name, include_all)
+        return true if super
+        return false if real_connection.object_id == self.object_id
+        real_connection.respond_to?(method_name, include_all)
       end
 
       def method_missing(meth, *args, &block)
