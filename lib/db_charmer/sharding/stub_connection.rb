@@ -37,6 +37,10 @@ module DbCharmer
         @real_conn = ::ActiveRecord::Base.coerce_to_connection_proxy(conn, DbCharmer.connections_should_exist?)
       end
 
+      def respond_to?(method_name, include_all = false)
+        super || real_connection.respond_to?(method_name, include_all)
+      end
+
       def method_missing(meth, *args, &block)
         # Fail on database statements
         if ::ActiveRecord::ConnectionAdapters::DatabaseStatements.instance_methods.member?(meth.to_s)
