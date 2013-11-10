@@ -87,8 +87,6 @@ module DbCharmer
 
         self.db_charmer_connection_proxy = new_conn
         self.hijack_connection!
-
-        # self.reset_column_information
       end
 
     end
