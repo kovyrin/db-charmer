@@ -1,4 +1,4 @@
-1.9.0 (unreleased yet):
+1.9.0 (2013-10-09):
 
 Most of the major changes in this version are related to our initial push towards making
 DbCharmer thread-safe and making sure it works correctly in multi-threaded environments.
