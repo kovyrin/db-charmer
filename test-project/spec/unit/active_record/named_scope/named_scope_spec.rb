@@ -14,19 +14,23 @@ describe "Named scopes" do
     end
 
     it "should actually run queries on the specified db" do
-      Post.on_db(:slave01).connection.should_receive(:select_all).once.and_return([])
-      Post.on_db(:slave01).windows_posts.all
+      Post.on_db(:slave01).connection.should_receive(:select_all).once.and_call_original
+      Post.on_db(:slave01).windows_posts.to_a
       # Post.windows_posts.all
     end
 
-    it "should work with long scope chains" do
-      Post.on_db(:slave01).connection.should_not_receive(:select_all)
-      Post.on_db(:slave01).connection.should_receive(:select_value).and_return(5)
-      Post.on_db(:slave01).windows_posts.count.should == 5
+    it "should work with long scope chains (only the last item in the chain should be evaluated)" do
+      if DbCharmer.rails4?
+        Post.on_db(:slave01).connection.should_receive(:select_all).once.and_call_original
+      else
+        Post.on_db(:slave01).connection.should_not_receive(:select_all)
+        Post.on_db(:slave01).connection.should_receive(:select_value).and_call_original
+      end
+      Post.on_db(:slave01).windows_posts.count.should == Post.windows_posts.count
     end
 
     it "should work with associations" do
-      users(:bill).posts.on_db(:slave01).windows_posts.all.should == users(:bill).posts.windows_posts
+      users(:bill).posts.on_db(:slave01).windows_posts.to_a.should == users(:bill).posts.windows_posts
     end
   end
 
@@ -37,19 +41,23 @@ describe "Named scopes" do
 
     it "should actually run queries on the specified db" do
       Post.on_db(:slave01).connection.object_id.should_not == Post.connection.object_id
-      Post.on_db(:slave01).connection.should_receive(:select_all).and_return([])
-      Post.windows_posts.on_db(:slave01).all
-      Post.windows_posts.all
+      Post.on_db(:slave01).connection.should_receive(:select_all).and_call_original
+      Post.windows_posts.on_db(:slave01).to_a
+      Post.windows_posts.to_a
     end
 
-    it "should work with long scope chains" do
-      Post.on_db(:slave01).connection.should_not_receive(:select_all)
-      Post.on_db(:slave01).connection.should_receive(:select_value).and_return(5)
-      Post.windows_posts.on_db(:slave01).count.should == 5
+    it "should work with long scope chains (only the last item in the chain should be evaluated)" do
+      if DbCharmer.rails4?
+        Post.on_db(:slave01).connection.should_receive(:select_all).once.and_call_original
+      else
+        Post.on_db(:slave01).connection.should_not_receive(:select_all)
+        Post.on_db(:slave01).connection.should_receive(:select_value).and_call_original
+      end
+      Post.windows_posts.on_db(:slave01).count.should == Post.windows_posts.count
     end
 
     it "should work with associations" do
-      users(:bill).posts.windows_posts.on_db(:slave01).all.should == users(:bill).posts.windows_posts
+      users(:bill).posts.windows_posts.on_db(:slave01).to_a.should == users(:bill).posts.windows_posts
     end
   end
 end
