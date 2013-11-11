@@ -1,11 +1,9 @@
 language: ruby
 rvm:
-  - 1.8.7
   - 1.9.3
   - 2.0.0
 
 env:
-  - RAILS_VERSION=2.x
   - RAILS_VERSION=3.0.20
   - RAILS_VERSION=3.1.12
   - RAILS_VERSION=3.2.3
@@ -28,14 +26,6 @@ branches:
 # Build matrix configuration
 matrix:
   exclude:
-    # Do not run Rails 2.x tests on ruby 1.9
-    - rvm: 1.9.3
-      env: RAILS_VERSION=2.x
-
-    # Do not run Rails 2.x tests on ruby 2.0
-    - rvm: 2.0.0
-      env: RAILS_VERSION=2.x
-
     # Do not run Rails 3.0 tests on ruby 2.0
     - rvm: 2.0.0
       env: RAILS_VERSION=3.0.20
@@ -47,7 +37,3 @@ matrix:
     # Do not run early Rails 3.2 tests on ruby 2.0
     - rvm: 2.0.0
       env: RAILS_VERSION=3.2.3
-
-    # Do not run Rails 4.x tests on ruby 1.8
-    - rvm: 1.8.7
-      env: RAILS_VERSION=4.0.0.rc2
