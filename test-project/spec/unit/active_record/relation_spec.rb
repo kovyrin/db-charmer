@@ -3,6 +3,7 @@ require 'spec_helper'
 describe "ActiveRecord::Relation for a model with db_magic" do
   before do
     class RelTestModel < ActiveRecord::Base
+      attr_accessible :login
       db_magic :connection => nil
       self.table_name = :users
     end
@@ -27,7 +28,7 @@ describe "ActiveRecord::Relation for a model with db_magic" do
   it "should execute select queries on the default connection" do
     rel = RelTestModel.on_db(:user_master).where("1=1")
 
-    RelTestModel.on_db(:user_master).connection.should_receive(:select_all).and_return([])
+    RelTestModel.on_db(:user_master).connection.should_receive(:select_all).and_call_original
     RelTestModel.connection.should_not_receive(:select_all)
 
     rel.first
@@ -36,7 +37,7 @@ describe "ActiveRecord::Relation for a model with db_magic" do
   it "should execute delete queries on the default connection" do
     rel = RelTestModel.on_db(:user_master).where("1=1")
 
-    RelTestModel.on_db(:user_master).connection.should_receive(:delete)
+    RelTestModel.on_db(:user_master).connection.should_receive(:delete).and_call_original
     RelTestModel.connection.should_not_receive(:delete)
 
     rel.delete_all
@@ -45,7 +46,7 @@ describe "ActiveRecord::Relation for a model with db_magic" do
   it "should execute update_all queries on the default connection" do
     rel = RelTestModel.on_db(:user_master).where("1=1")
 
-    RelTestModel.on_db(:user_master).connection.should_receive(:update)
+    RelTestModel.on_db(:user_master).connection.should_receive(:update).and_call_original
     RelTestModel.connection.should_not_receive(:update)
 
     rel.update_all("login = login + 'new'")
@@ -55,7 +56,7 @@ describe "ActiveRecord::Relation for a model with db_magic" do
     rel = RelTestModel.on_db(:user_master).where("1=1")
     user = RelTestModel.create!(:login => 'login')
 
-    RelTestModel.on_db(:user_master).connection.should_receive(:update)
+    RelTestModel.on_db(:user_master).connection.should_receive(:update).and_call_original
     RelTestModel.connection.should_not_receive(:update)
 
     rel.update(user.id, :login => "foobar")
