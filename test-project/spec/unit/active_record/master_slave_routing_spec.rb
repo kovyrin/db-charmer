@@ -65,7 +65,8 @@ describe "ActiveRecord slave-enabled models" do
       u2 = UserWithSlave.create(:login => 'bar')
 
       UserWithSlave.where(:login => 'foo').should == [ u1 ]
-      UserWithSlave.limit(1).size.should == 1
+      limited_set = DbCharmer.rails31? ? UserWithSlave.limit(1) : UserWithSlave.find(:all, :limit => 1)
+      limited_set.size.should == 1
       UserWithSlave.where(:login => 'bar').first.should == u2
     end
   end
