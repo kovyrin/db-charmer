@@ -35,10 +35,8 @@ module DbCharmer
       end
 
       module InstanceMethods
-        DISPATCH_METHOD = (DbCharmer.rails3?) ? :process_action : :perform_action
-
         def self.included(base)
-          base.alias_method_chain DISPATCH_METHOD, :forced_slave_reads
+          base.alias_method_chain :process_action, :forced_slave_reads
         end
 
         def force_slave_reads!
@@ -56,9 +54,9 @@ module DbCharmer
       protected
 
         class_eval <<-EOF, __FILE__, __LINE__+1
-          def #{DISPATCH_METHOD}_with_forced_slave_reads(*args, &block)
+          def process_action_with_forced_slave_reads(*args, &block)
             DbCharmer.with_controller(self) do
-              #{DISPATCH_METHOD}_without_forced_slave_reads(*args, &block)
+              process_action_without_forced_slave_reads(*args, &block)
             end
           end
         EOF

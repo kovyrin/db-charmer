@@ -1,13 +1,5 @@
 require 'spec_helper'
 
-if DbCharmer.rails2?
-  describe "ActiveRecord preload_associations method" do
-    it "should be public" do
-      ActiveRecord::Base.public_methods.collect(&:to_s).member?('preload_associations').should be_true
-    end
-  end
-end
-
 describe "ActiveRecord in finder methods" do
   fixtures :categories, :users, :posts, :categories_posts, :avatars
 

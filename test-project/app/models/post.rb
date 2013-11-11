@@ -6,11 +6,7 @@ class Post < ActiveRecord::Base
   has_and_belongs_to_many :categories
 
   def self.define_scope(*args, &block)
-    if DbCharmer.rails3?
-      scope(*args, &block)
-    else
-      named_scope(*args, &block)
-    end
+    scope(*args, &block)
   end
 
   define_scope :windows_posts, :conditions => "title like '%win%'"
