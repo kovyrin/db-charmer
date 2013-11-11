@@ -7,47 +7,55 @@ describe "ActiveRecord slave-enabled models" do
     end
   end
 
+  def proxy_select_to_master(model, method = :select_all)
+    model.connection.should_receive(method) do |*args|
+      User.on_master.connection.send(method, *args)
+    end
+  end
+
+  def select_value_method
+    if DbCharmer.rails4?
+      :select_all
+    else
+      :select_value
+    end
+  end
+
+  #-------------------------------------------------------------------------------------------------
   describe "in finder method" do
     [ :last, :first, :all ].each do |meth|
       describe meth do
         it "should go to the slave if called on the first level connection" do
-          User.on_slave.connection.should_receive(:select_all).and_return([])
-          User.send(meth)
+          proxy_select_to_master(User.on_slave)
+          User.send(meth).inspect # to force arel to touch the database
         end
 
         it "should not change connection if called in an on_db block" do
           stub_columns_for_rails31 User.on_db(:logs).connection
-          User.on_db(:logs).connection.should_receive(:select_all).and_return([])
+          proxy_select_to_master(User.on_db(:logs))
           User.on_slave.connection.should_not_receive(:select_all)
-          User.on_db(:logs).send(meth)
-        end
-
-        it "should not change connection when it's already been changed by on_slave call" do
-          pending "rails3: not sure if we need this spec" if DbCharmer.rails3?
-          User.on_slave do
-            User.on_slave.connection.should_receive(:select_all).and_return([])
-            User.should_not_receive(:on_db)
-            User.send(meth)
-          end
+          User.on_db(:logs).send(meth).inspect # to force arel to touch the database
         end
 
         it "should not change connection if called in a transaction" do
-          User.on_db(:user_master).connection.should_receive(:select_all).and_return([])
+          User.on_db(:user_master).connection.should_receive(:select_all).and_call_original
           User.on_slave.connection.should_not_receive(:select_all)
-          User.transaction { User.send(meth) }
+          User.transaction do
+            User.send(meth).inspect # to force arel to touch the database
+          end
         end
       end
     end
 
     it "should go to the master if called find with :lock => true option" do
-      User.on_db(:user_master).connection.should_receive(:select_all).and_return([])
+      User.on_db(:user_master).connection.should_receive(:select_all).and_call_original
       User.on_slave.connection.should_not_receive(:select_all)
       User.find(:first, :lock => true)
     end
 
     it "should not go to the master if no :lock => true option passed" do
       User.on_db(:user_master).connection.should_not_receive(:select_all)
-      User.on_slave.connection.should_receive(:select_all).and_return([])
+      User.on_slave.connection.should_receive(:select_all).and_call_original
       User.find(:first)
     end
 
@@ -63,31 +71,30 @@ describe "ActiveRecord slave-enabled models" do
   end
 
   describe "in calculation method" do
+    # Prepare the database so that all of of our calculations would return 1
+    before do
+      User.delete_all
+      u = User.new
+      u.id = 1
+      u.save!
+    end
+
     [ :count, :minimum, :maximum, :average ].each do |meth|
       describe meth do
         it "should go to the slave if called on the first level connection" do
-          User.on_slave.connection.should_receive(:select_value).and_return(1)
+          proxy_select_to_master(User.on_slave, select_value_method)
           User.send(meth, :id).should == 1
         end
 
         it "should not change connection if called in an on_db block" do
-          User.on_db(:logs).connection.should_receive(:select_value).and_return(1)
-          User.on_slave.connection.should_not_receive(:select_value)
+          proxy_select_to_master(User.on_db(:logs), select_value_method)
+          User.on_slave.connection.should_not_receive(select_value_method)
           User.on_db(:logs).send(meth, :id).should == 1
         end
 
-        it "should not change connection when it's already been changed by an on_slave call" do
-          pending "rails3: not sure if we need this spec" if DbCharmer.rails3?
-          User.on_slave do
-            User.on_slave.connection.should_receive(:select_value).and_return(1)
-            User.should_not_receive(:on_db)
-            User.send(meth, :id).should == 1
-          end
-        end
-
         it "should not change connection if called in a transaction" do
-          User.on_db(:user_master).connection.should_receive(:select_value).and_return(1)
-          User.on_slave.connection.should_not_receive(:select_value)
+          User.on_db(:user_master).connection.should_receive(select_value_method).and_call_original
+          User.on_slave.connection.should_not_receive(select_value_method)
           User.transaction { User.send(meth, :id).should == 1 }
         end
       end
@@ -117,7 +124,6 @@ describe "ActiveRecord slave-enabled models" do
         User.delete_all
         u = User.create
 
-        User.on_db(:user_master).connection.should_receive(:select_all).and_return([{}])
         User.on_slave.connection.should_not_receive(:select_all)
 
         User.on_slave { u.reload }
