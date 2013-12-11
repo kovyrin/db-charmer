@@ -2,6 +2,10 @@
 require 'active_record/version' unless defined?(::ActiveRecord::VERSION::MAJOR)
 require 'active_support/core_ext'
 
+if defined?(Rails)
+  require "db_charmer/railtie"
+end
+
 #---------------------------------------------------------------------------------------------------
 module DbCharmer
   # Configure autoload
