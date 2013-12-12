@@ -2,10 +2,6 @@
 require 'active_record/version' unless defined?(::ActiveRecord::VERSION::MAJOR)
 require 'active_support/core_ext'
 
-if defined?(Rails)
-  require "db_charmer/railtie"
-end
-
 #---------------------------------------------------------------------------------------------------
 module DbCharmer
   # Configure autoload
@@ -87,6 +83,10 @@ require 'db_charmer/connection_factory'
 require 'db_charmer/connection_proxy'
 require 'db_charmer/force_slave_reads'
 require 'db_charmer/with_remapped_databases'
+
+if DbCharmer.rails3?
+  require "db_charmer/railtie"
+end
 
 #---------------------------------------------------------------------------------------------------
 # Add our custom class-level attributes to AR models
