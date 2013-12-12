@@ -84,6 +84,10 @@ require 'db_charmer/connection_proxy'
 require 'db_charmer/force_slave_reads'
 require 'db_charmer/with_remapped_databases'
 
+if DbCharmer.rails3?
+  require "db_charmer/railtie"
+end
+
 #---------------------------------------------------------------------------------------------------
 # Add our custom class-level attributes to AR models
 require 'db_charmer/active_record/class_attributes'
