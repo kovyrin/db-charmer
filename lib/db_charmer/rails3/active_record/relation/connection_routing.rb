@@ -10,7 +10,7 @@ module DbCharmer
 
         DB_CHARMER_ATTRIBUTES = [ :db_charmer_connection, :db_charmer_connection_is_forced, :db_charmer_enable_slaves ]
 
-        SPAWN_METHODS = ::ActiveRecord::SpawnMethods.public_instance_methods
+        SPAWN_METHODS = [ :except, :only, :merge ]
 
         # Define the default relation connection + override all the query methods here
         def self.included(base)
