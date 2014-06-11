@@ -2,14 +2,15 @@ language: ruby
 rvm:
   - 1.9.3
   - 2.0.0
-  - 2.1.0-preview1
+  - 2.1.2
 
 env:
   - RAILS_VERSION=3.0.20
   - RAILS_VERSION=3.1.12
   - RAILS_VERSION=3.2.3
-  - RAILS_VERSION=3.2.15
-  - RAILS_VERSION=4.0.1
+  - RAILS_VERSION=3.2.18
+  - RAILS_VERSION=4.0.5
+  - RAILS_VERSION=4.1.1
   #- RAILS_VERSION=4.0.1 DB_CHARMER_GEM=2.0.0
 
 notifications:
@@ -32,7 +33,7 @@ matrix:
       env: RAILS_VERSION=3.0.20
 
     # Do not run Rails 3.0 tests on ruby 2.1
-    - rvm: 2.1.0-preview1
+    - rvm: 2.1.2
       env: RAILS_VERSION=3.0.20
 
     # Do not run Rails 3.1 tests on ruby 2.0
@@ -40,7 +41,7 @@ matrix:
       env: RAILS_VERSION=3.1.12
 
     # Do not run Rails 3.1 tests on ruby 2.1
-    - rvm: 2.1.0-preview1
+    - rvm: 2.1.2
       env: RAILS_VERSION=3.1.12
 
     # Do not run early Rails 3.2 tests on ruby 2.0
