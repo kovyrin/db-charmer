@@ -3,8 +3,9 @@ source 'http://rubygems.org'
 gem 'rake', "0.9.2.2"
 gem 'mysql', "2.8.1"
 
-gem 'rspec'
-gem 'rspec-rails'
+gem 'rspec', '< 3.0'
+gem 'rspec-core', '< 3.0'
+gem 'rspec-rails', '< 3.0'
 
 # Load DbCharmer as a gem
 if ENV['DB_CHARMER_GEM'].to_s == ''
