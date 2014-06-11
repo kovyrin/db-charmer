@@ -139,7 +139,7 @@ module DbCharmer
           prepare_shard_model
 
           # Select shard
-          shard = ShardInfo.all(:conditions => { :enabled => true, :open => true }, :order => 'blocks_count ASC', :limit => 1).first
+          shard = ShardInfo.where(:enabled => true, :open => true).order('blocks_count ASC').first
           raise "Can't find any shards to use for blocks allocation!" unless shard
           return shard
         end
@@ -194,7 +194,8 @@ module DbCharmer
         def shard_connections
           # Find all shards
           prepare_shard_model
-          shards = ShardInfo.all(:conditions => { :enabled => true })
+          shards = ShardInfo.where(:enabled => true)
+
           # Map them to connections
           shards.map { |shard| shard_connection_config(shard) }
         end

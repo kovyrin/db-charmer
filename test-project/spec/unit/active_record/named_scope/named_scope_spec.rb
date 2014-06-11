@@ -16,7 +16,6 @@ describe "Named scopes" do
     it "should actually run queries on the specified db" do
       Post.on_db(:slave01).connection.should_receive(:select_all).once.and_call_original
       Post.on_db(:slave01).windows_posts.to_a
-      # Post.windows_posts.all
     end
 
     it "should work with long scope chains (only the last item in the chain should be evaluated)" do
