@@ -79,6 +79,7 @@ module DbCharmer
 
       #-----------------------------------------------------------------------------------------------------------------
       def switch_connection_to(conn, should_exist = true)
+        return if conn == :current_db_charmer_connection
         new_conn = coerce_to_connection_proxy(conn, should_exist)
 
         if db_charmer_connection_proxy.respond_to?(:set_real_connection)
