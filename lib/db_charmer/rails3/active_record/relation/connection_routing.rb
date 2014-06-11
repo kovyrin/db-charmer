@@ -10,6 +10,8 @@ module DbCharmer
 
         DB_CHARMER_ATTRIBUTES = [ :db_charmer_connection, :db_charmer_connection_is_forced, :db_charmer_enable_slaves ]
 
+        SPAWN_METHODS = ::ActiveRecord::SpawnMethods.public_instance_methods
+
         # Define the default relation connection + override all the query methods here
         def self.included(base)
           init_attributes(base)
@@ -23,32 +25,19 @@ module DbCharmer
           end
 
           # Override spawn methods
-          base.alias_method_chain :except, :db_charmer
-          base.alias_method_chain :only, :db_charmer
+          SPAWN_METHODS.each do |meth|
+            base.alias_method_chain meth, :db_charmer
+          end
         end
 
         # Override all query methods
         def self.init_routing(base)
-          ALL_METHODS.each do |meth|
-            base.alias_method_chain meth, :db_charmer
+          ALL_METHODS.each do |spawn_method|
+            base.alias_method_chain(spawn_method, :db_charmer)
           end
 
           # Special case: for normal selects we go to the slave, but for selects with a lock we should use master
           base.alias_method_chain :to_a, :db_charmer
-        end
-
-        # Copy db_charmer attributes in addition to what they're copying
-        def except_with_db_charmer(*args)
-          except_without_db_charmer(*args).tap do |result|
-            copy_db_charmer_options(self, result)
-          end
-        end
-
-        # Copy db_charmer attributes in addition to what they're copying
-        def only_with_db_charmer(*args)
-          only_without_db_charmer(*args).tap do |result|
-            copy_db_charmer_options(self, result)
-          end
         end
 
         # Copy our accessors from one instance to another
@@ -104,7 +93,8 @@ module DbCharmer
           destination ||= select_destination(method, recommendation)
 
           # What method to use
-          on_db_method = [ :on_db, db_charmer_connection ]
+          current_connection = db_charmer_connection || :current_db_charmer_connection
+          on_db_method = [ :on_db, current_connection ]
           on_db_method = :on_master if destination == :master
           on_db_method = :first_level_on_slave if destination == :slave
 
@@ -136,6 +126,17 @@ module DbCharmer
             def #{aliased_method_name method, :with}(*args, &block)
               switch_connection_for_method(:#{method.to_s}) do
                 #{aliased_method_name method, :without}(*args, &block)
+              end
+            end
+          EOF
+        end
+
+        # Define spawn methods
+        SPAWN_METHODS.each do |spawn_method|
+          class_eval <<-EOF, __FILE__, __LINE__ + 1
+            def #{aliased_method_name spawn_method, :with}(*args)
+              #{aliased_method_name spawn_method, :without}(*args).tap do |result|
+                copy_db_charmer_options(self, result)
               end
             end
           EOF

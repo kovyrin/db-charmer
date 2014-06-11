@@ -10,9 +10,13 @@ describe "DbCharmer::AssociationProxy extending AR::Associations" do
   describe "in has_many associations" do
     before do
       @user = users(:bill)
-      @posts = @user.posts.all
+      @posts = @user.posts.to_a
+
       Post.switch_connection_to(:logs)
       User.switch_connection_to(:logs)
+
+      # Make sure the next @user.posts call will touch the db again
+      @user.clear_association_cache
     end
 
     after do
@@ -25,8 +29,14 @@ describe "DbCharmer::AssociationProxy extending AR::Associations" do
       User.connection.should_not_receive(:select_all)
 
       stub_columns_for_rails31 Post.on_db(:logs).connection
-      Post.on_db(:slave01).connection.should_receive(:select_all).and_return(@posts.map { |p| p.attributes })
-      assert_equal @posts, @user.posts.on_db(:slave01)
+
+      post_attributes = @posts.map { |p| p.attributes }
+      slave_connection = Post.on_db(:slave01).connection
+      slave_connection.should_receive(:select_all).and_return(post_attributes)
+
+      on_db_proxy = @user.posts.on_db(:slave01)
+      posts_from_on_db = on_db_proxy.to_a
+      assert_equal @posts, posts_from_on_db
     end
 
     it "on_db should work in prefix mode" do
@@ -34,7 +44,8 @@ describe "DbCharmer::AssociationProxy extending AR::Associations" do
       User.connection.should_not_receive(:select_all)
 
       stub_columns_for_rails31 Post.on_db(:logs).connection
-      Post.on_db(:slave01).connection.should_receive(:select_all).and_return(@posts.map { |p| p.attributes })
+      post_attributes = @posts.map { |p| p.attributes }
+      Post.on_db(:slave01).connection.should_receive(:select_all).and_return(post_attributes)
       @user.on_db(:slave01).posts.should == @posts
     end
 
