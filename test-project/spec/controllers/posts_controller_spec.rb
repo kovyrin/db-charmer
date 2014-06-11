@@ -13,22 +13,22 @@ describe PostsController do
 
   # Delete these examples and add some real ones
   it "should support db_charmer readonly actions method" do
-    PostsController.respond_to?(:force_slave_reads).should be_true
+    PostsController.respond_to?(:force_slave_reads).should be(true)
   end
 
   it "index action should force slave reads" do
-    PostsController.force_slave_reads_action?(:index).should be_true
+    PostsController.force_slave_reads_action?(:index).should be(true)
   end
 
   it "create action should not force slave reads" do
-    PostsController.force_slave_reads_action?(:create).should be_false
+    PostsController.force_slave_reads_action?(:create).should be(false)
   end
 
   describe "GET 'index'" do
     context "slave reads enforcing (action is listed in :only)" do
       it "should enable enforcing" do
         get 'index'
-        controller.force_slave_reads?.should be_true
+        controller.force_slave_reads?.should be(true)
       end
 
       it "should actually force slave reads" do
@@ -44,7 +44,7 @@ describe PostsController do
     context "slave reads enforcing (action is listed in :only)" do
       it "should enable enforcing" do
         get 'show', :id => Post.first.id
-        controller.force_slave_reads?.should be_true
+        controller.force_slave_reads?.should be(true)
       end
 
       it "should actually force slave reads" do
@@ -62,7 +62,7 @@ describe PostsController do
     context "slave reads enforcing (action is listed in :except)" do
       it "should not enable enforcing" do
         get 'new'
-        controller.force_slave_reads?.should be_false
+        controller.force_slave_reads?.should be(false)
       end
 
       it "should not do any actual enforcing" do
@@ -89,7 +89,7 @@ describe PostsController do
     context "slave reads enforcing (action is not listed in force_slave_reads params)" do
       it "should not enable enforcing" do
         get 'create'
-        controller.force_slave_reads?.should_not be_true
+        controller.force_slave_reads?.should_not be(true)
       end
 
       it "should not do any actual enforcing" do

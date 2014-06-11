@@ -18,17 +18,17 @@ describe DbCharmer do
 
   it "should have connections_should_exist? method" do
     DbCharmer.connections_should_exist = true
-    DbCharmer.connections_should_exist?.should be_true
+    DbCharmer.connections_should_exist?.should be(true)
     DbCharmer.connections_should_exist = false
-    DbCharmer.connections_should_exist?.should be_false
+    DbCharmer.connections_should_exist?.should be(false)
     DbCharmer.connections_should_exist = "shit"
-    DbCharmer.connections_should_exist?.should be_true
+    DbCharmer.connections_should_exist?.should be(true)
     DbCharmer.connections_should_exist = nil
-    DbCharmer.connections_should_exist?.should be_false
+    DbCharmer.connections_should_exist?.should be(false)
   end
 
   it "should have current_controller accessors" do
-    DbCharmer.respond_to?(:current_controller).should be_true
+    DbCharmer.respond_to?(:current_controller).should be(true)
     DbCharmer.current_controller = :foo
     DbCharmer.current_controller.should == :foo
     DbCharmer.current_controller = nil
@@ -36,28 +36,28 @@ describe DbCharmer do
 
   context "in force_slave_reads? method" do
     it "should return true if force_slave_reads=true" do
-      DbCharmer.force_slave_reads?.should be_false
+      DbCharmer.force_slave_reads?.should be(false)
 
       DbCharmer.force_slave_reads do
-        DbCharmer.force_slave_reads?.should be_true
+        DbCharmer.force_slave_reads?.should be(true)
       end
 
-      DbCharmer.force_slave_reads?.should be_false
+      DbCharmer.force_slave_reads?.should be(false)
     end
 
     it "should return false if no controller defined and global force_slave_reads=false" do
       DbCharmer.current_controller = nil
-      DbCharmer.force_slave_reads?.should be_false
+      DbCharmer.force_slave_reads?.should be(false)
     end
 
     it "should consult with the controller about forcing slave reads if possible" do
-      DbCharmer.current_controller = mock("controller")
+      DbCharmer.current_controller = double("controller")
 
       DbCharmer.current_controller.should_receive(:force_slave_reads?).and_return(true)
-      DbCharmer.force_slave_reads?.should be_true
+      DbCharmer.force_slave_reads?.should be(true)
 
       DbCharmer.current_controller.should_receive(:force_slave_reads?).and_return(false)
-      DbCharmer.force_slave_reads?.should be_false
+      DbCharmer.force_slave_reads?.should be(false)
     end
   end
 

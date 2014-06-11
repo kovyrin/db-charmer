@@ -4,7 +4,7 @@ describe "DbCharmer::AssociationProxy extending AR::Associations" do
   fixtures :users, :posts
 
   it "should add proxy? => true method" do
-    users(:bill).posts.proxy?.should be_true
+    users(:bill).posts.proxy?.should be(true)
   end
 
   describe "in has_many associations" do
@@ -67,7 +67,7 @@ describe "DbCharmer::AssociationProxy extending AR::Associations" do
     end
 
     it "should implement on_db proxy" do
-      pending
+      skip
       Post.connection.should_not_receive(:select_all)
       User.connection.should_not_receive(:select_all)
       User.on_db(:slave01).connection.should_receive(:select_all).once.and_return([ @user ])
@@ -75,7 +75,7 @@ describe "DbCharmer::AssociationProxy extending AR::Associations" do
     end
 
     it "on_db should work in prefix mode" do
-      pending
+      skip
       Post.connection.should_not_receive(:select_all)
       User.connection.should_not_receive(:select_all)
       User.on_db(:slave01).connection.should_receive(:select_all).once.and_return([ @user ])

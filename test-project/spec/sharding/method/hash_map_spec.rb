@@ -21,7 +21,7 @@ describe DbCharmer::Sharding::Method::HashMap do
     end
 
     it "should support default shard" do
-      @sharder.support_default_shard?.should be_true
+      @sharder.support_default_shard?.should be(true)
     end
   end
 

@@ -112,14 +112,14 @@ describe "DbCharmer#with_remapped_databases" do
   it "should hijack connections only when necessary" do
     unhijack!(Category)
 
-    Category.respond_to?(:connection_with_magic).should be_false
+    Category.respond_to?(:connection_with_magic).should be(false)
     DbCharmer.with_remapped_databases(:logs => :slave01) do
-      Category.respond_to?(:connection_with_magic).should be_false
+      Category.respond_to?(:connection_with_magic).should be(false)
     end
-    Category.respond_to?(:connection_with_magic).should be_false
+    Category.respond_to?(:connection_with_magic).should be(false)
 
     DbCharmer.with_remapped_databases(:master => :slave01) do
-      Category.respond_to?(:connection_with_magic).should be_true
+      Category.respond_to?(:connection_with_magic).should be(true)
       should_have_connection(Category, slave_connection)
     end
   end

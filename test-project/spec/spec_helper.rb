@@ -25,4 +25,18 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = false
   config.use_instantiated_fixtures  = false
+
+  # Infer spec types from file locations (pre-rspec-3.0 behavior)
+  config.infer_spec_type_from_file_location!
+
+  # Raise errors on rspec deprecations
+  config.raise_errors_for_deprecations!
+
+  # Enable old and new syntaxes for expectations and mocks
+  config.expect_with :rspec do |c|
+    c.syntax = [ :should, :expect ]
+  end
+  config.mock_with :rspec do |c|
+    c.syntax = [ :should, :expect ]
+  end
 end

@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
-gem 'rake', "0.9.2.2"
-gem 'rspec'
+gem 'rake'
+gem 'rspec', '~> 3.0.0'
 gem 'rspec-rails'
 
 # Load DbCharmer as a gem

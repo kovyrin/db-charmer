@@ -46,15 +46,15 @@ describe "In ActiveRecord models" do
 
       it "should make db_charmer_force_slave_reads = true by default" do
         Blah.db_magic :slave => :slave01
-        Blah.db_charmer_force_slave_reads.should be_true
+        Blah.db_charmer_force_slave_reads.should be(true)
       end
 
       it "should pass force_slave_reads value to db_charmer_force_slave_reads" do
         Blah.db_magic :slave => :slave01, :force_slave_reads => false
-        Blah.db_charmer_force_slave_reads.should be_false
+        Blah.db_charmer_force_slave_reads.should be(false)
 
         Blah.db_magic :slave => :slave01, :force_slave_reads => true
-        Blah.db_charmer_force_slave_reads.should be_true
+        Blah.db_charmer_force_slave_reads.should be(true)
       end
     end
 
