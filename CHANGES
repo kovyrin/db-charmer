@@ -3,6 +3,8 @@
 WIP: Rails 4 support!
 WIP: Rails 2.x support removed!
 
+Bug fix: no need to generate a thread-specific connection class.
+
 ----------------------------------------------------------------------------------------
 1.9.0 (2013-10-09):
 
