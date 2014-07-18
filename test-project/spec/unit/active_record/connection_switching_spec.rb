@@ -24,6 +24,11 @@ describe DbCharmer, "AR connection switching" do
       BarModelForConnSwitching.connection.should be(ActiveRecord::Base.connection)
     end
 
+    it "should accept a special :current_db_charmer_connection symbol and not touch the connection" do
+      BarModelForConnSwitching.switch_connection_to(:current_db_charmer_connection)
+      BarModelForConnSwitching.connection.should be(@proxy)
+    end
+
     it "should accept a string and generate an abstract class with connection factory" do
       BarModelForConnSwitching.switch_connection_to('logs')
       BarModelForConnSwitching.connection.object_id == DbCharmer::ConnectionFactory.connect('logs').object_id
@@ -42,12 +47,11 @@ describe DbCharmer, "AR connection switching" do
 
     context "with a hash parameter" do
       before do
-        @conf = {
-          :adapter => 'mysql',
+        @conf = ActiveRecord::Base.configurations['common'].merge(
           :username => "db_charmer_ro",
           :database => "db_charmer_sandbox_test",
           :connection_name => 'sanbox_ro'
-        }
+        )
       end
 
       it "should fail if there is no :connection_name parameter" do

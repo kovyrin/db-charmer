@@ -1,18 +1,17 @@
 class Post < ActiveRecord::Base
+  attr_accessible :title, :user_id
+
   DB_MAGIC_DEFAULT_PARAMS = { :slave => :slave01, :force_slave_reads => false }
   db_magic DB_MAGIC_DEFAULT_PARAMS
 
   belongs_to :user
   has_and_belongs_to_many :categories
 
-  def self.define_scope(*args, &block)
-    if DbCharmer.rails3?
-      scope(*args, &block)
-    else
-      named_scope(*args, &block)
-    end
+  if DbCharmer.rails4?
+    scope :windows_posts, lambda { where("title like '%win%'") }
+    scope :dummy_scope, lambda { where("1") }
+  else
+    scope :windows_posts, :conditions => "title like '%win%'"
+    scope :dummy_scope, :conditions => '1'
   end
-
-  define_scope :windows_posts, :conditions => "title like '%win%'"
-  define_scope :dummy_scope, :conditions => '1'
 end

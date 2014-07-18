@@ -79,13 +79,13 @@ describe "DbCharmer#with_remapped_databases" do
   end
 
   it "should successfully run selects on the right database" do
-    # We need this call to make sure rails would fetch columns info from the logs server before we mess its connection up
-    LogRecord.all
+    LogRecord.delete_all
+    result = logs_connection.select_all("SELECT * FROM log_records")
 
     # Remap LogRecord connection to slave01 and make sure selects would go there (even though we do not have the table there)
     DbCharmer.with_remapped_databases(:logs => :slave01) do
       logs_connection.should_not_receive(:select_all)
-      slave_connection.should_receive(:select_all).and_return([])
+      slave_connection.should_receive(:select_all).and_return(result)
       stub_columns_for_rails31 slave_connection
       LogRecord.all.should be_empty
     end
@@ -112,14 +112,14 @@ describe "DbCharmer#with_remapped_databases" do
   it "should hijack connections only when necessary" do
     unhijack!(Category)
 
-    Category.respond_to?(:connection_with_magic).should be_false
+    Category.respond_to?(:connection_with_magic).should be(false)
     DbCharmer.with_remapped_databases(:logs => :slave01) do
-      Category.respond_to?(:connection_with_magic).should be_false
+      Category.respond_to?(:connection_with_magic).should be(false)
     end
-    Category.respond_to?(:connection_with_magic).should be_false
+    Category.respond_to?(:connection_with_magic).should be(false)
 
     DbCharmer.with_remapped_databases(:master => :slave01) do
-      Category.respond_to?(:connection_with_magic).should be_true
+      Category.respond_to?(:connection_with_magic).should be(true)
       should_have_connection(Category, slave_connection)
     end
   end

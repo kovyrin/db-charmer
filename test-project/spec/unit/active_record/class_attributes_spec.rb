@@ -100,17 +100,17 @@ describe DbCharmer, "for ActiveRecord models" do
     it "should use per-model settings when possible" do
       FooModel.db_charmer_force_slave_reads = true
       DbCharmer.should_not_receive(:force_slave_reads?)
-      FooModel.db_charmer_force_slave_reads?.should be_true
+      FooModel.db_charmer_force_slave_reads?.should be(true)
     end
 
     it "should use global settings when local setting is false" do
       FooModel.db_charmer_force_slave_reads = false
 
       DbCharmer.should_receive(:force_slave_reads?).and_return(true)
-      FooModel.db_charmer_force_slave_reads?.should be_true
+      FooModel.db_charmer_force_slave_reads?.should be(true)
 
       DbCharmer.should_receive(:force_slave_reads?).and_return(false)
-      FooModel.db_charmer_force_slave_reads?.should be_false
+      FooModel.db_charmer_force_slave_reads?.should be(false)
     end
   end
 end

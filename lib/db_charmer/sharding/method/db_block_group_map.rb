@@ -179,7 +179,7 @@ module DbCharmer
           prepare_shard_models
 
           # Select group
-          group = Group.first(:conditions => { :enabled => true, :open => true }, :order => 'blocks_count ASC')
+          group = Group.where(:enabled => true, :open => true).order('blocks_count ASC').first
           raise "Can't find any tablegroups to use for blocks allocation!" unless group
           return group
         end
@@ -241,7 +241,7 @@ module DbCharmer
         def shard_connections
           # Find all groups
           prepare_shard_models
-          groups = Group.all(:conditions => { :enabled => true }, :include => :shard)
+          groups = Group.where(:enabled => true).includes(shard)
           # Map them to shards
           groups.map { |group| shard_connection_config(group.shard, group.id) }
         end

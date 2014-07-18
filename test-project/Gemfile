@@ -1,26 +1,32 @@
 source 'http://rubygems.org'
 
-gem 'rake', "0.9.2.2"
-gem 'mysql', "2.8.1"
-
-gem 'rspec'
+gem 'rake'
+gem 'rspec', '~> 3.0.0'
 gem 'rspec-rails'
 
 # Load DbCharmer as a gem
 if ENV['DB_CHARMER_GEM'].to_s == ''
   gem_path = File.expand_path(File.dirname(File.dirname(__FILE__)))
   puts "Using on-disk db-charmer code from '#{gem_path}'..."
-  gem 'db-charmer', :path => gem_path, :require => 'db_charmer'
+  gem 'db-charmer', :path => gem_path
 else
   puts "Using db-charmer gem: #{ENV['DB_CHARMER_GEM']}..."
-  gem 'db-charmer', ENV['DB_CHARMER_GEM'], :require => 'db_charmer'
+  gem 'db-charmer', ENV['DB_CHARMER_GEM']
 end
 
 # Detect Rails version we need to use
 rails_version_file = File.expand_path("../.rails-version", __FILE__)
 version = File.exists?(rails_version_file) && File.read(rails_version_file).chomp
 version ||= ENV['RAILS_VERSION']
-version ||= '3-2-stable'
+version ||= '4-0-stable'
+
+# Different mysql gem versions for different rails
+if version.to_i < 4
+  gem 'mysql', '~> 2.8.1'
+else
+  gem 'mysql'
+  gem 'protected_attributes'
+end
 
 # Require gems for selected rails version
 case version
@@ -35,6 +41,8 @@ when /3-1-stable/
   gem "rails", :git => "git://github.com/rails/rails.git", :branch => "3-1-stable"
 when /3-2-stable/
   gem "rails", :git => "git://github.com/rails/rails.git", :branch => "3-2-stable"
+when /4-0-stable/
+  gem "rails", :git => "git://github.com/rails/rails.git", :branch => "4-0-stable"
 else
   gem "rails", version
 end

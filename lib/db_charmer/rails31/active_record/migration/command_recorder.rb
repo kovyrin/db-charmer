@@ -3,7 +3,7 @@ module DbCharmer
     module Migration
       module CommandRecorder
         def invert_on_db(args)
-          [:replay_commands_on_db, [args.first, args[1].inverse]]
+          [ :replay_commands_on_db, args ]
         end
       end
     end

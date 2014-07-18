@@ -23,8 +23,7 @@ private
     old_hijack_new_classes = Thread.current[:db_charmer_hijack_new_classes]
     begin
       Thread.current[:db_charmer_hijack_new_classes] = true
-      subclasses_method = DbCharmer.rails3? ? :descendants : :subclasses
-      ::ActiveRecord::Base.send(subclasses_method).each do |subclass|
+      ::ActiveRecord::Base.descendants.each do |subclass|
         subclass.hijack_connection!
       end
       yield

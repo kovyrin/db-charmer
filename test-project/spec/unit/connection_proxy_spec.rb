@@ -3,7 +3,7 @@ require 'spec_helper'
 describe DbCharmer::ConnectionProxy do
   before(:each) do
     class ProxyTest; end
-    @conn = mock('connection')
+    @conn = double('connection')
     @proxy = DbCharmer::ConnectionProxy.new(ProxyTest, :foo)
   end
 
@@ -13,7 +13,7 @@ describe DbCharmer::ConnectionProxy do
   end
 
   it "should be a blankslate for the connection" do
-    ProxyTest.stub!(:retrieve_connection).and_return(@conn)
+    ProxyTest.stub(:retrieve_connection).and_return(@conn)
     @proxy.should be(@conn)
   end
 
@@ -24,13 +24,13 @@ describe DbCharmer::ConnectionProxy do
         yield
       end
     end
-    ProxyTest.stub!(:retrieve_connection).and_return(MockConnection)
+    ProxyTest.stub(:retrieve_connection).and_return(MockConnection)
     res = @proxy.foo { :foo }
     res.should == :foo
   end
 
   it "should proxy all calls to the underlying class connections" do
-    ProxyTest.stub!(:retrieve_connection).and_return(@conn)
+    ProxyTest.stub(:retrieve_connection).and_return(@conn)
     @conn.should_receive(:foo)
     @proxy.foo
   end

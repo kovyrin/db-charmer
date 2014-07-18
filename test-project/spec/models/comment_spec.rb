@@ -6,7 +6,7 @@ describe Comment do
   describe "preload polymorphic association" do
     subject do
       lambda {
-        Comment.find(:all, :include => :commentable)
+        Comment.includes(:commentable).to_a
       }
     end
 

@@ -53,7 +53,6 @@ module DbCharmer
               yield
             ensure
               # Switch it back
-              ::ActiveRecord::Base.verify_active_connections!
               announce "Switching connection back"
               ::ActiveRecord::Base.switch_connection_to(old_proxy)
             end
@@ -91,22 +90,34 @@ module DbCharmer
           end
         end
 
+        #-------------------------------------------------------------------------------------------
         def record_on_db(db_name, block)
-          recorder = ::ActiveRecord::Migration::CommandRecorder.new(DbCharmer::ConnectionFactory.connect(db_name))
-          old_recorder, @connection = @connection, recorder
+          # Switch current recorder to a new one with specified connection
+          old_recorder = @connection
+          new_connection = DbCharmer::ConnectionFactory.connect(db_name)
+          @connection = ::ActiveRecord::Migration::CommandRecorder.new(new_connection)
+          @connection.reverting = old_recorder.reverting if DbCharmer.rails4?
+
+          # Call the block to record commands in the block
           block.call
-          old_recorder.record :on_db, [db_name, @connection]
+
+          # Record on_db call and pass new recorder with it
+          old_recorder.record :on_db, [ db_name, @connection ]
+
+          # Switch recorder back
           @connection = old_recorder
         end
 
-        def replay_commands_on_db(name, commands)
+        def replay_commands_on_db(name, recorder)
           on_db(name) do
+            commands = (DbCharmer.rails4?) ? recorder.commands : recorder.inverse
             commands.each do |cmd, args|
-              send(cmd, *args)
+              send(cmd, args)
             end
           end
         end
 
+        #-------------------------------------------------------------------------------------------
         def on_db(db_name, &block)
           if @connection.is_a?(::ActiveRecord::Migration::CommandRecorder)
             record_on_db(db_name, block)
@@ -127,7 +138,6 @@ module DbCharmer
         ensure
           @connection = old_connection
           # Switch it back
-          ::ActiveRecord::Base.verify_active_connections!
           announce "Switching connection back"
           ::ActiveRecord::Base.switch_connection_to(old_proxy)
         end

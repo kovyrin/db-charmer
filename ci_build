@@ -10,14 +10,7 @@ if [ "$RAILS_VERSION" == "" ]; then
   exit 1
 fi
 
-# Change directory according to the rails version
-if [ "$RAILS_VERSION" == "2.x" ]; then
-  # Downgrade rubygems because rails 2.3 does not work on 2.0+
-  gem update --system 1.8.25
-  cd test-project-2.x
-else
-  cd test-project
-fi
+cd test-project
 
 # Print version info
 echo "-----------------------------------------------------------------------------------------------------------------"
@@ -45,8 +38,4 @@ bundle install
 bundle exec rake --trace db:migrate
 
 # Run the build and return its exit code
-if [ "$RAILS_VERSION" == "2.x" ]; then
-  exec bundle exec spec -p '/*/**/*_spec.rb' -cbfs spec
-else
-  exec bundle exec rspec -cbfs spec
-fi
+exec bundle exec rspec spec

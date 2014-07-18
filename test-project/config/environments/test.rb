@@ -8,7 +8,7 @@ DbCharmerSandbox::Application.configure do
   config.cache_classes = true
 
   # Log error messages when you accidentally call methods on nil.
-  config.whiny_nils = true
+  config.whiny_nils = true unless DbCharmer.rails4?
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
@@ -32,4 +32,10 @@ DbCharmerSandbox::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  # Set secret key to suppress warnings
+  config.secret_key_base = "cb6e014d1905fe90d9d5d672b99f0038897db641"
+
+  # Rails4+ only option
+  config.eager_load = false if DbCharmer.rails4?
 end

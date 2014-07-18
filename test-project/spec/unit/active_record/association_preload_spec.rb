@@ -1,13 +1,5 @@
 require 'spec_helper'
 
-if DbCharmer.rails2?
-  describe "ActiveRecord preload_associations method" do
-    it "should be public" do
-      ActiveRecord::Base.public_methods.collect(&:to_s).member?('preload_associations').should be_true
-    end
-  end
-end
-
 describe "ActiveRecord in finder methods" do
   fixtures :categories, :users, :posts, :categories_posts, :avatars
 
@@ -22,32 +14,32 @@ describe "ActiveRecord in finder methods" do
 
   it "should switch all belongs_to association connections when :include is used" do
     User.connection.should_not_receive(:select_all)
-    Post.on_db(:slave01).all(:include => :user)
+    Post.on_db(:slave01).includes(:user).to_a
   end
 
   it "should switch all has_many association connections when :include is used" do
     Post.connection.should_not_receive(:select_all)
-    User.on_db(:slave01).all(:include => :posts)
+    User.on_db(:slave01).includes(:posts).to_a
   end
 
   it "should switch all has_one association connections when :include is used" do
     Avatar.connection.should_not_receive(:select_all)
-    User.on_db(:slave01).all(:include => :avatar)
+    User.on_db(:slave01).includes(:avatar).to_a
   end
 
   it "should switch all has_and_belongs_to_many association connections when :include is used" do
     Post.connection.should_not_receive(:select_all)
-    Category.on_db(:slave01).all(:include => :posts)
+    Category.on_db(:slave01).includes(:posts).to_a
   end
 
   #-------------------------------------------------------------------------------------------
   it "should not switch assocations when called on a top-level connection" do
     User.connection.should_receive(:select_all).and_return([])
-    Post.all(:include => :user)
+    Post.includes(:user).to_a
   end
 
   it "should not switch connection when association model and main model are on different servers" do
     LogRecord.connection.should_receive(:select_all).and_return([])
-    User.on_db(:slave01).all(:include => :log_records)
+    User.on_db(:slave01).includes(:log_records).to_a
   end
 end

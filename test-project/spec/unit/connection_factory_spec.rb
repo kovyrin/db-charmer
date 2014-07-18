@@ -34,15 +34,15 @@ describe DbCharmer::ConnectionFactory do
 
   context "in establish_connection method" do
     it "should generate an abstract class" do
-      klass = mock('AbstractClass')
-      conn = mock('connection1')
-      klass.stub!(:retrieve_connection).and_return(conn)
+      klass = double('AbstractClass')
+      conn = double('connection1')
+      klass.stub(:retrieve_connection).and_return(conn)
       DbCharmer::ConnectionFactory.should_receive(:generate_abstract_class).and_return(klass)
       DbCharmer::ConnectionFactory.establish_connection(:foo).should be(conn)
     end
 
     it "should create and return a connection proxy for the abstract class" do
-      klass = mock('AbstractClass')
+      klass = double('AbstractClass')
       DbCharmer::ConnectionFactory.should_receive(:generate_abstract_class).and_return(klass)
       DbCharmer::ConnectionProxy.should_receive(:new).with(klass, :foo)
       DbCharmer::ConnectionFactory.establish_connection(:foo)
@@ -51,17 +51,17 @@ describe DbCharmer::ConnectionFactory do
 
   context "in establish_connection_to_db method" do
     it "should generate an abstract class" do
-      klass = mock('AbstractClass')
-      conn =  mock('connection2')
-      klass.stub!(:establish_connection)
-      klass.stub!(:retrieve_connection).and_return(conn)
+      klass = double('AbstractClass')
+      conn =  double('connection2')
+      klass.stub(:establish_connection)
+      klass.stub(:retrieve_connection).and_return(conn)
       DbCharmer::ConnectionFactory.should_receive(:generate_empty_abstract_ar_class).and_return(klass)
       DbCharmer::ConnectionFactory.establish_connection_to_db(:foo, :username => :foo).should be(conn)
     end
 
     it "should create and return a connection proxy for the abstract class" do
-      klass = mock('AbstractClass')
-      klass.stub!(:establish_connection)
+      klass = double('AbstractClass')
+      klass.stub(:establish_connection)
       DbCharmer::ConnectionFactory.should_receive(:generate_empty_abstract_ar_class).and_return(klass)
       DbCharmer::ConnectionProxy.should_receive(:new).with(klass, :foo)
       DbCharmer::ConnectionFactory.establish_connection_to_db(:foo, :username => :foo)
@@ -79,7 +79,7 @@ describe DbCharmer::ConnectionFactory do
 
 # should_receive is evil on a singletone classes
 #    it "should memoize proxies" do
-#      conn = mock('connection3')
+#      conn = double('connection3')
 #      DbCharmer::ConnectionFactory.should_receive(:establish_connection).with('foo', false).once.and_return(conn)
 #      DbCharmer::ConnectionFactory.connect(:foo)
 #      DbCharmer::ConnectionFactory.connect(:foo)
@@ -89,12 +89,11 @@ describe DbCharmer::ConnectionFactory do
   context "in connect_to_db method" do
     before do
       DbCharmer::ConnectionFactory.reset!
-      @conf = {
-        :adapter => 'mysql',
+      @conf = ActiveRecord::Base.configurations['common'].merge(
         :username => "db_charmer_ro",
         :database => "db_charmer_sandbox_test",
         :connection_name => 'sanbox_ro'
-      }
+      )
     end
 
     it "should return a connection proxy" do
@@ -103,7 +102,7 @@ describe DbCharmer::ConnectionFactory do
 
 # should_receive is evil on a singletone classes
 #    it "should memoize proxies" do
-#      conn = mock('connection4')
+#      conn = double('connection4')
 #      DbCharmer::ConnectionFactory.should_receive(:establish_connection_to_db).with(@conf[:connection_name], @conf).once.and_return(conn)
 #      DbCharmer::ConnectionFactory.connect_to_db(@conf[:connection_name], @conf)
 #      DbCharmer::ConnectionFactory.connect_to_db(@conf[:connection_name], @conf)

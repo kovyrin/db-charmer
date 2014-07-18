@@ -5,6 +5,7 @@ require 'active_support/core_ext'
 #---------------------------------------------------------------------------------------------------
 module DbCharmer
   # Configure autoload
+  autoload :EmptyObject, 'db_charmer/empty_object'
   autoload :Sharding, 'db_charmer/sharding'
   autoload :Version,  'db_charmer/version'
   module ActionController
@@ -12,6 +13,16 @@ module DbCharmer
   end
 
   #-------------------------------------------------------------------------------------------------
+  # Used in all Rails4.1-specific places
+  def self.rails41?
+    rails4? && ::ActiveRecord::VERSION::MINOR >= 1
+  end
+
+  # Used in all Rails4-specific places
+  def self.rails4?
+    ::ActiveRecord::VERSION::MAJOR > 3
+  end
+
   # Used in all Rails3-specific places
   def self.rails3?
     ::ActiveRecord::VERSION::MAJOR > 2
@@ -19,12 +30,7 @@ module DbCharmer
 
   # Used in all Rails3.1-specific places
   def self.rails31?
-    rails3? && ::ActiveRecord::VERSION::MINOR >= 1
-  end
-
-  # Used in all Rails2-specific places
-  def self.rails2?
-    ::ActiveRecord::VERSION::MAJOR == 2
+    (rails3? && ::ActiveRecord::VERSION::MINOR >= 1) || rails4?
   end
 
   # Detect broken Rails version
@@ -72,7 +78,7 @@ module DbCharmer
 end
 
 #---------------------------------------------------------------------------------------------------
-# Print warning about the broken Rails 2.3.4
+# Print warning about the broken Rails 3.2.4
 puts "WARNING: Rails 3.2.4 is not officially supported by DbCharmer. Please upgrade." if DbCharmer.rails324?
 
 #---------------------------------------------------------------------------------------------------
@@ -101,15 +107,10 @@ ActiveRecord::Base.extend(DbCharmer::ActiveRecord::ConnectionSwitching)
 
 #---------------------------------------------------------------------------------------------------
 # Enable AR logging extensions
-if DbCharmer.rails3?
-  require 'db_charmer/rails3/abstract_adapter/connection_name'
-  require 'db_charmer/rails3/active_record/log_subscriber'
-  ActiveRecord::LogSubscriber.send(:include, DbCharmer::ActiveRecord::LogSubscriber)
-  ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, DbCharmer::AbstractAdapter::ConnectionName)
-else
-  require 'db_charmer/rails2/abstract_adapter/log_formatting'
-  ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, DbCharmer::AbstractAdapter::LogFormatting)
-end
+require 'db_charmer/rails3/abstract_adapter/connection_name'
+require 'db_charmer/rails3/active_record/log_subscriber'
+ActiveRecord::LogSubscriber.send(:include, DbCharmer::ActiveRecord::LogSubscriber)
+ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, DbCharmer::AbstractAdapter::ConnectionName)
 
 #---------------------------------------------------------------------------------------------------
 # Enable connection proxy in AR
@@ -120,19 +121,10 @@ ActiveRecord::Base.send(:include, DbCharmer::ActiveRecord::MultiDbProxy::Instanc
 
 #---------------------------------------------------------------------------------------------------
 # Enable connection proxy for relations
-if DbCharmer.rails3?
-  require 'db_charmer/rails3/active_record/relation_method'
-  require 'db_charmer/rails3/active_record/relation/connection_routing'
-  ActiveRecord::Base.extend(DbCharmer::ActiveRecord::RelationMethod)
-  ActiveRecord::Relation.send(:include, DbCharmer::ActiveRecord::Relation::ConnectionRouting)
-end
-
-#---------------------------------------------------------------------------------------------------
-# Enable connection proxy for scopes (rails 2.x only)
-if DbCharmer.rails2?
-  require 'db_charmer/rails2/active_record/named_scope/scope_proxy'
-  ActiveRecord::NamedScope::Scope.send(:include, DbCharmer::ActiveRecord::NamedScope::ScopeProxy)
-end
+require 'db_charmer/rails3/active_record/relation_method'
+require 'db_charmer/rails3/active_record/relation/connection_routing'
+ActiveRecord::Base.extend(DbCharmer::ActiveRecord::RelationMethod)
+ActiveRecord::Relation.send(:include, DbCharmer::ActiveRecord::Relation::ConnectionRouting)
 
 #---------------------------------------------------------------------------------------------------
 # Enable connection proxy for associations
@@ -186,12 +178,7 @@ end
 
 #---------------------------------------------------------------------------------------------------
 # Enable the magic
-if DbCharmer.rails3?
-  require 'db_charmer/rails3/active_record/master_slave_routing'
-else
-  require 'db_charmer/rails2/active_record/master_slave_routing'
-end
-
+require 'db_charmer/rails3/active_record/master_slave_routing'
 require 'db_charmer/active_record/sharding'
 require 'db_charmer/active_record/db_magic'
 ActiveRecord::Base.extend(DbCharmer::ActiveRecord::DbMagic)
@@ -201,8 +188,11 @@ ActiveRecord::Base.extend(DbCharmer::ActiveRecord::DbMagic)
 if DbCharmer.rails31?
   require 'db_charmer/rails31/active_record/preloader/association'
   ActiveRecord::Associations::Preloader::Association.send(:include, DbCharmer::ActiveRecord::Preloader::Association)
-  require 'db_charmer/rails31/active_record/preloader/has_and_belongs_to_many'
-  ActiveRecord::Associations::Preloader::HasAndBelongsToMany.send(:include, DbCharmer::ActiveRecord::Preloader::HasAndBelongsToMany)
+
+  unless DbCharmer.rails41?
+    require 'db_charmer/rails31/active_record/preloader/has_and_belongs_to_many'
+    ActiveRecord::Associations::Preloader::HasAndBelongsToMany.send(:include, DbCharmer::ActiveRecord::Preloader::HasAndBelongsToMany)
+  end
 else
   require 'db_charmer/active_record/association_preload'
   ActiveRecord::Base.extend(DbCharmer::ActiveRecord::AssociationPreload)

@@ -32,8 +32,8 @@ describe Event, "sharded model" do
     )
 
     # Check sharded tables to make sure they have the data
-    Event.shard_for(2).find_all_by_from_uid(1).map(&:event_data).should == [ 'foo' ]
-    Event.shard_for(12).find_all_by_from_uid(1).map(&:event_data).should == [ 'bar' ]
+    Event.shard_for(2).where(:from_uid => 1).map(&:event_data).should == [ 'foo' ]
+    Event.shard_for(12).where(:from_uid => 1).map(&:event_data).should == [ 'bar' ]
   end
 
   it "should allocate new blocks when needed" do
