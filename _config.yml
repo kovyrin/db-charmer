@@ -3,8 +3,6 @@ auto: true
 server: true
 permalink: none
 
-#baseurl: /
-
 exclude:
  - Rakefile
 
