@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.authors       = [ 'Oleksiy Kovyrin' ]
   s.email         = 'alexey@kovyrin.net'
-  s.homepage      = 'http://dbcharmer.net'
+  s.homepage      = 'http://kovyrin.github.io/db-charmer/'
   s.summary       = 'ActiveRecord Connections Magic (slaves, multiple connections, etc)'
   s.description   = 'DbCharmer is a Rails plugin (and gem) that could be used to manage AR model connections, implement master/slave query schemes, sharding and other magic features many high-scale applications need.'
   s.license       = 'MIT'

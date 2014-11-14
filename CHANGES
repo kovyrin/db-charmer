@@ -1,3 +1,11 @@
+1.9.1 (2014-11-14):
+
+The project has been suspended. No updates will be provided and no Rails versions
+beyond 3.2.x will be supported.
+
+For more information please check out this blog post: http://kovyrin.net/2014/11/14/dbcharmer-suspended/
+
+----------------------------------------------------------------------------------------
 1.9.0 (2013-10-09):
 
 Most of the major changes in this version are related to our initial push towards making
