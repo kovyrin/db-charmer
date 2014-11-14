@@ -1,3 +1,8 @@
+= WARNING: The Project Has Been Suspended
+
+Please note, that this project has been suspended. No updates will be provided and no Rails versions
+beyond 3.2.x will be supported. For more information please check out this blog post: http://kovyrin.net/2014/11/14/dbcharmer-suspended/
+
 = DB Charmer - ActiveRecord Connection Magic Plugin
 
 +DbCharmer+ is a simple yet powerful plugin for ActiveRecord that significantly extends its ability to work with
@@ -10,8 +15,7 @@ multiple databases and/or database servers. The major features we add to ActiveR
 5. Multiple database migrations with very flexible query routing controls.
 6. Simple database sharding functionality with multiple sharding methods (value, range, mapping table).
 
-For more information on the project, you can check out our web site at http://dbcharmer.net.
-
+For more information on the project, you can check out our web site at http://kovyrin.github.io/db-charmer/.
 
 == Installation
 
