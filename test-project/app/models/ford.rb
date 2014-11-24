@@ -1,2 +1,0 @@
-class Ford < Car
-end
