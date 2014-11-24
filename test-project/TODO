@@ -1,6 +1,0 @@
-Functionality:
-- Add a controller wrapper to force all queries to the master (thanks mascohism for the idea)
-
-Docs:
-- Document (make more obvious) multi-db migrations code with migration_connections_should_exist
-- Document the fact, that all queries in a transaction go to the master

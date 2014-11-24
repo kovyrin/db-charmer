@@ -1,2 +1,0 @@
-class Toyota < Car
-end
