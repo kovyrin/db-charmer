@@ -3,7 +3,7 @@ module DbCharmer
     module MasterSlaveRouting
 
       module ClassMethods
-        SLAVE_METHODS = [ :find_by_sql, :count_by_sql, :calculate ]
+        SLAVE_METHODS = [ :find_by_sql, :count_by_sql, :calculate, :columns]
         MASTER_METHODS = [ :update, :create, :delete, :destroy, :delete_all, :destroy_all, :update_all, :update_counters ]
 
         SLAVE_METHODS.each do |slave_method|
