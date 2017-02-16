@@ -21,13 +21,16 @@ module DbCharmer
       end
 
       #---------------------------------------------------------------------------------------------
-      @@db_charmer_slaves = {}
+      def db_charmer_thread_slaves
+        Thread.current[:db_charmer_slaves] ||= {}
+      end
+
       def db_charmer_slaves=(slaves)
-        @@db_charmer_slaves[self.name] = slaves
+        db_charmer_thread_slaves[self.name] = slaves
       end
 
       def db_charmer_slaves
-        @@db_charmer_slaves[self.name] || []
+        db_charmer_thread_slaves[self.name] || []
       end
 
       # Returns a random connection from the list of slaves configured for this AR class
