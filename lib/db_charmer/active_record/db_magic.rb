@@ -82,8 +82,10 @@ module DbCharmer
         self.extend(DbCharmer::ActiveRecord::MultiDbProxy::MasterSlaveClassMethods)
 
         # Enable automatic master/slave queries routing (we have specialized versions on those modules for rails2/3)
-        self.extend(DbCharmer::ActiveRecord::MasterSlaveRouting::ClassMethods)
-        self.send(:include, DbCharmer::ActiveRecord::MasterSlaveRouting::InstanceMethods)
+        if self != ::ActiveRecord::Base
+          self.extend(DbCharmer::ActiveRecord::MasterSlaveRouting::ClassMethods)
+          self.send(:include, DbCharmer::ActiveRecord::MasterSlaveRouting::InstanceMethods)
+        end
       end
 
     end
