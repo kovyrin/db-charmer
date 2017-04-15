@@ -23,6 +23,11 @@ module DbCharmer
     ::ActiveRecord::VERSION::MAJOR > 3
   end
 
+  # Used in all Rails4.1-specific places
+  def self.rails41?
+    rails4? && ::ActiveRecord::VERSION::MINOR >= 1
+  end
+
   # Used in all Rails3-specific places
   def self.rails3?
     ::ActiveRecord::VERSION::MAJOR > 2
